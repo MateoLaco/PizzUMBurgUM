@@ -1,6 +1,8 @@
 package com.example.PizzUMBurgUM;
 
+import com.example.PizzUMBurgUM.entidades.Creacion;
 import com.example.PizzUMBurgUM.entidades.Producto;
+import com.example.PizzUMBurgUM.repositorios.CreacionRepositorio;
 import com.example.PizzUMBurgUM.repositorios.ProductoRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +20,9 @@ public class PizzUmBurgUmApplication {
 
     @Autowired
     private ProductoRepositorio productoRepositorio;
+
+    @Autowired
+    private CreacionRepositorio creacionRepositorio;
 
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(PizzUmBurgUmApplication.class, args);
@@ -42,6 +47,12 @@ public class PizzUmBurgUmApplication {
 
         productoRepositorio.save(p1);
         productoRepositorio.save(p2);
+
+        Creacion c1 = Creacion.builder()
+                .idCreacion(1)
+                .build();
+
+        creacionRepositorio.save(c1);
     }
 
 }
