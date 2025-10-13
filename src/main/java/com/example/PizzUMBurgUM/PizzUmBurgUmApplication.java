@@ -33,7 +33,15 @@ public class PizzUmBurgUmApplication {
                 .tipo("Pizza")
                 .build();
 
+        Producto p2 = Producto.builder()
+                .idProducto(2)
+                .nombre("Pepperoni")
+                .precio(200)
+                .tipo("Pizza")
+                .build();
+
         productoRepositorio.save(p1);
+        productoRepositorio.save(p2);
     }
 
 }
