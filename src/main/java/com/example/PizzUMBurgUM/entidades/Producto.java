@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,4 +32,7 @@ public class Producto {
     @Column(length = 10)
     @NotNull
     private String tipo;
+
+    @ManyToMany(mappedBy = "productos")
+    private Set<Creacion> creaciones = new HashSet<>();
 }
