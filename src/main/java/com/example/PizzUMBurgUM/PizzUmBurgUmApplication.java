@@ -1,7 +1,9 @@
 package com.example.PizzUMBurgUM;
 
+import com.example.PizzUMBurgUM.entidades.Cliente;
 import com.example.PizzUMBurgUM.entidades.Creacion;
 import com.example.PizzUMBurgUM.entidades.Producto;
+import com.example.PizzUMBurgUM.repositorios.ClienteRepositorio;
 import com.example.PizzUMBurgUM.repositorios.CreacionRepositorio;
 import com.example.PizzUMBurgUM.repositorios.ProductoRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,9 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.util.Date;
 
 @SpringBootApplication
 @Component
@@ -23,6 +28,9 @@ public class PizzUmBurgUmApplication {
 
     @Autowired
     private CreacionRepositorio creacionRepositorio;
+
+    @Autowired
+    private ClienteRepositorio clienteRepositorio;
 
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(PizzUmBurgUmApplication.class, args);
@@ -53,6 +61,15 @@ public class PizzUmBurgUmApplication {
                 .build();
 
         creacionRepositorio.save(c1);
+
+        Cliente cl1 = Cliente.builder()
+                .email("correo@gmail.com")
+                .contrasena("Contraseña")
+                .telefono(123456789)
+                .nombreCompleto("Nombre de uruario")
+                .build();
+
+        clienteRepositorio.save(cl1);
     }
 
 }

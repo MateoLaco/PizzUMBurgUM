@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class Pagina {
+public class ControladorPublico {
     @GetMapping("/inicio")
     public String inicio(){
         return "index";
