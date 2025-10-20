@@ -1,4 +1,4 @@
 package com.example.PizzUMBurgUM.controladores;
 
-public class CreacionControlador {
+public class ControladorCreacion {
 }

@@ -35,7 +35,8 @@ public class ProductoServicio {
         return productoRepositorio.findAll();
     }
 
-    public Optional<Producto> obtenerProductoPorId(Integer idProducto) {
-        return productoRepositorio.findById(idProducto);
+    public Producto obtenerProductoPorId(Integer idProducto) {
+        return productoRepositorio.findById(idProducto)
+                .orElseThrow(() -> new RuntimeException("No existe el producto con el id: " + idProducto));
     }
 }
