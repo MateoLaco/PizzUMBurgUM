@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Iniciar Sesión - PizzUM & BurgUM</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <!-- Tarjeta de Login -->
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white text-center">
+                    <h4 class="mb-0"> Iniciar Sesión </h4>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Formulario de Login -->
+                    <form th:action="@{/auth/login}" method="post">
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label"> Email</label>
+                            <input type="email"
+                                   class="form-control"
+                                   id="email"
+                                   name="username"
+                                   placeholder="tu@email.com"
+                                   required>
+                        </div>
+
+                        <!-- Contraseña -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label"> Contraseña</label>
+                            <input type="password"
+                                   class="form-control"
+                                   id="password"
+                                   name="password"
+                                   placeholder="Tu contraseña"
+                                   required>
+                        </div>
+
+                        <!-- Botón de Login -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                 Ingresar a Mi Cuenta
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Enlace a Registro -->
+                    <div class="text-center mt-3">
+                        <p class="mb-0">¿No tienes cuenta?</p>
+                        <a th:href="@{/auth/register}" class="btn btn-outline-secondary btn-sm">
+                             Crear Cuenta Nueva
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="text-center mt-4">
+                <div class="alert alert-info">
+                    <small>
+                        💡 <strong>Demo:</strong> Puedes probar el sistema sin registrar<br>
+                        Email: <code>demo@pizzum.com</code> | Contraseña: <code>demo123</code>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

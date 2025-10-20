@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Inicio</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="jumbotron bg-light p-5 rounded text-center">
+        <h1 class="display-4">¡Bienvenido a PizzUM & BurgUM!</h1>
+        <p class="lead">Diseña tus propias pizzas y hamburguesas a tu gusto</p>
+        <hr class="my-4">
+        <p>Elige entre una amplia variedad de ingredientes y crea tu combinación perfecta</p>
+
+        <div class="mt-4">
+            <a th:href="@{/auth/register}" class="btn btn-danger btn-lg me-3">Comenzar Ahora</a>
+            <a th:href="@{/auth/login}" class="btn btn-outline-secondary btn-lg">Iniciar Sesión</a>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h3 class="card-title">Pizzas Personalizadas</h3>
+                    <p class="card-text">
+                        Elige tamaño, masa, salsa, queso y todos los toppings que quieras
+                    </p>
+                    <a th:href="@{/client/create-pizza}" class="btn btn-outline-danger">Crear Mi Pizza</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h3 class="card-title">Hamburguesas Personalizadas</h3>
+                    <p class="card-text">
+                        Selecciona carnes, pan, toppings y aderezos a tu medida
+                    </p>
+                    <a th:href="@{/client/create-burger}" class="btn btn-outline-danger">Crear Mi Hamburguesa</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
