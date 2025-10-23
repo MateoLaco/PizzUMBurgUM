@@ -13,7 +13,12 @@ public class ClienteServicio {
     @Autowired
     private ClienteRepositorio clienteRepositorio;
 
-    public Cliente agregarCliente(Cliente unCliente){return unCliente == null ? null: clienteRepositorio.save(unCliente);}
+    public Cliente agregarCliente(Cliente unCliente){
+        if (unCliente == null){return null;}
+        if (clienteRepositorio.existsByEmail(unCliente.getEmail())){return null;}
+        clienteRepositorio.save(unCliente);
+        return unCliente;           //Crear una forma que utilice EmailDuplicado(excepción)
+    }
 
     public Cliente actualizarCliente(Cliente unCliente){
         if (clienteRepositorio.existsById(unCliente.getId())){

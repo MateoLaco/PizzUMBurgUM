@@ -61,15 +61,6 @@ public class PizzUmBurgUmApplication {
                 .build();
 
         creacionRepositorio.save(c1);
-
-        Cliente cl1 = Cliente.builder()
-                .email("correo@gmail.com")
-                .contrasena("Contraseña")
-                .telefono(123456789)
-                .nombreCompleto("Nombre de uruario")
-                .build();
-
-        clienteRepositorio.save(cl1);
     }
 
 }

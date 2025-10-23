@@ -38,7 +38,8 @@ public class Cliente {
 
     @NotNull
     @Column(length = 9)
-    private int telefono;
+    @Size(min = 8, max = 9)
+    private String telefono;
 
     @PrePersist
     public void onCreate() {
