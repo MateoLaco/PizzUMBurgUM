@@ -19,16 +19,4 @@ public class ControladorRestCliente {
     public ResponseEntity<List<Cliente>> listarCliente(){
         return ResponseEntity.ok(clienteServicio.obtenerClientes());
     }
-
-    @PostMapping("/nuevo")
-    public ResponseEntity<Cliente> nuevoCliente(@RequestParam String nombreUsuario, @RequestParam String contrasena, @RequestParam String tel, @RequestParam String email) {
-        Cliente clienteNuevo = Cliente.builder()
-                .nombreCompleto(nombreUsuario)
-                .contrasena(contrasena)
-                .telefono(tel)
-                .email(email)
-                .build();
-        clienteServicio.agregarCliente(clienteNuevo);
-        return ResponseEntity.ok(clienteNuevo);
-    }
 }
