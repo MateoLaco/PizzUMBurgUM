@@ -3,46 +3,292 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
 <head>
-    <title>Inicio</title>
+    <title>Inicio - PizzUM & BurgUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos para la página de inicio */
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #ffc107;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+            url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1926&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .btn-hero {
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary-hero {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+        }
+
+        .btn-primary-hero:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        .btn-outline-hero {
+            border: 2px solid white;
+            color: white;
+            background: transparent;
+        }
+
+        .btn-outline-hero:hover {
+            background: white;
+            color: #333;
+            transform: translateY(-3px);
+        }
+
+        .features-section {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .feature-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 30px;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-card img {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .feature-card-body {
+            padding: 30px;
+        }
+
+        .feature-card-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+
+        .feature-card-text {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .btn-feature {
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .quick-nav {
+            background: var(--dark-color);
+            padding: 30px 0;
+            color: white;
+        }
+
+        .quick-nav-item {
+            text-align: center;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .quick-nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-5px);
+        }
+
+        .quick-nav-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .quick-nav-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 60px 0;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .btn-hero {
+                display: block;
+                margin: 10px auto;
+                width: 80%;
+            }
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="jumbotron bg-light p-5 rounded text-center">
-        <h1 class="display-4">¡Bienvenido a PizzUM & BurgUM!</h1>
-        <p class="lead">Diseña tus propias pizzas y hamburguesas a tu gusto</p>
-        <hr class="my-4">
-        <p>Elige entre una amplia variedad de ingredientes y crea tu combinación perfecta</p>
 
-        <div class="mt-4">
-            <a th:href="@{/auth/register}" class="btn btn-danger btn-lg me-3">Comenzar Ahora</a>
-            <a th:href="@{/auth/login}" class="btn btn-outline-secondary btn-lg">Iniciar Sesión</a>
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">¡Bienvenido a PizzUM & BurgUM!</h1>
+            <p class="hero-subtitle">Diseña tus propias pizzas y hamburguesas</p>
+            <div class="mt-4">
+                <a th:href="@{/auth/register}" class="btn btn-hero btn-primary-hero">Registrarse</a>
+                <a th:href="@{/auth/login}" class="btn btn-hero btn-outline-hero">Iniciar Sesión</a>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <div class="row mt-5">
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <h3 class="card-title">Pizzas Personalizadas</h3>
-                    <p class="card-text">
-                        Elige tamaño, masa, salsa, queso y todos los toppings que quieras
-                    </p>
-                    <a th:href="@{/cliente/crearPizza}" class="btn btn-outline-danger">Crear Mi Pizza</a>
+    <!-- Barra de Navegación Rápida -->
+    <section class="quick-nav">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4 col-12">
+                    <div class="quick-nav-item">
+                        <div class="quick-nav-title">Pizzas</div>
+                        <small>Personaliza</small>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="quick-nav-item">
+                        <div class="quick-nav-title">Burgers</div>
+                        <small>Crea tu estilo</small>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="quick-nav-item">
+                        <div class="quick-nav-title">Favoritos</div>
+                        <small>Guarda creaciones</small>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <h3 class="card-title">Hamburguesas Personalizadas</h3>
-                    <p class="card-text">
-                        Selecciona carnes, pan, toppings y aderezos a tu medida
-                    </p>
-                    <a th:href="@{/cliente/crearHamburguesa}" class="btn btn-outline-danger">Crear Mi Hamburguesa</a>
+    </section>
+
+    <!-- Sección de Características Principales -->
+    <section class="features-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="feature-card">
+                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                             alt="Pizza personalizada" class="card-img-top">
+                        <div class="feature-card-body">
+                            <h3 class="feature-card-title">Pizzas Personalizadas</h3>
+                            <p class="feature-card-text">
+                                Elige entre múltiples tamaños, tipos de masa, salsas, quesos y toppings diferentes.
+                            </p>
+                            <a th:href="@{/client/crearPizza}" class="btn btn-danger btn-feature">Crear Mi Pizza</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="feature-card">
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1998&q=80"
+                             alt="Hamburguesa personalizada" class="card-img-top">
+                        <div class="feature-card-body">
+                            <h3 class="feature-card-title">Hamburguesas Personalizadas</h3>
+                            <p class="feature-card-text">
+                                Combina hasta 3 tipos de carnes y elige entre una amplia variedad
+                                de toppings y aderezos.
+                            </p>
+                            <a th:href="@{/client/crearHamburguesa}" class="btn btn-warning btn-feature">Crear Mi Hamburguesa</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
+
+<script>
+    // Efectos de animación al scrollear
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animación para las tarjetas al hacer scroll
+        const featureCards = document.querySelectorAll('.feature-card');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        featureCards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    });
+</script>
 </body>
 </html>
