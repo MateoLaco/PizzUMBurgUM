@@ -1,5 +1,7 @@
 package com.example.PizzUMBurgUM.servicios;
 
+import com.example.PizzUMBurgUM.Dto.DetalleDto;
+import com.example.PizzUMBurgUM.Dto.TicketDto;
 import com.example.PizzUMBurgUM.entidades.Creacion;
 import com.example.PizzUMBurgUM.repositorios.CreacionRepositorio;
 import com.example.PizzUMBurgUM.repositorios.ProductoRepositorio;
@@ -32,4 +34,24 @@ public class CreacionServicio {
     }
 
     public List<Creacion> obtenerCreaciones(){return creacionRepositorio.findAll();}
+
+    public TicketDto generarTicket(Long idCreacion) {
+        Creacion creacion = creacionRepositorio.findById(idCreacion).orElseThrow();
+
+        List<DetalleDto> detalle = creacion.getProductos().stream()
+                .map(p -> new DetalleDto(p.getNombre(), (int) p.getPrecio()))
+                .toList();
+
+        int total = detalle.stream()
+                .mapToInt(DetalleDto::costo)
+                .sum();
+
+        return new TicketDto(
+                creacion.getIdCreacion(),
+                creacion.getCliente().getEmail(),
+                detalle,
+                total
+        );
+    }
+
 }
