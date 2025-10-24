@@ -17,7 +17,7 @@ public class ClienteServicio {
         if (unCliente == null){return null;}
         if (clienteRepositorio.existsByEmail(unCliente.getEmail())){return null;}
         clienteRepositorio.save(unCliente);
-        return unCliente;           //Crear una forma que utilice EmailDuplicado(excepción)
+        return unCliente;
     }
 
     public Cliente actualizarCliente(Cliente unCliente){
