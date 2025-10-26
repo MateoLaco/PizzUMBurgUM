@@ -55,12 +55,6 @@ public class PizzUmBurgUmApplication {
 
         productoRepositorio.save(p1);
         productoRepositorio.save(p2);
-
-        Creacion c1 = Creacion.builder()
-                .idCreacion(1)
-                .build();
-
-        creacionRepositorio.save(c1);
     }
 
 }
