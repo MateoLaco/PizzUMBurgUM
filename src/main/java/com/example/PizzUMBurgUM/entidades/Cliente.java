@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idCliente;
 
     @NotBlank
     @Email(message = "El email no contiene el formato indicado. Ej: [usuario@dominio.com]")
@@ -26,7 +27,7 @@ public class Cliente {
 
     @NotNull
     @Column
-    private Date fechaRegistro;
+    private LocalDate fechaRegistro;
 
     @NotBlank
     @Column
@@ -41,8 +42,11 @@ public class Cliente {
     @Size(min = 8, max = 9)
     private String telefono;
 
+    @OneToMany(mappedBy = "creador", cascade = CascadeType.ALL)
+    private List<Creacion> creaciones;
+
     @PrePersist
     public void onCreate() {
-        this.fechaRegistro = new Date();
+        this.fechaRegistro = LocalDate.now();
     }
 }
