@@ -16,7 +16,7 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--dark-color);
             min-height: 100vh;
         }
 
@@ -244,7 +244,7 @@
                             <p class="feature-card-text">
                                 Elige entre múltiples tamaños, tipos de masa, salsas, quesos y toppings diferentes.
                             </p>
-                            <a th:href="@{/client/crearPizza}" class="btn btn-danger btn-feature">Crear Mi Pizza</a>
+                            <a th:href="@{/cliente/crearPizza}" class="btn btn-danger btn-feature">Crear Mi Pizza</a>
                         </div>
                     </div>
                 </div>
@@ -258,7 +258,7 @@
                                 Combina hasta 3 tipos de carnes y elige entre una amplia variedad
                                 de toppings y aderezos.
                             </p>
-                            <a th:href="@{/client/crearHamburguesa}" class="btn btn-warning btn-feature">Crear Mi Hamburguesa</a>
+                            <a th:href="@{/cliente/crearHamburguesa}" class="btn btn-warning btn-feature">Crear Mi Hamburguesa</a>
                         </div>
                     </div>
                 </div>

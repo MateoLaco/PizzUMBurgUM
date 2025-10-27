@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Crear Hamburguesa - PizzUM & BurgUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #ffc107;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark-color);
+            min-height: 100vh;
+        }
+
+        .creation-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+            url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1998&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .creation-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .creation-subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+        }
+
+        .option-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .option-card {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .option-card:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.2);
+        }
+
+        .option-card.selected {
+            border-color: var(--secondary-color);
+            background-color: #fffdf4;
+        }
+
+        .option-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .option-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .option-price {
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .summary-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .total-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .btn-crear {
+            background: linear-gradient(45deg, #ffc107, #e0a800);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-crear:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+        }
+
+        .btn-favorito {
+            background: linear-gradient(45deg, #ffc107, #e0a800);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .ingredient-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .form-check {
+            margin-bottom: 10px;
+            padding-left: 2rem;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .meat-counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .counter-btn {
+            background: var(--secondary-color);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .counter-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            min-width: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- Hero Section -->
+    <section class="creation-hero">
+        <div class="container">
+            <h1 class="creation-title">Arma Tu Hamburguesa</h1>
+            <p class="creation-subtitle">Crea tu hamburguesa ideal</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="row">
+            <!-- Opciones de Personalización -->
+            <div class="col-lg-8">
+                <!-- Carnes -->
+                <div class="option-section">
+                    <h3 class="section-title">Tipo de Carne</h3>
+                    <div class="meat-counter">
+                        <button class="counter-btn" onclick="changeMeatCount(-1)">-</button>
+                        <span class="counter-value" id="meatCount">1</span>
+                        <button class="counter-btn" onclick="changeMeatCount(1)">+</button>
+                        <span>(Máximo 3 carnes)</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('meat', 'vaca', 4.50)">
+                                <div class="option-name">Carne de Vaca</div>
+<!--                                <div class="option-description">Clásica y jugosa</div>-->
+                                <div class="option-price">+$4.50</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('meat', 'pollo', 3.50)">
+                                <div class="option-name">Pollo</div>
+<!--                                <div class="option-description">Más ligera</div>-->
+                                <div class="option-price">+$3.50</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('meat', 'cerdo', 4.00)">
+                                <div class="option-name">Cerdo</div>
+<!--                                <div class="option-description">Sabrosa y tierna</div>-->
+                                <div class="option-price">+$4.00</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('meat', 'vegetariana', 3.00)">
+                                <div class="option-name">Vegetariana</div>
+                                <div class="option-description">Lentejas y soja</div>
+                                <div class="option-price">+$3.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pan -->
+                <div class="option-section">
+                    <h3 class="section-title">Tipo de Pan</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('bread', 'papa', 0)">
+                                <div class="option-name">Pan de Papa</div>
+<!--                                <div class="option-description">Suave y esponjoso</div>-->
+                                <div class="option-price">Incluido</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('bread', 'integral', 1.00)">
+                                <div class="option-name">Integral</div>
+<!--                                <div class="option-description">Más saludable</div>-->
+                                <div class="option-price">+$1.00</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('bread', 'sin-gluten', 2.00)">
+                                <div class="option-name">Sin Gluten</div>
+<!--                                <div class="option-description">Para celíacos</div>-->
+                                <div class="option-price">+$2.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toppings -->
+                <div class="option-section">
+                    <h3 class="section-title">Extras</h3>
+                    <div class="ingredient-list">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="toppingB1" onchange="toggleTopping('Lechuga', 0.50)">
+                            <label class="form-check-label" for="toppingB1">
+                                Lechuga <span class="option-price">+$0.50</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="toppingB2" onchange="toggleTopping('Tomate', 0.50)">
+                            <label class="form-check-label" for="toppingB2">
+                                Tomate <span class="option-price">+$0.50</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="toppingB3" onchange="toggleTopping('Cebolla', 0.40)">
+                            <label class="form-check-label" for="toppingB3">
+                                Cebolla <span class="option-price">+$0.40</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="toppingB4" onchange="toggleTopping('Panceta', 2.00)">
+                            <label class="form-check-label" for="toppingB4">
+                                Panceta <span class="option-price">+$2.00</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="toppingB5" onchange="toggleTopping('Queso Cheddar', 1.50)">
+                            <label class="form-check-label" for="toppingB5">
+                                Queso Cheddar <span class="option-price">+$1.50</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aderezos -->
+                <div class="option-section">
+                    <h3 class="section-title">Aderezos</h3>
+                    <div class="ingredient-list">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="sauce1" onchange="toggleSauce('Ketchup', 0)">
+                            <label class="form-check-label" for="sauce1">
+                                Ketchup <span class="option-price">Gratis</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="sauce2" onchange="toggleSauce('Mostaza', 0)">
+                            <label class="form-check-label" for="sauce2">
+                                Mostaza <span class="option-price">Gratis</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="sauce3" onchange="toggleSauce('Mayonesa', 0)">
+                            <label class="form-check-label" for="sauce3">
+                                Mayonesa <span class="option-price">Gratis</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="sauce4" onchange="toggleSauce('Salsa BBQ', 0.50)">
+                            <label class="form-check-label" for="sauce4">
+                                Salsa BBQ <span class="option-price">+$0.50</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="sauce5" onchange="toggleSauce('Salsa Especial', 1.00)">
+                            <label class="form-check-label" for="sauce5">
+                                Salsa Especial <span class="option-price">+$1.00</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen y Precio -->
+            <div class="col-lg-4">
+                <div class="summary-card">
+                    <h3 class="summary-title">Tu Hamburguesa</h3>
+
+                    <div id="burgerSummary">
+                        <p><strong>Carnes:</strong> <span id="selectedMeat">-</span></p>
+                        <p><strong>Pan:</strong> <span id="selectedBread">-</span></p>
+                        <p><strong>Toppings:</strong> <span id="selectedToppings">Ninguno</span></p>
+                        <p><strong>Aderezos:</strong> <span id="selectedSauces">Ninguno</span></p>
+                    </div>
+
+                    <div class="total-price">$<span id="totalPrice">0.00</span></div>
+
+                    <button class="btn-crear" onclick="addToCart()">
+                        Agregar al Carrito
+                    </button>
+                    <button class="btn-favorito" onclick="saveToFavorites()">
+                        Guardar en Favoritos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentBurger = {
+        meat: null,
+        bread: null,
+        toppings: [],
+        sauces: [],
+        meatCount: 1,
+        total: 0
+    };
+
+    function changeMeatCount(change) {
+        const newCount = currentBurger.meatCount + change;
+        if (newCount >= 1 && newCount <= 3) {
+            currentBurger.meatCount = newCount;
+            document.getElementById('meatCount').textContent = newCount;
+            calculateTotal();
+        }
+    }
+
+    function selectOption(type, name, price) {
+        // Remover selección anterior
+        document.querySelectorAll('.option-card').forEach(card => {
+            if (card.onclick && card.onclick.toString().includes(`selectOption('${type}'`)) {
+                card.classList.remove('selected');
+            }
+        });
+
+        // Agregar selección actual
+        event.currentTarget.classList.add('selected');
+
+        // Actualizar datos
+        currentBurger[type] = { name, price };
+
+        // Actualizar display
+        const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+        const displayPrice = price > 0 ? ` (+$${price.toFixed(2)})` : '';
+        document.getElementById(`selected${type.charAt(0).toUpperCase() + type.slice(1)}`).textContent =
+            type === 'meat' ? `${currentBurger.meatCount}x ${displayName}${displayPrice}` : displayName + displayPrice;
+
+        calculateTotal();
+    }
+
+    function toggleTopping(name, price) {
+        const checkbox = event.target;
+        if (checkbox.checked) {
+            currentBurger.toppings.push({ name, price });
+        } else {
+            currentBurger.toppings = currentBurger.toppings.filter(t => t.name !== name);
+        }
+        updateToppingsDisplay();
+        calculateTotal();
+    }
+
+    function toggleSauce(name, price) {
+        const checkbox = event.target;
+        if (checkbox.checked) {
+            currentBurger.sauces.push({ name, price });
+        } else {
+            currentBurger.sauces = currentBurger.sauces.filter(s => s.name !== name);
+        }
+        updateSaucesDisplay();
+        calculateTotal();
+    }
+
+    function updateToppingsDisplay() {
+        const toppingsElement = document.getElementById('selectedToppings');
+        if (currentBurger.toppings.length === 0) {
+            toppingsElement.textContent = 'Ninguno';
+        } else {
+            toppingsElement.textContent = currentBurger.toppings.map(t => t.name).join(', ');
+        }
+    }
+
+    function updateSaucesDisplay() {
+        const saucesElement = document.getElementById('selectedSauces');
+        if (currentBurger.sauces.length === 0) {
+            saucesElement.textContent = 'Ninguno';
+        } else {
+            saucesElement.textContent = currentBurger.sauces.map(s => s.name).join(', ');
+        }
+    }
+
+    function calculateTotal() {
+        let total = 0;
+
+        if (currentBurger.meat) total += currentBurger.meat.price * currentBurger.meatCount;
+        if (currentBurger.bread) total += currentBurger.bread.price;
+
+        currentBurger.toppings.forEach(topping => {
+            total += topping.price;
+        });
+
+        currentBurger.sauces.forEach(sauce => {
+            total += sauce.price;
+        });
+
+        currentBurger.total = total;
+        document.getElementById('totalPrice').textContent = total.toFixed(2);
+    }
+
+    function addToCart() {
+        if (!currentBurger.meat) {
+            alert('⚠️ Por favor selecciona un tipo de carne para tu hamburguesa');
+            return;
+        }
+        alert(`✅ Hamburguesa agregada al carrito!\nTotal: $${currentBurger.total.toFixed(2)}`);
+    }
+
+    function saveToFavorites() {
+        if (!currentBurger.meat) {
+            alert('⚠️ Crea una hamburguesa primero para guardarla en favoritos');
+            return;
+        }
+        alert('⭐ Hamburguesa guardada en tus favoritos');
+    }
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', function() {
+        calculateTotal();
+    });
+</script>
+</body>
+</html>
