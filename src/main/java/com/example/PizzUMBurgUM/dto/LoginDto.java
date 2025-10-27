@@ -1,4 +1,4 @@
-package com.example.PizzUMBurgUM.Dto;
+package com.example.PizzUMBurgUM.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

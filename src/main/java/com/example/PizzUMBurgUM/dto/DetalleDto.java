@@ -1,4 +1,4 @@
-package com.example.PizzUMBurgUM.Dto;
+package com.example.PizzUMBurgUM.dto;
 
 public record DetalleDto(
         String descripcion,

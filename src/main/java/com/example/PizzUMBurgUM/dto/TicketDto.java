@@ -1,8 +1,8 @@
-package com.example.PizzUMBurgUM.Dto;
+package com.example.PizzUMBurgUM.dto;
 import java.util.List;
 
 public record TicketDto(
-        Long idCreacion,
+        Integer idCreacion,
         String clienteEmail,
         List<DetalleDto> detalle,
         int total
