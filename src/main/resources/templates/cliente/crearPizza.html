@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Crear Pizza - PizzUM & BurgUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #ffc107;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark-color);
+            min-height: 100vh;
+        }
+
+        .creation-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+            url('https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .creation-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .creation-subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+        }
+
+        .option-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .option-card {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.2);
+        }
+
+        .option-card.selected {
+            border-color: var(--primary-color);
+            background-color: #fff5f5;
+        }
+
+        .option-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .option-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .option-price {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .summary-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .total-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .btn-crear {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-crear:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-favorito {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .ingredient-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .form-check {
+            margin-bottom: 10px;
+            padding-left: 2rem;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- Hero Section -->
+    <section class="creation-hero">
+        <div class="container">
+            <h1 class="creation-title">Crea Tu Pizza</h1>
+            <p class="creation-subtitle">Personaliza cada detalle de tu pizza</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="row">
+            <!-- Opciones de Personalización -->
+            <div class="col-lg-8">
+                <!-- Tamaño -->
+                <div class="option-section">
+                    <h3 class="section-title">Tamaño de la Pizza</h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="option-card" onclick="selectOption('size', 'pequena', 8.99)">
+                                <div class="option-name">Pequeña</div>
+<!--                                <div class="option-description">25cm - 4 porciones</div>-->
+                                <div class="option-price">$8.99</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="option-card" onclick="selectOption('size', 'mediana', 12.99)">
+                                <div class="option-name">Mediana</div>
+<!--                                <div class="option-description">30cm - 6 porciones</div>-->
+                                <div class="option-price">$12.99</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="option-card" onclick="selectOption('size', 'grande', 16.99)">
+                                <div class="option-name">Grande</div>
+<!--                                <div class="option-description">35cm - 8 porciones</div>-->
+                                <div class="option-price">$16.99</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Masa -->
+                <div class="option-section">
+                    <h3 class="section-title">Tipo de Masa</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('dough', 'napolitana', 1.50)">
+                                <div class="option-name">Napolitana</div>
+                                <div class="option-description">Tradicional italiana</div>
+                                <div class="option-price">+$1.50</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('dough', 'integral', 2.00)">
+                                <div class="option-name">Integral</div>
+<!--                                <div class="option-description">Más saludable</div>-->
+                                <div class="option-price">+$2.00</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('dough', 'sin-gluten', 3.00)">
+                                <div class="option-name">Sin Gluten</div>
+<!--                                <div class="option-description">Para celíacos</div>-->
+                                <div class="option-price">+$3.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Salsa -->
+                <div class="option-section">
+                    <h3 class="section-title"> Tipo de Salsa</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('sauce', 'tomate', 0)">
+                                <div class="option-name">Salsa de Tomate</div>
+<!--                                <div class="option-description">Clásica y deliciosa</div>-->
+                                <div class="option-price">Incluida</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('sauce', 'pomodoro', 1.00)">
+                                <div class="option-name">Pomodoro</div>
+<!--                                <div class="option-description">Italiana auténtica</div>-->
+                                <div class="option-price">+$1.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Queso -->
+                <div class="option-section">
+                    <h3 class="section-title">Tipo de queso</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('cheese', 'muzzarella', 0)">
+                                <div class="option-name">Muzzarella</div>
+<!--                                <div class="option-description">Tradicional</div>-->
+                                <div class="option-price">Incluido</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="option-card" onclick="selectOption('cheese', 'roquefort', 2.50)">
+                                <div class="option-name">Roquefort</div>
+<!--                                <div class="option-description">Azul intenso</div>-->
+                                <div class="option-price">+$2.50</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toppings -->
+                <div class="option-section">
+                    <h3 class="section-title">Toppings Adicionales</h3>
+                    <div class="ingredient-list">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="topping1" onchange="toggleTopping('Pepperoni', 1.50)">
+                            <label class="form-check-label" for="topping1">
+                                Pepperoni <span class="option-price">+$1.50</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="topping2" onchange="toggleTopping('Jamón', 1.25)">
+                            <label class="form-check-label" for="topping2">
+                                Jamón <span class="option-price">+$1.25</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="topping3" onchange="toggleTopping('Champiñones', 1.00)">
+                            <label class="form-check-label" for="topping3">
+                                Champiñones <span class="option-price">+$1.00</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="topping4" onchange="toggleTopping('Aceitunas', 0.75)">
+                            <label class="form-check-label" for="topping4">
+                                Aceitunas <span class="option-price">+$0.75</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="topping5" onchange="toggleTopping('Pimientos', 0.80)">
+                            <label class="form-check-label" for="topping5">
+                                Pimientos <span class="option-price">+$0.80</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="topping6" onchange="toggleTopping('Extra Queso', 2.00)">
+                            <label class="form-check-label" for="topping6">
+                                Extra Queso <span class="option-price">+$2.00</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen y Precio -->
+            <div class="col-lg-4">
+                <div class="summary-card">
+                    <h3 class="summary-title">Tu Pizza</h3>
+
+                    <div id="pizzaSummary">
+                        <p><strong>Tamaño:</strong> <span id="selectedSize">-</span></p>
+                        <p><strong>Masa:</strong> <span id="selectedDough">-</span></p>
+                        <p><strong>Salsa:</strong> <span id="selectedSauce">-</span></p>
+                        <p><strong>Queso:</strong> <span id="selectedCheese">-</span></p>
+                        <p><strong>Toppings:</strong> <span id="selectedToppings">Ninguno</span></p>
+                    </div>
+
+                    <div class="total-price">$<span id="totalPrice">0.00</span></div>
+
+                    <button class="btn-crear" onclick="addToCart()">
+                        Agregar al Carrito
+                    </button>
+                    <button class="btn-favorito" onclick="saveToFavorites()">
+                        Guardar en Favoritos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentPizza = {
+        size: null,
+        dough: null,
+        sauce: null,
+        cheese: null,
+        toppings: [],
+        total: 0
+    };
+
+    function selectOption(type, name, price) {
+        // Remover selección anterior
+        document.querySelectorAll('.option-card').forEach(card => {
+            if (card.onclick && card.onclick.toString().includes(`selectOption('${type}'`)) {
+                card.classList.remove('selected');
+            }
+        });
+
+        // Agregar selección actual
+        event.currentTarget.classList.add('selected');
+
+        // Actualizar datos
+        currentPizza[type] = { name, price };
+
+        // Actualizar display
+        document.getElementById(`selected${type.charAt(0).toUpperCase() + type.slice(1)}`).textContent =
+            name.charAt(0).toUpperCase() + name.slice(1) + (price > 0 ? ` (+$${price.toFixed(2)})` : '');
+
+        calculateTotal();
+    }
+
+    function toggleTopping(name, price) {
+        const checkbox = event.target;
+        if (checkbox.checked) {
+            currentPizza.toppings.push({ name, price });
+        } else {
+            currentPizza.toppings = currentPizza.toppings.filter(t => t.name !== name);
+        }
+        updateToppingsDisplay();
+        calculateTotal();
+    }
+
+    function updateToppingsDisplay() {
+        const toppingsElement = document.getElementById('selectedToppings');
+        if (currentPizza.toppings.length === 0) {
+            toppingsElement.textContent = 'Ninguno';
+        } else {
+            toppingsElement.textContent = currentPizza.toppings.map(t => t.name).join(', ');
+        }
+    }
+
+    function calculateTotal() {
+        let total = 0;
+
+        if (currentPizza.size) total += currentPizza.size.price;
+        if (currentPizza.dough) total += currentPizza.dough.price;
+        if (currentPizza.sauce) total += currentPizza.sauce.price;
+        if (currentPizza.cheese) total += currentPizza.cheese.price;
+
+        currentPizza.toppings.forEach(topping => {
+            total += topping.price;
+        });
+
+        currentPizza.total = total;
+        document.getElementById('totalPrice').textContent = total.toFixed(2);
+    }
+
+    function addToCart() {
+        if (!currentPizza.size) {
+            alert('⚠Por favor selecciona un tamaño para tu pizza');
+            return;
+        }
+        alert(`Pizza agregada al carrito!\nTotal: $${currentPizza.total.toFixed(2)}`);
+    }
+
+    function saveToFavorites() {
+        if (!currentPizza.size) {
+            alert('Crea una pizza primero para guardarla en favoritos');
+            return;
+        }
+        alert('Pizza guardada en tus favoritos');
+    }
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', function() {
+        calculateTotal();
+    });
+</script>
+</body>
+</html>
