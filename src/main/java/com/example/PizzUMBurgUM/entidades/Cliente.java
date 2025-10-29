@@ -21,25 +21,37 @@ public class Cliente {
     private Long idCliente;
 
     @NotBlank
+    @Column(length = 50)
+    private String nombreUsuario;
+
+    @NotBlank
     @Email(message = "El email no contiene el formato indicado. Ej: [usuario@dominio.com]")
     @Column(length = 50, unique = true)
     private String email;
-
-    @NotNull
-    @Column
-    private LocalDate fechaRegistro;
 
     @NotBlank
     @Column
     private String contrasena;
 
-    @NotBlank
+    @NotNull
+    @Column
+    private String metodoPago;
+
+    @NotNull
+    @Column
+    private LocalDate fechaRegistro;
+
+    @NotNull
     @Column(length = 50)
-    private String nombreCompleto;
+    private String direccion;
+
+    @NotNull
+    @Column
+    private LocalDate fechaNacimiento;
 
     @NotNull
     @Column(length = 9)
-    @Size(min = 8, max = 9)
+    @Size(min = 8, max = 13)
     private String telefono;
 
     @OneToMany(mappedBy = "creador", cascade = CascadeType.ALL)
