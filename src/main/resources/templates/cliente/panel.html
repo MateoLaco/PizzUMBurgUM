@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Dashboard - PizzUM & BurgUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #ffc107;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark-color);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Barra de Navegación Horizontal */
+        .navbar-horizontal {
+            background: var(--dark-color);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .navbar-brand {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: white !important;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: nowrap;
+        }
+
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            padding: 10px 20px !important;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            white-space: nowrap;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white !important;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .logout-btn:hover {
+            background: white;
+            color: var(--dark-color);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+            url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1926&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        /* Features Section - Tarjetas de Creación */
+        .features-section {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .feature-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 30px;
+            height: 100%;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .feature-card img {
+            height: 250px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .feature-card-body {
+            padding: 30px;
+        }
+
+        .feature-card-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .feature-card-text {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .btn-feature {
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-feature:hover {
+            text-decoration: none;
+        }
+
+        .btn-primary-feature {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+        }
+
+        .btn-primary-feature:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-secondary-feature {
+            background: linear-gradient(45deg, #ffc107, #e0a800);
+            color: #000;
+        }
+
+        .btn-secondary-feature:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+        }
+
+        /* Estadísticas Section */
+        .stats-section {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Favoritos Section */
+        .favorites-section {
+            background: #f8f9fa;
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 40px;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+
+        .favorite-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .favorite-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .favorite-name {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+
+        .favorite-details {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .favorite-price {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        .btn-view-all {
+            background: var(--dark-color);
+            color: white;
+            padding: 12px 40px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            margin-top: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-view-all:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .nav-link {
+                padding: 8px 15px !important;
+                font-size: 0.9rem;
+            }
+
+            .navbar-brand {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero-title {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .user-info {
+                padding: 6px 12px;
+            }
+
+            .user-avatar {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- Barra de Navegación Horizontal -->
+    <nav class="navbar-horizontal">
+        <div class="container">
+            <div class="nav-container">
+                <!-- Logo -->
+                <a class="navbar-brand" href="/cliente/panel">
+                    PizzUM & <span>BurgUM</span>
+                </a>
+
+                <!-- Links de Navegación -->
+                <div class="nav-links">
+                    <a class="nav-link active" href="/cliente/panel">
+                        <i class="fas fa-home me-2"></i>Inicio
+                    </a>
+                    <a class="nav-link" href="/cliente/perfil">
+                        <i class="fas fa-user me-2"></i>Perfil
+                    </a>
+                    <a class="nav-link" href="/cliente/favoritos">
+                        <i class="fas fa-heart me-2"></i>Favoritos
+                    </a>
+                    <form th:action="@{/logout}" method="post" style="display: inline;">
+                        <button type="submit" class="nav-link logout-btn">
+                            <i class="fas fa-sign-out-alt me-2"></i>Salir
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">¡Bienvenido de vuelta!</h1>
+            <p class="hero-subtitle">Crea tus propias pizzas y hamburguesas personalizadas</p>
+        </div>
+    </section>
+
+    <!-- Features Section - Tarjetas de Creación -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">¿Qué quieres crear hoy?</h2>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="feature-card" onclick="window.location.href='/cliente/crear-hamburguesa'">
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1998&q=80" alt="Crear Hamburguesa">
+                        <div class="feature-card-body">
+                            <h3 class="feature-card-title">Crear Hamburguesa</h3>
+                            <p class="feature-card-text">
+                                Diseña tu hamburguesa ideal eligiendo entre diferentes tipos de carne, pan, toppings y salsas.
+                                ¡Totalmente personalizable a tu gusto!
+                            </p>
+                            <a href="/cliente/crear-hamburguesa" class="btn-feature btn-secondary-feature">
+                                <i class="fas fa-plus me-2"></i>Crear Hamburguesa
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-card" onclick="window.location.href='/cliente/crear-pizza'">
+                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Crear Pizza">
+                        <div class="feature-card-body">
+                            <h3 class="feature-card-title">Crear Pizza</h3>
+                            <p class="feature-card-text">
+                                Personaliza tu pizza desde la masa hasta los toppings. Elige el tamaño, tipo de salsa,
+                                queso y todos los ingredientes que más te gusten.
+                            </p>
+                            <a href="/cliente/crear-pizza" class="btn-feature btn-primary-feature">
+                                <i class="fas fa-plus me-2"></i>Crear Pizza
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estadísticas -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="stat-number" th:text="${pedidosCompletados ?: '12'}">12</div>
+                    <div class="stat-label">Pedidos Completados</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number" th:text="${favoritosGuardados ?: '8'}">8</div>
+                    <div class="stat-label">Favoritos Guardados</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number" th:text="${hamburguesasCreadas ?: '15'}">15</div>
+                    <div class="stat-label">Hamburguesas Creadas</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number" th:text="${pizzasCreadas ?: '10'}">10</div>
+                    <div class="stat-label">Pizzas Creadas</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Favoritos -->
+    <section class="favorites-section">
+        <div class="container">
+            <h2 class="section-title">Tus Favoritos Recientes</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="favorite-card">
+                        <div class="favorite-name">Hamburguesa Clásica Premium</div>
+                        <div class="favorite-details">Carne de vaca, pan de papa, queso cheddar, lechuga, tomate, salsa especial</div>
+                        <div class="favorite-price">$12.50</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="favorite-card">
+                        <div class="favorite-name">Pizza Suprema</div>
+                        <div class="favorite-details">Grande, masa napolitana, pepperoni, champiñones, pimientos, extra queso</div>
+                        <div class="favorite-price">$18.75</div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <a href="/cliente/favoritos" class="btn-view-all">
+                    <i class="fas fa-heart me-2"></i>Ver Todos los Favoritos
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 PizzUM & BurgUM. Todos los derechos reservados.</p>
+            <p class="mb-0">Diseñado con ❤️ para amantes de la buena comida</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Marcar enlace activo
+        const currentPage = window.location.pathname;
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+
+        // Hacer que toda la tarjeta sea clickeable
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Solo redirigir si no se hizo click en un enlace dentro de la tarjeta
+                if (!e.target.closest('a')) {
+                    const link = this.querySelector('a.btn-feature');
+                    if (link) {
+                        window.location.href = link.getAttribute('href');
+                    }
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
