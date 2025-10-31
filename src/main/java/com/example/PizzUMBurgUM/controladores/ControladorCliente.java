@@ -2,6 +2,7 @@ package com.example.PizzUMBurgUM.controladores;
 
 import org.springframework.ui.Model;
 import com.example.PizzUMBurgUM.entidades.Cliente;
+import com.example.PizzUMBurgUM.entidades.Usuario;
 import com.example.PizzUMBurgUM.servicios.ClienteServicio;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;

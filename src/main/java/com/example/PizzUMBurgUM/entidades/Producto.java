@@ -2,6 +2,7 @@ package com.example.PizzUMBurgUM.entidades;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.util.HashSet;
@@ -17,9 +18,9 @@ import java.util.Set;
 public class Producto {
 
     @Id
-    @NotNull
-    @Column(length = 100)
-    private int idProducto;
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id_producto;
 
     @Column(length = 50)
     @NotNull
@@ -29,9 +30,9 @@ public class Producto {
     @NotNull
     private float precio;
 
-    @Column(length = 10)
+    @Column(length = 1)
     @NotNull
-    private String tipo;
+    private char tipo;
 
     @ManyToMany(mappedBy = "productos")
     private Set<Creacion> creaciones = new HashSet<>();
