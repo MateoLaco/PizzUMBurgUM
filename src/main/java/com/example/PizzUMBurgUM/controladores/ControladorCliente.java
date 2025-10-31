@@ -19,15 +19,32 @@ public class ControladorCliente {
     private ClienteServicio clienteServicio;
 
     @PostMapping("/nuevo")
-    public String nuevoCliente(@RequestParam String nombreUsuario, @RequestParam String contrasena, @RequestParam String tel, @RequestParam String email) {
+    public String nuevoCliente(
+            @RequestParam String nombreUsuario,
+            @RequestParam String email,
+            @RequestParam String contrasena,
+            @RequestParam String metodoPago,
+            @RequestParam String direccion,
+            @RequestParam int diaNacimiento,
+            @RequestParam int mesNacimiento,
+            @RequestParam int anioNacimiento,
+            @RequestParam String codigoPais,
+            @RequestParam String tel
+    ) {
+        LocalDate fechaNacimiento = LocalDate.of(anioNacimiento, mesNacimiento, diaNacimiento);
+        String telefono = codigoPais + tel;
         Cliente clienteNuevo = Cliente.builder()
-                .nombreCompleto(nombreUsuario)
-                .contrasena(contrasena)
-                .telefono(tel)
+                .nombreUsuario(nombreUsuario)
                 .email(email)
+                .contrasena(contrasena)
+                .metodoPago(metodoPago)
+                .direccion(direccion)
+                .fechaNacimiento(fechaNacimiento)
+                .telefono(telefono)
                 .build();
         Cliente a = clienteServicio.agregarCliente(clienteNuevo);
         if (a == null) {
+            System.out.println("No se ha podido regostrar el usuario");
             return "redirect:/auth/register";
         }
         else  {
