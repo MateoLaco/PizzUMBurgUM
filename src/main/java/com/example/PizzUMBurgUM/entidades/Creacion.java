@@ -24,7 +24,10 @@ public class Creacion {
 
     @NotNull
     @Column(length = 1)
-    private char tipoCreacion;
+    private char tipo; //pizza o hamburguesa
+
+    @Column(name = "es_favorito")
+    private boolean favorito = false;
 
     @ManyToMany
     @JoinTable(
