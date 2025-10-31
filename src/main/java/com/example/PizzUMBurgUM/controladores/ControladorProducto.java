@@ -24,7 +24,7 @@ public class ControladorProducto {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> obtenerPorId(@PathVariable("id") Integer id) {
+    public ResponseEntity<Producto> obtenerPorId(@PathVariable("id") Long id) {
         return ResponseEntity.ok(productoServicio.obtenerProductoPorId(id));
     }
 }

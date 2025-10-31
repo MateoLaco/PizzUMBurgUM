@@ -21,7 +21,7 @@ public class ClienteServicio {
     }
 
     public Cliente actualizarCliente(Cliente unCliente){
-        if (clienteRepositorio.existsById(unCliente.getIdCliente())){
+        if (clienteRepositorio.existsById(unCliente.getIdUsuario())){
             return clienteRepositorio.save(unCliente);
         }
         return null;

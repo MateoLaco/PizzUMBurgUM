@@ -3,36 +3,22 @@ package com.example.PizzUMBurgUM.entidades;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Entity
-@Table()
-public class Cliente {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCliente;
-
-    @NotBlank
-    @Column(length = 50)
-    private String nombreUsuario;
-
-    @NotBlank
-    @Email(message = "El email no contiene el formato indicado. Ej: [usuario@dominio.com]")
-    @Column(length = 50, unique = true)
-    private String email;
-
-    @NotBlank
-    @Column
-    private String contrasena;
-
+@Table(name = "cliente")
+@PrimaryKeyJoinColumn(name = "id_usuario")
+public class Cliente extends Usuario{
     @NotNull
     @Column
     private String metodoPago;
@@ -54,8 +40,9 @@ public class Cliente {
     @Size(min = 8, max = 13)
     private String telefono;
 
-    @OneToMany(mappedBy = "creador", cascade = CascadeType.ALL)
-    private List<Creacion> creaciones;
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private Set<ClienteCreacion> clienteCreaciones = new HashSet<>();
 
     @PrePersist
     public void onCreate() {

@@ -1,6 +1,7 @@
 package com.example.PizzUMBurgUM.controladores;
 
 import com.example.PizzUMBurgUM.entidades.Cliente;
+import com.example.PizzUMBurgUM.entidades.Usuario;
 import com.example.PizzUMBurgUM.servicios.ClienteServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
