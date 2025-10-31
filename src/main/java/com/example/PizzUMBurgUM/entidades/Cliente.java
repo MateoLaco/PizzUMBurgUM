@@ -40,10 +40,6 @@ public class Cliente extends Usuario{
     @Size(min = 8, max = 13)
     private String telefono;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private Set<ClienteCreacion> clienteCreaciones = new HashSet<>();
-
     @PrePersist
     public void onCreate() {
         this.fechaRegistro = LocalDate.now();

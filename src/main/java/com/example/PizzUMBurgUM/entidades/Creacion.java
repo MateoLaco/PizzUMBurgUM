@@ -21,7 +21,7 @@ public class Creacion {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCreacion;
+    private Long id_creacion;
 
     @NotNull
     @Column(length = 1)
@@ -45,8 +45,4 @@ public class Creacion {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente creador;
-
-    @OneToMany(mappedBy = "creacion", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private Set<ClienteCreacion> relacionesConClientes = new HashSet<>();
 }

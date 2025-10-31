@@ -2,14 +2,13 @@ package com.example.PizzUMBurgUM.controladores;
 
 import org.springframework.ui.Model;
 import com.example.PizzUMBurgUM.entidades.Cliente;
-import com.example.PizzUMBurgUM.entidades.Usuario;
 import com.example.PizzUMBurgUM.servicios.ClienteServicio;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller

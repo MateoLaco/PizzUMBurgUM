@@ -4,10 +4,7 @@ import com.example.PizzUMBurgUM.entidades.Cliente;
 import com.example.PizzUMBurgUM.entidades.Creacion;
 import com.example.PizzUMBurgUM.entidades.Funcionario;
 import com.example.PizzUMBurgUM.entidades.Producto;
-import com.example.PizzUMBurgUM.repositorios.ClienteRepositorio;
-import com.example.PizzUMBurgUM.repositorios.CreacionRepositorio;
-import com.example.PizzUMBurgUM.repositorios.FuncionarioRepositorio;
-import com.example.PizzUMBurgUM.repositorios.ProductoRepositorio;
+import com.example.PizzUMBurgUM.repositorios.*;
 import com.example.PizzUMBurgUM.servicios.CreacionServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -36,6 +33,7 @@ public class PizzUmBurgUmApplication {
 
     @Autowired
     private ClienteRepositorio clienteRepositorio;
+
     @Autowired
     private FuncionarioRepositorio funcionarioRepositorio;
 
@@ -78,7 +76,7 @@ public class PizzUmBurgUmApplication {
 
         List<Long> prods = List.of(p1.getId_producto(), p2.getId_producto());
 
-        Creacion c1 = creacionServicio.agregarCreacion(cliente1.getIdUsuario(),'P',prods, true);
+        Creacion c1 = creacionServicio.agregarCreacion(cliente1.getIdUsuario(),'P',prods);
 
         Funcionario funcionario = Funcionario.builder()
                 .nombreUsuario("Juan")
