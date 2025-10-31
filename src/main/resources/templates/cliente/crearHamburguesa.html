@@ -480,18 +480,18 @@
 
     function addToCart() {
         if (!currentBurger.meat) {
-            alert('⚠️ Por favor selecciona un tipo de carne para tu hamburguesa');
+            alert('Por favor selecciona un tipo de carne para tu hamburguesa');
             return;
         }
-        alert(`✅ Hamburguesa agregada al carrito!\nTotal: $${currentBurger.total.toFixed(2)}`);
+        alert(`Hamburguesa agregada al carrito!\nTotal: $${currentBurger.total.toFixed(2)}`);
     }
 
     function saveToFavorites() {
         if (!currentBurger.meat) {
-            alert('⚠️ Crea una hamburguesa primero para guardarla en favoritos');
+            alert('Crea una hamburguesa primero para guardarla en favoritos');
             return;
         }
-        alert('⭐ Hamburguesa guardada en tus favoritos');
+        alert('Hamburguesa guardada en tus favoritos');
     }
 
     // Inicializar
