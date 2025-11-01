@@ -17,12 +17,16 @@ public class ClienteServicio {
     @Autowired
     private CreacionRepositorio creacionRepositorio;
 
+
     public Cliente agregarCliente(Cliente unCliente){
-        if (unCliente == null){return null;}
-        if (clienteRepositorio.existsByEmail(unCliente.getEmail())){return null;}
+        if (unCliente == null){
+            throw new RuntimeException("El cliente no puede ser null");}
+        if (clienteRepositorio.existsByEmail(unCliente.getEmail())){
+            throw new RuntimeException("El email ya está registrado");}
         clienteRepositorio.save(unCliente);
         return unCliente;
     }
+
 
     public Cliente actualizarCliente(Cliente unCliente){
         if (clienteRepositorio.existsById(unCliente.getIdCliente())){

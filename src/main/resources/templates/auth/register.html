@@ -40,9 +40,6 @@
             color: #333;
             display: block;
             margin-bottom: 5px;
-            padding: 0;
-            border: none;
-            background: transparent;
         }
         input, select {
             padding: 10px;
@@ -50,6 +47,7 @@
             border: 1px solid #ccc;
             font-size: 1rem;
             width: 100%;
+            box-sizing: border-box;
         }
         .form-row {
             display: flex;
@@ -104,223 +102,138 @@
         .login-link a:hover {
             text-decoration: underline;
         }
-        .error-message {
-            color: #e53e3e;
-            font-size: 0.85rem;
-            margin-top: 5px;
-            display: none;
-        }
-        .success-message {
-            color: #38a169;
-            font-size: 0.85rem;
-            margin-top: 5px;
-            display: none;
+        .error {
+            color: #dc3545;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 10px;
+            background: #ffe6e6;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <form id="registerForm" method="POST" action="/cliente/nuevo">
-            <h2>Registro de Cliente</h2>
+<div class="container">
+    <form method="POST" action="/auth/register">
+        <h2>Registro de Cliente</h2>
 
-            <div class="form-group">
-                <label for="nombreUsuario">Nombre de Usuario</label>
-                <input id="nombreUsuario" name="nombreUsuario" type="text" required />
-                <div class="error-message" id="usernameError">El nombre de usuario debe tener al menos 3 caracteres</div>
-            </div>
+        <!-- Mensaje de error -->
+        <div th:if="${error}" class="error" th:text="${error}"></div>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input id="email" name="email" type="email" required />
-                <div class="error-message" id="emailError">Por favor ingresa un email válido</div>
-            </div>
+        <div>
+            <label for="nombreUsuario">Nombre de Usuario</label>
+            <input id="nombreUsuario" name="nombreUsuario" type="text" required />
+        </div>
 
-            <div class="form-group">
-                <label for="contrasena">Contraseña</label>
-                <input id="contrasena" name="contrasena" type="password" required />
-                <div class="error-message" id="passwordError">La contraseña debe tener al menos 8 caracteres</div>
-            </div>
+        <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required />
+        </div>
 
-            <div class="form-group">
-                <label for="confirmarContrasena">Confirmar Contraseña</label>
-                <input id="confirmarContrasena" name="confirmarContrasena" type="password" required />
-                <div class="error-message" id="confirmPasswordError">Las contraseñas no coinciden</div>
-                <div class="success-message" id="passwordMatch"> Las contraseñas coinciden</div>
-            </div>
+        <div>
+            <label for="contrasena">Contraseña</label>
+            <input id="contrasena" name="contrasena" type="password" required />
+        </div>
 
+        <div>
+            <label for="metodoPago">Método de Pago</label>
+            <select id="metodoPago" name="metodoPago" required>
+                <option value="" disabled selected>Selecciona un tipo de tarjeta</option>
+                <option value="Visa">Visa</option>
+                <option value="MasterCard">MasterCard</option>
+                <option value="American Express">American Express</option>
+            </select>
+        </div>
+
+        <!-- Número de tarjeta (siempre visible) -->
+        <div>
+            <label for="numeroTarjeta">Número de Tarjeta</label>
+            <input id="numeroTarjeta" name="numeroTarjeta" type="text" placeholder="1234 5678 9012 3456" required />
+        </div>
+
+        <div>
+            <label for="direccion">Dirección</label>
+            <input id="direccion" name="direccion" type="text" placeholder="Calle, número, ciudad" required />
+        </div>
+
+        <div class="form-row">
             <div class="form-group">
-                <label for="metodoPago">Método de Pago</label>
-                <select id="metodoPago" name="metodoPago" required>
-                    <option value="" disabled selected>Selecciona un método de pago</option>
-                    <option value="visa">Visa</option>
-                    <option value="mastercard">Mastercard</option>
-                    <option value="american-express">American Express</option>
+                <label for="diaNacimiento">Día de nacimiento</label>
+                <select id="diaNacimiento" name="diaNacimiento" required>
+                    <option value="" disabled selected>Día</option>
+                    <!-- Días se llenan con JavaScript -->
                 </select>
             </div>
-
             <div class="form-group">
-                <label for="direccion">Dirección</label>
-                <input id="direccion" name="direccion" type="text" placeholder="Calle, número, ciudad" required />
+                <label for="mesNacimiento">Mes de nacimiento</label>
+                <select id="mesNacimiento" name="mesNacimiento" required>
+                    <option value="" disabled selected>Mes</option>
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
             </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="diaNacimiento">Día de nacimiento</label>
-                    <select id="diaNacimiento" name="diaNacimiento" required>
-                        <option value="" disabled selected>Día</option>
-                       //del 1 al 31
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="mesNacimiento">Mes de nacimiento</label>
-                    <select id="mesNacimiento" name="mesNacimiento" required>
-                        <option value="" disabled selected>Mes</option>
-                        <option value="1">Enero</option>
-                        <option value="2">Febrero</option>
-                        <option value="3">Marzo</option>
-                        <option value="4">Abril</option>
-                        <option value="5">Mayo</option>
-                        <option value="6">Junio</option>
-                        <option value="7">Julio</option>
-                        <option value="8">Agosto</option>
-                        <option value="9">Septiembre</option>
-                        <option value="10">Octubre</option>
-                        <option value="11">Noviembre</option>
-                        <option value="12">Diciembre</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="anioNacimiento">Año de Nacimiento</label>
-                    <select id="anioNacimiento" name="anioNacimiento" required>
-                        <option value="" disabled selected>Año</option>
-                        //dsdee 1920
-                    </select>
-                </div>
-            </div>
-
             <div class="form-group">
-                <label for="tel">Teléfono</label>
-                <div class="combo">
-                    <select class="flag-select" id="codigoPais" name="codigoPais">
-                        <option value="+34">ES +34</option>
-                        <option value="+1">US +1</option>
-                        <option value="+52">MX +52</option>
-                        <option value="+54">AR+54</option>
-                        <option value="+56">CL +56</option>
-                        <option value="+57">CO +57</option>
-                        <option value="+598">UY + 598</option>
-                    </select>
-                    <input id="tel" name="tel" class="tel-input" type="text" inputmode="numeric" placeholder="9 dígitos" minlength="8" maxlength="9" required />
-                </div>
-                <div class="error-message" id="phoneError">El teléfono no es valido</div>
+                <label for="anioNacimiento">Año de Nacimiento</label>
+                <select id="anioNacimiento" name="anioNacimiento" required>
+                    <option value="" disabled selected>Año</option>
+                    <!-- Años se llenan con JavaScript -->
+                </select>
             </div>
+        </div>
 
-            <button type="submit">Crear cuenta</button>
-
-            <div class="login-link">
-                <p>¿Ya tienes cuenta? <a href="/auth/login">Iniciar Sesión</a></p>
+        <div>
+            <label for="tel">Teléfono</label>
+            <div class="combo">
+                <select class="flag-select" id="codigoPais" name="codigoPais">
+                    <option value="+34">ES +34</option>
+                    <option value="+1">US +1</option>
+                    <option value="+52">MX +52</option>
+                    <option value="+54">AR +54</option>
+                    <option value="+56">CL +56</option>
+                    <option value="+57">CO +57</option>
+                    <option value="+598">UY +598</option>
+                </select>
+                <input id="tel" name="tel" class="tel-input" type="text" placeholder="9 dígitos" required />
             </div>
-        </form>
-    </div>
+        </div>
 
-    <script>
-        // Llenar días del 1 al 31
-        const diaSelect = document.getElementById('diaNacimiento');
-        for (let i = 1; i <= 31; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = i;
-            diaSelect.appendChild(option);
-        }
+        <button type="submit">Crear cuenta</button>
 
-        // Llenar años desde 1920 hasta el año actual
-        const anioSelect = document.getElementById('anioNacimiento');
-        const currentYear = new Date().getFullYear();
-        for (let i = currentYear; i >= 1920; i--) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = i;
-            anioSelect.appendChild(option);
-        }
+        <div class="login-link">
+            <p>¿Ya tienes cuenta? <a href="/auth/login">Iniciar Sesión</a></p>
+        </div>
+    </form>
+</div>
 
-        // Validación de formulario
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+<script>
+    // Llenar días del 1 al 31
+    const diaSelect = document.getElementById('diaNacimiento');
+    for (let i = 1; i <= 31; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        diaSelect.appendChild(option);
+    }
 
-            let isValid = true;
-
-            // Validar nombre de usuario
-            const username = document.getElementById('nombreUsuario').value;
-            if (username.length < 3) {
-                document.getElementById('usernameError').style.display = 'block';
-                isValid = false;
-            } else {
-                document.getElementById('usernameError').style.display = 'none';
-            }
-
-            // Validar email
-            const email = document.getElementById('email').value;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                document.getElementById('emailError').style.display = 'block';
-                isValid = false;
-            } else {
-                document.getElementById('emailError').style.display = 'none';
-            }
-
-            // Validar contraseña
-            const password = document.getElementById('contrasena').value;
-            if (password.length < 8) {
-                document.getElementById('passwordError').style.display = 'block';
-                isValid = false;
-            } else {
-                document.getElementById('passwordError').style.display = 'none';
-            }
-
-            // Validar confirmación de contraseña
-            const confirmPassword = document.getElementById('confirmarContrasena').value;
-            if (password !== confirmPassword) {
-                document.getElementById('confirmPasswordError').style.display = 'block';
-                document.getElementById('passwordMatch').style.display = 'none';
-                isValid = false;
-            } else {
-                document.getElementById('confirmPasswordError').style.display = 'none';
-                document.getElementById('passwordMatch').style.display = 'block';
-            }
-
-            // Validar teléfono
-            const phone = document.getElementById('tel').value;
-            const phoneRegex = /^\d{8,9}$/;
-            if (!phoneRegex.test(phone)) {
-                document.getElementById('phoneError').style.display = 'block';
-                isValid = false;
-            } else {
-                document.getElementById('phoneError').style.display = 'none';
-            }
-
-            // Si todo es válido, enviar formulario
-            if (isValid) {
-                // Aquí iría la lógica para enviar el formulario
-                alert('Formulario enviado correctamente');
-                this.submit(); // Descomentar para enviar realmente el formulario
-            }
-        });
-
-        // Validación en tiempo real para confirmación de contraseña
-        document.getElementById('confirmarContrasena').addEventListener('input', function() {
-            const password = document.getElementById('contrasena').value;
-            const confirmPassword = this.value;
-
-            if (password && confirmPassword) {
-                if (password !== confirmPassword) {
-                    document.getElementById('confirmPasswordError').style.display = 'block';
-                    document.getElementById('passwordMatch').style.display = 'none';
-                } else {
-                    document.getElementById('confirmPasswordError').style.display = 'none';
-                    document.getElementById('passwordMatch').style.display = 'block';
-                }
-            }
-        });
-    </script>
+    // Llenar años desde 1920 hasta el año actual
+    const anioSelect = document.getElementById('anioNacimiento');
+    const currentYear = new Date().getFullYear();
+    for (let i = currentYear; i >= 1920; i--) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        anioSelect.appendChild(option);
+    }
+</script>
 </body>
 </html>

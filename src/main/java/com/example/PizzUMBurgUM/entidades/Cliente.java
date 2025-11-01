@@ -13,20 +13,21 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table()
+@Table(name = "CLIENTE")
 public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_cliente")
     private Long idCliente;
 
     @NotBlank
-    @Column(length = 50)
+    @Column(name = "nombre_usuario", nullable = false)
     private String nombreUsuario;
 
     @NotBlank
     @Email(message = "El email no contiene el formato indicado. Ej: [usuario@dominio.com]")
-    @Column(length = 50, unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @NotBlank
@@ -34,20 +35,24 @@ public class Cliente {
     private String contrasena;
 
     @NotNull
-    @Column
+    @Column(name = "metodo pago")
     private String metodoPago;
 
     @NotNull
-    @Column
+    @Column(name = "fecha_registro")
     private LocalDate fechaRegistro;
 
     @NotNull
-    @Column(length = 50)
-    private String direccion;
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
 
     @NotNull
-    @Column
-    private LocalDate fechaNacimiento;
+    @Column(name = "direccion")
+    private String direccion;
+
+
+    @Column(name = "numero_tarjeta")
+    private String numeroTarjeta;
 
     @NotNull
     @Column(length = 9)

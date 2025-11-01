@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,4 +44,9 @@ public class Creacion {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente creador;
+
+    private String nombre;
+    private String descripcion;
+    private Double precio;
+    private LocalDate fechaCreacion;
 }

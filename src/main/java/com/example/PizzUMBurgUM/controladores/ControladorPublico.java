@@ -9,14 +9,10 @@ public class ControladorPublico {
     public String inicio() {
         return "publico/inicio";
     }
+//
+//    @GetMapping("/auth/login")
+//    public String login() {
+//        return "auth/login";
+//    }
 
-    @GetMapping("/auth/login")
-    public String login() {
-        return "auth/login";
-    }
-
-    @GetMapping("/auth/register")
-    public String register() {
-        return "auth/register";
-    }
 }
