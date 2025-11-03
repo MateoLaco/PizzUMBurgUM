@@ -14,7 +14,7 @@ public class ControladorTicket {
     public ControladorTicket(CreacionServicio creacionServicio) {
         this.creacionServicio = creacionServicio;
     }
-    public TicketDto obtenerTicket(@PathVariable Integer idCreacion) {
+    public TicketDto obtenerTicket(@PathVariable Long idCreacion) {
         return creacionServicio.generarTicket(idCreacion);
     }
 }

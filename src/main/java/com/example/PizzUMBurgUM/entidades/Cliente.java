@@ -3,37 +3,22 @@ package com.example.PizzUMBurgUM.entidades;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Entity
-@Table(name = "CLIENTE")
-public class Cliente {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cliente")
-    private Long idCliente;
-
-    @NotBlank
-    @Column(name = "nombre_usuario", nullable = false)
-    private String nombreUsuario;
-
-    @NotBlank
-    @Email(message = "El email no contiene el formato indicado. Ej: [usuario@dominio.com]")
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @NotBlank
-    @Column
-    private String contrasena;
-
+@Table(name = "cliente")
+@PrimaryKeyJoinColumn(name = "id_usuario")
+public class Cliente extends Usuario{
     @NotNull
     @Column(name = "metodo pago")
     private String metodoPago;

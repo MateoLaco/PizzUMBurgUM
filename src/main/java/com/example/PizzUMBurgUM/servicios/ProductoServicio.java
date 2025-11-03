@@ -17,13 +17,13 @@ public class ProductoServicio {
     public Producto agregarProducto(Producto unProducto) {return unProducto == null ? null: productoRepositorio.save(unProducto);}
 
     public Producto actualizarProducto(Producto unProducto) {
-        if(productoRepositorio.existsById(unProducto.getIdProducto())){
+        if(productoRepositorio.existsById(unProducto.getId_producto())){
             return productoRepositorio.save(unProducto);
         }
         return null;
     }
 
-    public boolean eliminarProducto(Integer idProducto) {
+    public boolean eliminarProducto(Long idProducto) {
         if(idProducto!=null){
             productoRepositorio.deleteById(idProducto);
             return true;
@@ -35,7 +35,7 @@ public class ProductoServicio {
         return productoRepositorio.findAll();
     }
 
-    public Producto obtenerProductoPorId(Integer idProducto) {
+    public Producto obtenerProductoPorId(Long idProducto) {
         return productoRepositorio.findById(idProducto)
                 .orElseThrow(() -> new RuntimeException("No existe el producto con el id: " + idProducto));
     }
