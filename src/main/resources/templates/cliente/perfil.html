@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Mi Perfil - PizzUM & BurgUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #ffc107;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark-color);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Barra de Navegación Horizontal (IGUAL QUE EN PANEL) */
+        .navbar-horizontal {
+            background: var(--dark-color);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .navbar-brand {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: white !important;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: nowrap;
+        }
+
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            padding: 10px 20px !important;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            white-space: nowrap;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white !important;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .logout-btn:hover {
+            background: white;
+            color: var(--dark-color);
+        }
+
+        /* Responsive (IGUAL QUE EN PANEL) */
+        @media (max-width: 1200px) {
+            .nav-link {
+                padding: 8px 15px !important;
+                font-size: 0.9rem;
+            }
+
+            .navbar-brand {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        /* ESTILOS ESPECÍFICOS DEL PERFIL */
+        .profile-section {
+            background: white;
+            padding: 40px 0;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, var(--dark-color), #1a2530);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            color: var(--dark-color);
+        }
+
+        .profile-stats {
+            background: var(--light-color);
+            padding: 40px 0;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.2rem;
+        }
+
+        .favorite-card, .history-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+
+        .favorite-card:hover, .history-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+
+        .item-details {
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .item-price {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+
+        .item-date {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tab-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .tab-header {
+            display: flex;
+            background: var(--light-color);
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-weight: 600;
+            color: var(--dark-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .tab-button.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tab-button:hover {
+            background: rgba(220, 53, 69, 0.1);
+        }
+
+        .tab-content {
+            padding: 30px;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Responsive para el perfil */
+        @media (max-width: 768px) {
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+
+            .tab-header {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- Barra de Navegación Horizontal (EXACTAMENTE IGUAL QUE EN PANEL) -->
+    <nav class="navbar-horizontal">
+        <div class="container">
+            <div class="nav-container">
+                <!-- Logo -->
+                <a class="navbar-brand" href="/cliente/panel">
+                    PizzUM & <span>BurgUM</span>
+                </a>
+
+                <!-- Links de Navegación -->
+                <div class="nav-links">
+                    <a class="nav-link" href="/cliente/panel">
+                        <i class="fas fa-home me-2"></i>Inicio
+                    </a>
+                    <a class="nav-link active" href="/cliente/perfil">
+                        <i class="fas fa-user me-2"></i>Perfil
+                    </a>
+                    <a class="nav-link" href="/cliente/favoritos">
+                        <i class="fas fa-heart me-2"></i>Favoritos
+                    </a>
+                    <form th:action="@{/logout}" method="post" style="display: inline;">
+                        <button type="submit" class="nav-link logout-btn">
+                            <i class="fas fa-sign-out-alt me-2"></i>Salir
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header del Perfil -->
+    <section class="profile-header">
+        <div class="container">
+            <div class="profile-avatar" th:text="${cliente.nombreUsuario.substring(0, 1).toUpperCase()}">
+                U
+            </div>
+            <h1 style="font-family: 'Montserrat', sans-serif; font-size: 2.5rem;" th:text="${cliente.nombreUsuario}">Usuario</h1>
+            <p class="lead" th:text="${cliente.email}">usuario@email.com</p>
+            <p>Miembro desde <span th:text="${#temporals.format(cliente.fechaRegistro, 'MMMM yyyy')}">Octubre 2024</span></p>
+        </div>
+    </section>
+
+    <!-- Estadísticas -->
+    <section class="profile-stats">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card">
+                        <span class="stat-number" th:text="${totalPizzas}">0</span>
+                        <div class="stat-label">Pizzas Creadas</div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card">
+                        <span class="stat-number" th:text="${totalHamburguesas}">0</span>
+                        <div class="stat-label">Hamburguesas Creadas</div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card">
+                        <span class="stat-number" th:text="${totalFavoritos}">0</span>
+                        <div class="stat-label">Favoritos Guardados</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pestañas de Favoritos e Historial -->
+    <section class="profile-section">
+        <div class="container">
+            <div class="tab-container">
+                <div class="tab-header">
+                    <button class="tab-button active" onclick="openTab('favoritos')">
+                        <i class="fas fa-heart me-2"></i>Mis Favoritos
+                    </button>
+                    <button class="tab-button" onclick="openTab('historial')">
+                        <i class="fas fa-history me-2"></i>Mi Historial
+                    </button>
+                </div>
+
+                <!-- Pestaña de Favoritos -->
+                <div id="favoritos" class="tab-content active">
+                    <h3 class="section-title">Mis Creaciones Favoritas</h3>
+
+                    <div th:if="${favoritos.empty}">
+                        <div class="empty-state">
+                            <i class="fas fa-heart"></i>
+                            <h3>No tienes favoritos aún</h3>
+                            <p>Cuando marques creaciones como favoritas, aparecerán aquí.</p>
+                            <a href="/cliente/crear-pizza" class="btn btn-primary mt-3">Crear Mi Primera Pizza</a>
+                        </div>
+                    </div>
+
+                    <div class="row" th:unless="${favoritos.empty}">
+                        <div class="col-lg-6 mb-4" th:each="favorito : ${favoritos}">
+                            <div class="favorite-card">
+                                <div class="item-name" th:text="${favorito.nombre}">Nombre de la Creación</div>
+                                <div class="item-details" th:text="${favorito.descripcion}">Descripción de la creación...</div>
+                                <div class="item-price" th:text="'$' + ${favorito.precio}">$0.00</div>
+                                <div class="item-date" th:text="'Creado: ' + ${#temporals.format(favorito.fechaCreacion, 'dd/MM/yyyy')}">Fecha</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pestaña de Historial -->
+                <div id="historial" class="tab-content">
+                    <h3 class="section-title">Mi Historial de Creaciones</h3>
+
+                    <!-- Historial de Pizzas -->
+                    <h4 class="mt-4 mb-3" style="color: var(--primary-color);">
+                        <i class="fas fa-pizza-slice me-2"></i>Pizzas
+                    </h4>
+                    <div th:if="${historialPizzas.empty}">
+                        <div class="empty-state" style="padding: 30px;">
+                            <i class="fas fa-pizza-slice"></i>
+                            <p>No has creado pizzas aún</p>
+                        </div>
+                    </div>
+                    <div class="row" th:unless="${historialPizzas.empty}">
+                        <div class="col-lg-6 mb-4" th:each="pizza : ${historialPizzas}">
+                            <div class="history-card">
+                                <div class="item-name" th:text="${pizza.nombre}">Pizza Personalizada</div>
+                                <div class="item-details" th:text="${pizza.descripcion}">Ingredientes...</div>
+                                <div class="item-price" th:text="'$' + ${pizza.precio}">$0.00</div>
+                                <div class="item-date" th:text="'Creada: ' + ${#temporals.format(pizza.fechaCreacion, 'dd/MM/yyyy')}">Fecha</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Historial de Hamburguesas -->
+                    <h4 class="mt-5 mb-3" style="color: var(--secondary-color);">
+                        <i class="fas fa-hamburger me-2"></i>Hamburguesas
+                    </h4>
+                    <div th:if="${historialHamburguesas.empty}">
+                        <div class="empty-state" style="padding: 30px;">
+                            <i class="fas fa-hamburger"></i>
+                            <p>No has creado hamburguesas aún</p>
+                        </div>
+                    </div>
+                    <div class="row" th:unless="${historialHamburguesas.empty}">
+                        <div class="col-lg-6 mb-4" th:each="hamburguesa : ${historialHamburguesas}">
+                            <div class="history-card">
+                                <div class="item-name" th:text="${hamburguesa.nombre}">Hamburguesa Personalizada</div>
+                                <div class="item-details" th:text="${hamburguesa.descripcion}">Ingredientes...</div>
+                                <div class="item-price" th:text="'$' + ${hamburguesa.precio}">$0.00</div>
+                                <div class="item-date" th:text="'Creada: ' + ${#temporals.format(hamburguesa.fechaCreacion, 'dd/MM/yyyy')}">Fecha</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    function openTab(tabName) {
+        // Ocultar todos los contenidos de pestañas
+        const tabContents = document.getElementsByClassName('tab-content');
+        for (let i = 0; i < tabContents.length; i++) {
+            tabContents[i].classList.remove('active');
+        }
+
+        // Desactivar todos los botones de pestañas
+        const tabButtons = document.getElementsByClassName('tab-button');
+        for (let i = 0; i < tabButtons.length; i++) {
+            tabButtons[i].classList.remove('active');
+        }
+
+        // Mostrar la pestaña específica y activar el botón
+        document.getElementById(tabName).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // Marcar enlace activo en la navegación (PERFIL en rojo)
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPage = window.location.pathname;
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    });
+</script>
+</body>
+</html>

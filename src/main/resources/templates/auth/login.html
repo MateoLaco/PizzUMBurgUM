@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang ="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -76,29 +76,13 @@
         .register-link a:hover {
             text-decoration: underline;
         }
-        .demo-info {
-            background: rgba(255,255,255,0.9);
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .demo-info h3 {
-            margin: 0 0 10px 0;
-            font-size: 1rem;
-            color: #333;
-        }
-        .demo-info p {
-            margin: 5px 0;
+        .error {
+            color: #dc3545;
             font-size: 0.9rem;
-            color: #555;
-        }
-        .demo-info code {
-            background: #f0f0f0;
-            padding: 2px 4px;
-            border-radius: 4px;
-            font-family: monospace;
+            text-align: center;
+            padding: 10px;
+            background: #ffe6e6;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -106,11 +90,15 @@
 <div class="container">
     <form method="POST" action="/auth/login">
         <h2>Iniciar Sesión</h2>
-        <label for="email">Email</label>
-        <input id="email" name="username" type="email" placeholder="tu@email.com" required />
 
-        <label for="password">Contraseña</label>
-        <input id="password" name="password" type="password" placeholder="Tu contraseña" required />
+        <!-- Mensaje de error -->
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="tu@email.com" required />
+
+        <label for="contrasena">Contraseña</label>
+        <input id="contrasena" name="contrasena" type="password" placeholder="Tu contraseña" required />
 
         <button type="submit">Ingresar a mi cuenta</button>
 

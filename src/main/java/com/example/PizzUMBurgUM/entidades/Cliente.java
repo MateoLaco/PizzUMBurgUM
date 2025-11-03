@@ -20,25 +20,32 @@ import java.util.Set;
 @PrimaryKeyJoinColumn(name = "id_usuario")
 public class Cliente extends Usuario{
     @NotNull
-    @Column
+    @Column(name = "metodo pago")
     private String metodoPago;
 
     @NotNull
-    @Column
+    @Column(name = "fecha_registro")
     private LocalDate fechaRegistro;
 
     @NotNull
-    @Column(length = 50)
-    private String direccion;
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
 
     @NotNull
-    @Column
-    private LocalDate fechaNacimiento;
+    @Column(name = "direccion")
+    private String direccion;
+
+
+    @Column(name = "numero_tarjeta")
+    private String numeroTarjeta;
 
     @NotNull
     @Column(length = 9)
     @Size(min = 8, max = 13)
     private String telefono;
+
+    @OneToMany(mappedBy = "creador", cascade = CascadeType.ALL)
+    private List<Creacion> creaciones;
 
     @PrePersist
     public void onCreate() {
