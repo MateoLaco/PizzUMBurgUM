@@ -78,55 +78,6 @@
             transform: translateY(-3px);
         }
 
-        .features-section {
-            background: white;
-            padding: 80px 0;
-        }
-
-        .feature-card {
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            overflow: hidden;
-            margin-bottom: 30px;
-            height: 100%;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-
-        .feature-card img {
-            height: 200px;
-            object-fit: cover;
-            width: 100%;
-        }
-
-        .feature-card-body {
-            padding: 30px;
-        }
-
-        .feature-card-title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            color: var(--dark-color);
-            margin-bottom: 15px;
-        }
-
-        .feature-card-text {
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .btn-feature {
-            border-radius: 25px;
-            padding: 10px 25px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
         .quick-nav {
             background: var(--dark-color);
             padding: 30px 0;
@@ -145,42 +96,137 @@
             transform: translateY(-5px);
         }
 
-        .quick-nav-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
-
         .quick-nav-title {
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
             margin-bottom: 10px;
         }
 
-        .stats-section {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 60px 0;
+        /* Nuevos estilos para las secciones agregadas */
+        .about-section {
+            background: white;
+            padding: 80px 0;
         }
 
-        .stat-number {
-            font-size: 3rem;
+        .about-title {
+            font-family: 'Montserrat', sans-serif;
             font-weight: 700;
-            color: var(--secondary-color);
-            display: block;
+            color: var(--dark-color);
+            margin-bottom: 40px;
+            text-align: center;
+            padding: 0 20px;
         }
 
-        .stat-label {
+        .about-content {
             font-size: 1.1rem;
-            opacity: 0.9;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 30px;
+            padding: 0 25px;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .feature-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            padding: 0 15px;
+        }
+
+        .feature-item p {
+            padding: 0 15px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .faq-section {
+            background: var(--dark-color);
+            color: white;
+            padding: 80px 0;
+        }
+
+        .faq-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: none;
+            overflow: hidden;
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+
+        .faq-question {
+            background: none;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 20px 25px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            color: #e0e0e0;
+            line-height: 1.6;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-answer.show {
+            padding: 0 25px 25px;
+            max-height: 500px;
+        }
+
+        .faq-icon {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .faq-question.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Ajustes de márgenes generales */
+        .container {
+            padding-left: 20px;
+            padding-right: 20px;
         }
 
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 2.5rem;
+                padding: 0 15px;
             }
 
             .hero-subtitle {
                 font-size: 1.2rem;
+                padding: 0 15px;
             }
 
             .btn-hero {
@@ -188,12 +234,52 @@
                 margin: 10px auto;
                 width: 80%;
             }
+
+            .about-content,
+            .feature-title,
+            .feature-item p {
+                padding: 0 15px;
+            }
+
+            .faq-item {
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+
+            .faq-question {
+                padding: 18px 20px;
+            }
+
+            .faq-answer {
+                padding: 0 20px;
+            }
+
+            .faq-answer.show {
+                padding: 0 20px 20px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                padding-left: 40px;
+                padding-right: 40px;
+            }
+
+            .about-content {
+                padding: 0 40px;
+            }
+
+            .feature-title,
+            .feature-item p {
+                padding: 0 25px;
+            }
         }
     </style>
 </head>
 <body>
 <div layout:fragment="content">
 
+    <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
             <h1 class="hero-title">¡Bienvenido a PizzUM & BurgUM!</h1>
@@ -231,47 +317,134 @@
         </div>
     </section>
 
-    <!-- Sección de Características Principales -->
-    <section class="features-section">
+    <!-- Sección Acerca de Nosotros -->
+    <section class="about-section">
         <div class="container">
+            <h2 class="about-title">Acerca de PizzUM & BurgUM</h2>
             <div class="row">
-                <div class="col-md-6 mb-4">
-                    <div class="feature-card">
-                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                             alt="Pizza personalizada" class="card-img-top">
-                        <div class="feature-card-body">
-                            <h3 class="feature-card-title">Pizzas Personalizadas</h3>
-                            <p class="feature-card-text">
-                                Elige entre múltiples tamaños, tipos de masa, salsas, quesos y toppings diferentes.
-                            </p>
-                            <a th:href="@{/cliente/crearPizza}" class="btn btn-danger btn-feature">Crear Mi Pizza</a>
-                        </div>
-                    </div>
+                <div class="col-lg-6">
+                    <p class="about-content">
+                        En <strong>PizzUM & BurgUM</strong>, creemos que cada persona tiene gustos únicos.
+                        Por eso hemos creado una plataforma donde tú eres el chef. Diseña pizzas y hamburguesas
+                        exactamente como las deseas, eligiendo cada ingrediente, desde la masa hasta el último detalle.
+                    </p>
+                    <p class="about-content">
+                        Nuestra misión es revolucionar la forma en que disfrutas de la comida rápida,
+                        combinando tecnología y gastronomía para ofrecerte una experiencia personalizada
+                        que se adapta a tus preferencias y necesidades dietéticas.
+                    </p>
                 </div>
-                <div class="col-md-6 mb-4">
-                    <div class="feature-card">
-                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1998&q=80"
-                             alt="Hamburguesa personalizada" class="card-img-top">
-                        <div class="feature-card-body">
-                            <h3 class="feature-card-title">Hamburguesas Personalizadas</h3>
-                            <p class="feature-card-text">
-                                Combina hasta 3 tipos de carnes y elige entre una amplia variedad
-                                de toppings y aderezos.
-                            </p>
-                            <a th:href="@{/cliente/crearHamburguesa}" class="btn btn-warning btn-feature">Crear Mi Hamburguesa</a>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-md-6 text-center mb-4 feature-item">
+                            <h4 class="feature-title">Personalización Total</h4>
+                            <p>Más de 50 ingredientes para crear tu combinación perfecta</p>
+                        </div>
+                        <div class="col-md-6 text-center mb-4 feature-item">
+                            <h4 class="feature-title">Preparación Rápida</h4>
+                            <p>Preparamos tu pedido en menos de 30 minutos</p>
+                        </div>
+                        <div class="col-md-6 text-center mb-4 feature-item">
+                            <h4 class="feature-title">Calidad Premium</h4>
+                            <p>Ingredientes frescos y de la más alta calidad</p>
+                        </div>
+                        <div class="col-md-6 text-center mb-4 feature-item">
+                            <h4 class="feature-title">Opciones para Todos</h4>
+                            <p>Opciones vegetarianas y para celíacos</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Sección Preguntas Frecuentes -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="faq-title">Preguntas Frecuentes</h2>
+
+            <!-- Pregunta 1 -->
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(1)">
+                    ¿Cómo funciona el sistema de personalización?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer" id="faq-answer-1">
+                    Es muy simple: después de registrarte, podrás elegir entre crear una pizza o hamburguesa.
+                    Para las pizzas, seleccionas tamaño, masa, salsa, queso y toppings. Para las hamburguesas,
+                    eliges tipo de carne, pan, toppings y aderezos.
+                </div>
+            </div>
+
+            <!-- Pregunta 2 -->
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(2)">
+                    ¿Puedo guardar mis creaciones favoritas?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer" id="faq-answer-2">
+                    ¡Sí! Una vez que creas una pizza o hamburguesa que te encanta, puedes guardarla en tu sección
+                    de "Favoritos" para pedirla rápidamente en el futuro sin tener que volver a armarla.
+                </div>
+            </div>
+
+            <!-- Pregunta 3 -->
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(3)">
+                    ¿Qué métodos de pago aceptan?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer" id="faq-answer-3">
+                    Aceptamos tarjetas de crédito (Visa, MasterCard, American Express).
+                </div>
+            </div>
+
+            <!-- Pregunta 4 -->
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(4)">
+                    ¿Tienen opciones para dietas especiales?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer" id="faq-answer-4">
+                    Sí, ofrecemos masa sin gluten para pizzas, pan sin gluten para hamburguesas,
+                    opciones vegetarianas y veganas, y podemos adaptarnos a la mayoría de las
+                    restricciones dietéticas. Solo selecciona las opciones que necesites al crear tu pedido.
+                </div>
+            </div>
+
+        </div>
+    </section>
+
 </div>
 
 <script>
+    // Función para toggle de FAQs
+    function toggleFAQ(faqNumber) {
+        const answer = document.getElementById(`faq-answer-${faqNumber}`);
+        const question = event.currentTarget;
+
+        // Cerrar todas las demás FAQs
+        document.querySelectorAll('.faq-answer').forEach(faq => {
+            if (faq.id !== `faq-answer-${faqNumber}`) {
+                faq.classList.remove('show');
+            }
+        });
+
+        document.querySelectorAll('.faq-question').forEach(q => {
+            if (q !== question) {
+                q.classList.remove('active');
+            }
+        });
+
+        // Toggle la FAQ actual
+        answer.classList.toggle('show');
+        question.classList.toggle('active');
+    }
+
     // Efectos de animación al scrollear
     document.addEventListener('DOMContentLoaded', function() {
-        // Animación para las tarjetas al hacer scroll
-        const featureCards = document.querySelectorAll('.feature-card');
+        // Animación para las secciones al hacer scroll
+        const sections = document.querySelectorAll('.about-section, .faq-section');
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -282,11 +455,11 @@
             });
         }, { threshold: 0.1 });
 
-        featureCards.forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(50px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
+        sections.forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(50px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
         });
     });
 </script>
