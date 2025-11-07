@@ -110,11 +110,23 @@
             background: #ffe6e6;
             border-radius: 5px;
         }
+        .password-feedback {
+            font-size: 0.8rem;
+            margin-top: 4px;
+            padding-left: 5px;
+            display: none;
+        }
+        .password-match {
+            color: #28a745;
+        }
+        .password-mismatch {
+            color: #dc3545;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <form method="POST" action="/auth/register">
+    <form method="POST" action="/auth/register" id="registerForm">
         <h2>Registro de Cliente</h2>
 
         <!-- Mensaje de error -->
@@ -133,6 +145,19 @@
         <div>
             <label for="contrasena">Contraseña</label>
             <input id="contrasena" name="contrasena" type="password" required />
+        </div>
+
+        <!-- Nuevo campo para confirmar contraseña -->
+        <div>
+            <label for="confirmarContrasena">Confirmar Contraseña</label>
+            <input id="confirmarContrasena" name="confirmarContrasena" type="password" required />
+            <!-- Mensajes de coincidencia de contraseñas -->
+            <div id="passwordMatchMessage" class="password-feedback password-match">
+                ✓ Las contraseñas coinciden
+            </div>
+            <div id="passwordMismatchMessage" class="password-feedback password-mismatch">
+                ✗ Las contraseñas no coinciden
+            </div>
         </div>
 
         <div>
@@ -207,7 +232,7 @@
             </div>
         </div>
 
-        <button type="submit">Crear cuenta</button>
+        <button type="submit" id="submitButton">Crear cuenta</button>
 
         <div class="login-link">
             <p>¿Ya tienes cuenta? <a href="/auth/login">Iniciar Sesión</a></p>
@@ -234,6 +259,51 @@
         option.textContent = i;
         anioSelect.appendChild(option);
     }
+
+    // Verificar si las contraseñas coinciden
+    const contrasenaInput = document.getElementById('contrasena');
+    const confirmarContrasenaInput = document.getElementById('confirmarContrasena');
+    const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+    const passwordMismatchMessage = document.getElementById('passwordMismatchMessage');
+    const submitButton = document.getElementById('submitButton');
+    const registerForm = document.getElementById('registerForm');
+
+    function verificarContrasenas() {
+        const contrasena = contrasenaInput.value;
+        const confirmarContrasena = confirmarContrasenaInput.value;
+
+        // Ocultar ambos mensajes si ambos campos están vacíos
+        if (contrasena === '' && confirmarContrasena === '') {
+            passwordMatchMessage.style.display = 'none';
+            passwordMismatchMessage.style.display = 'none';
+            return;
+        }
+
+        // Mostrar mensaje de coincidencia o no coincidencia
+        if (contrasena === confirmarContrasena && contrasena !== '') {
+            passwordMatchMessage.style.display = 'block';
+            passwordMismatchMessage.style.display = 'none';
+        } else {
+            passwordMatchMessage.style.display = 'none';
+            passwordMismatchMessage.style.display = 'block';
+        }
+    }
+
+    // Agregar event listeners para verificar las contraseñas en tiempo real
+    contrasenaInput.addEventListener('input', verificarContrasenas);
+    confirmarContrasenaInput.addEventListener('input', verificarContrasenas);
+
+    // Prevenir envío del formulario si las contraseñas no coinciden
+    registerForm.addEventListener('submit', function(event) {
+        const contrasena = contrasenaInput.value;
+        const confirmarContrasena = confirmarContrasenaInput.value;
+
+        if (contrasena !== confirmarContrasena) {
+            event.preventDefault();
+            alert('Las contraseñas no coinciden. Por favor, verifica que ambas contraseñas sean iguales.');
+            confirmarContrasenaInput.focus();
+        }
+    });
 </script>
 </body>
 </html>
