@@ -6,7 +6,6 @@
     <title>Inicio - PizzUM & BurgUM</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Estilos para la página de inicio */
         :root {
             --primary-color: #dc3545;
             --secondary-color: #ffc107;
@@ -102,7 +101,6 @@
             margin-bottom: 10px;
         }
 
-        /* Nuevos estilos para las secciones agregadas */
         .about-section {
             background: white;
             padding: 80px 0;
@@ -114,7 +112,6 @@
             color: var(--dark-color);
             margin-bottom: 40px;
             text-align: center;
-            padding: 0 20px;
         }
 
         .about-content {
@@ -122,27 +119,13 @@
             line-height: 1.8;
             color: #555;
             margin-bottom: 30px;
-            padding: 0 25px;
+            padding: 0 40px; /* Añadido margen lateral */
+            text-align: justify; /* Mejor legibilidad */
         }
 
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-
-        .feature-title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            color: var(--dark-color);
-            margin-bottom: 15px;
-            padding: 0 15px;
-        }
-
-        .feature-item p {
-            padding: 0 15px;
-            color: #666;
-            line-height: 1.6;
+        .about-container {
+            max-width: 800px; /* Limitar el ancho máximo para mejor lectura */
+            margin: 0 auto; /* Centrar el contenido */
         }
 
         .faq-section {
@@ -156,7 +139,6 @@
             font-weight: 700;
             margin-bottom: 40px;
             text-align: center;
-            padding: 0 20px;
         }
 
         .faq-item {
@@ -165,8 +147,6 @@
             margin-bottom: 15px;
             border: none;
             overflow: hidden;
-            margin-left: 15px;
-            margin-right: 15px;
         }
 
         .faq-question {
@@ -212,21 +192,13 @@
             transform: rotate(180deg);
         }
 
-        /* Ajustes de márgenes generales */
-        .container {
-            padding-left: 20px;
-            padding-right: 20px;
-        }
-
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 2.5rem;
-                padding: 0 15px;
             }
 
             .hero-subtitle {
                 font-size: 1.2rem;
-                padding: 0 15px;
             }
 
             .btn-hero {
@@ -235,15 +207,9 @@
                 width: 80%;
             }
 
-            .about-content,
-            .feature-title,
-            .feature-item p {
-                padding: 0 15px;
-            }
-
-            .faq-item {
-                margin-left: 10px;
-                margin-right: 10px;
+            .about-content {
+                padding: 0 25px; /* Menos margen en móviles */
+                text-align: left; /* Mejor en móviles alineado a la izquierda */
             }
 
             .faq-question {
@@ -259,19 +225,9 @@
             }
         }
 
-        @media (min-width: 1200px) {
-            .container {
-                padding-left: 40px;
-                padding-right: 40px;
-            }
-
+        @media (max-width: 576px) {
             .about-content {
-                padding: 0 40px;
-            }
-
-            .feature-title,
-            .feature-item p {
-                padding: 0 25px;
+                padding: 0 20px; /* Aún menos margen en pantallas muy pequeñas */
             }
         }
     </style>
@@ -320,38 +276,20 @@
     <!-- Sección Acerca de Nosotros -->
     <section class="about-section">
         <div class="container">
-            <h2 class="about-title">Acerca de PizzUM & BurgUM</h2>
-            <div class="row">
-                <div class="col-lg-6">
-                    <p class="about-content">
-                        En <strong>PizzUM & BurgUM</strong>, creemos que cada persona tiene gustos únicos.
-                        Por eso hemos creado una plataforma donde tú eres el chef. Diseña pizzas y hamburguesas
-                        exactamente como las deseas, eligiendo cada ingrediente, desde la masa hasta el último detalle.
-                    </p>
-                    <p class="about-content">
-                        Nuestra misión es revolucionar la forma en que disfrutas de la comida rápida,
-                        combinando tecnología y gastronomía para ofrecerte una experiencia personalizada
-                        que se adapta a tus preferencias y necesidades dietéticas.
-                    </p>
-                </div>
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-md-6 text-center mb-4 feature-item">
-                            <h4 class="feature-title">Personalización Total</h4>
-                            <p>Más de 50 ingredientes para crear tu combinación perfecta</p>
-                        </div>
-                        <div class="col-md-6 text-center mb-4 feature-item">
-                            <h4 class="feature-title">Preparación Rápida</h4>
-                            <p>Preparamos tu pedido en menos de 30 minutos</p>
-                        </div>
-                        <div class="col-md-6 text-center mb-4 feature-item">
-                            <h4 class="feature-title">Calidad Premium</h4>
-                            <p>Ingredientes frescos y de la más alta calidad</p>
-                        </div>
-                        <div class="col-md-6 text-center mb-4 feature-item">
-                            <h4 class="feature-title">Opciones para Todos</h4>
-                            <p>Opciones vegetarianas y para celíacos</p>
-                        </div>
+            <div class="about-container"> <!-- Contenedor adicional para limitar el ancho -->
+                <h2 class="about-title">Acerca de PizzUM & BurgUM</h2>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p class="about-content">
+                            En <strong>PizzUM & BurgUM</strong> creemos que cada persona tiene su propio gusto.
+                            Por eso creamos una plataforma donde vos sos el chef: armá tus pizzas y hamburguesas a tu manera,
+                            eligiendo cada ingrediente, desde la masa hasta el último detalle.
+                        </p>
+                        <p class="about-content">
+                            Nuestra misión es transformar la manera en que disfrvás de la comida rápida,
+                            uniendo tecnología y sabor para ofrecerte una experiencia única,
+                            pensada según tus gustos y tus necesidades.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -370,7 +308,7 @@
                     <span class="faq-icon">▼</span>
                 </button>
                 <div class="faq-answer" id="faq-answer-1">
-                    Es muy simple: después de registrarte, podrás elegir entre crear una pizza o hamburguesa.
+                    Es muy simple: después de registrarte, podes elegir entre crear una pizza o hamburguesa.
                     Para las pizzas, seleccionas tamaño, masa, salsa, queso y toppings. Para las hamburguesas,
                     eliges tipo de carne, pan, toppings y aderezos.
                 </div>
@@ -383,8 +321,8 @@
                     <span class="faq-icon">▼</span>
                 </button>
                 <div class="faq-answer" id="faq-answer-2">
-                    ¡Sí! Una vez que creas una pizza o hamburguesa que te encanta, puedes guardarla en tu sección
-                    de "Favoritos" para pedirla rápidamente en el futuro sin tener que volver a armarla.
+                    Si. Una vez que creas una pizza o hamburguesa que te encantó, podes guardarla en tu sección
+                    de "Favoritos" para pedirla de nuevo en el futuro sin tener que armarla de nuevo.
                 </div>
             </div>
 
@@ -406,19 +344,16 @@
                     <span class="faq-icon">▼</span>
                 </button>
                 <div class="faq-answer" id="faq-answer-4">
-                    Sí, ofrecemos masa sin gluten para pizzas, pan sin gluten para hamburguesas,
+                    Sí, tenemos masa sin gluten para pizzas, pan sin gluten para hamburguesas,
                     opciones vegetarianas y veganas, y podemos adaptarnos a la mayoría de las
                     restricciones dietéticas. Solo selecciona las opciones que necesites al crear tu pedido.
                 </div>
             </div>
-
         </div>
     </section>
-
 </div>
 
 <script>
-    // Función para toggle de FAQs
     function toggleFAQ(faqNumber) {
         const answer = document.getElementById(`faq-answer-${faqNumber}`);
         const question = event.currentTarget;
@@ -441,9 +376,7 @@
         question.classList.toggle('active');
     }
 
-    // Efectos de animación al scrollear
     document.addEventListener('DOMContentLoaded', function() {
-        // Animación para las secciones al hacer scroll
         const sections = document.querySelectorAll('.about-section, .faq-section');
 
         const observer = new IntersectionObserver((entries) => {
