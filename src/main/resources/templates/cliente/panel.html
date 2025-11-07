@@ -5,6 +5,7 @@
 <head>
     <title>Dashboard - PizzUM & BurgUM</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #dc3545;
@@ -21,6 +22,13 @@
             padding: 0;
         }
 
+        /* Contenedor principal centrado */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
         /* Barra de Navegación Horizontal */
         .navbar-horizontal {
             background: var(--dark-color);
@@ -35,7 +43,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .navbar-brand {
@@ -145,6 +155,12 @@
             position: relative;
         }
 
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
         .hero-title {
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
@@ -211,16 +227,17 @@
         }
 
         .btn-feature {
-            padding: 12px 30px;
+            padding: 12px 40px;
             border-radius: 25px;
             font-weight: 600;
             transition: all 0.3s ease;
             border: none;
-            width: 100%;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            width: auto;
+            min-width: 250px;
         }
 
         .btn-feature:hover {
@@ -344,6 +361,34 @@
             text-align: center;
         }
 
+        /* Sistema de Grid Bootstrap-like */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+
+        .col-lg-6, .col-md-6, .col-md-3 {
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        .col-lg-6 {
+            width: 50%;
+        }
+
+        .col-md-6 {
+            width: 50%;
+        }
+
+        .col-md-3 {
+            width: 25%;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
         /* Responsive */
         @media (max-width: 1200px) {
             .nav-link {
@@ -353,6 +398,10 @@
 
             .navbar-brand {
                 font-size: 1.6rem;
+            }
+
+            .main-container, .nav-container {
+                max-width: 1140px;
             }
         }
 
@@ -369,6 +418,19 @@
 
             .hero-title {
                 font-size: 2.8rem;
+            }
+
+            .col-lg-6, .col-md-6 {
+                width: 100%;
+            }
+
+            .col-md-3 {
+                width: 50%;
+                margin-bottom: 30px;
+            }
+
+            .main-container, .nav-container {
+                max-width: 960px;
             }
         }
 
@@ -389,6 +451,34 @@
                 width: 30px;
                 height: 30px;
             }
+
+            .col-md-3 {
+                width: 100%;
+            }
+
+            .main-container, .nav-container {
+                max-width: 720px;
+                padding: 0 15px;
+            }
+
+            .btn-feature {
+                width: 100%; /* En móvil sí ocupa todo el ancho */
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-container, .nav-container {
+                padding: 0 10px;
+            }
+
+            .hero-section {
+                padding: 80px 0;
+            }
+
+            .features-section, .favorites-section {
+                padding: 50px 0;
+            }
         }
     </style>
 </head>
@@ -396,37 +486,34 @@
 <div layout:fragment="content">
     <!-- Barra de Navegación Horizontal -->
     <nav class="navbar-horizontal">
-        <div class="container">
-            <div class="nav-container">
-                <!-- Logo -->
-                <a class="navbar-brand" href="/cliente/panel">
-                    PizzUM & <span>BurgUM</span>
-                </a>
+        <div class="nav-container">
+            <!-- Logo -->
+            <a class="navbar-brand" href="/cliente/panel">
+                PizzUM & BurgUM
+            </a>
 
-                <!-- Links de Navegación -->
-                <div class="nav-links">
-                    <a class="nav-link active" href="/cliente/panel">
-                        <i class="fas fa-home me-2"></i>Inicio
-                    </a>
-                    <a class="nav-link" href="/cliente/perfil">
-                        <i class="fas fa-user me-2"></i>Perfil
-                    </a>
-                    <a class="nav-link" href="/cliente/favoritos">
-                        <i class="fas fa-heart me-2"></i>Favoritos
-                    </a>
-                    <form th:action="@{/logout}" method="post" style="display: inline;">
-                        <button type="submit" class="nav-link logout-btn">
-                            <i class="fas fa-sign-out-alt me-2"></i>Salir
-                        </button>
-                    </form>
-                </div>
+            <!-- Links de Navegación -->
+            <div class="nav-links">
+                <a class="nav-link active" href="/cliente/panel">
+                    Inicio
+                </a>
+                <a class="nav-link" href="/cliente/perfil">
+                    Perfil
+                </a>
+                <a class="nav-link" href="/cliente/favoritos">
+                    Favoritos
+                </a>
+                <!-- Botón Salir modificado para redirigir al inicio público -->
+                <a href="/publico/inicio" class="nav-link logout-btn">
+                    Salir
+                </a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero-section">
-        <div class="container">
+        <div class="hero-content">
             <h1 class="hero-title">¡Bienvenido de vuelta!</h1>
             <p class="hero-subtitle">Crea tus propias pizzas y hamburguesas personalizadas</p>
         </div>
@@ -434,7 +521,7 @@
 
     <!-- Features Section - Tarjetas de Creación -->
     <section class="features-section">
-        <div class="container">
+        <div class="main-container">
             <h2 class="section-title">¿Qué quieres crear hoy?</h2>
             <div class="row">
                 <div class="col-lg-6">
@@ -447,7 +534,7 @@
                                 ¡Totalmente personalizable a tu gusto!
                             </p>
                             <a href="/cliente/crear-hamburguesa" class="btn-feature btn-secondary-feature">
-                                <i class="fas fa-plus me-2"></i>Crear Hamburguesa
+                                Crear Hamburguesa
                             </a>
                         </div>
                     </div>
@@ -462,7 +549,7 @@
                                 queso y todos los ingredientes que más te gusten.
                             </p>
                             <a href="/cliente/crear-pizza" class="btn-feature btn-primary-feature">
-                                <i class="fas fa-plus me-2"></i>Crear Pizza
+                                Crear Pizza
                             </a>
                         </div>
                     </div>
@@ -473,7 +560,7 @@
 
     <!-- Estadísticas -->
     <section class="stats-section">
-        <div class="container">
+        <div class="main-container">
             <div class="row">
                 <div class="col-md-3">
                     <div class="stat-number" th:text="${pedidosCompletados ?: '12'}">12</div>
@@ -497,7 +584,7 @@
 
     <!-- Favoritos -->
     <section class="favorites-section">
-        <div class="container">
+        <div class="main-container">
             <h2 class="section-title">Tus Favoritos Recientes</h2>
             <div class="row">
                 <div class="col-md-6">
@@ -517,7 +604,7 @@
             </div>
             <div class="text-center">
                 <a href="/cliente/favoritos" class="btn-view-all">
-                    <i class="fas fa-heart me-2"></i>Ver Todos los Favoritos
+                    Ver Todos los Favoritos
                 </a>
             </div>
         </div>
@@ -525,9 +612,9 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 PizzUM & BurgUM. Todos los derechos reservados.</p>
-            <p class="mb-0">Diseñado con ❤️ para amantes de la buena comida</p>
+        <div class="main-container">
+            <p>&copy; 2025 PizzUM & BurgUM. Todos los derechos reservados.</p>
+            <p class="mb-0">Diseñado por MCN Solutions para amantes de la buena comida</p>
         </div>
     </footer>
 </div>
