@@ -15,6 +15,6 @@ import lombok.experimental.SuperBuilder;
 @PrimaryKeyJoinColumn(name = "id_usuario")
 public class Funcionario extends Usuario {
     @NotNull
-    @Column(length = 10)
+    @Column(length = 10, name = "rol")
     private String rol;
 }

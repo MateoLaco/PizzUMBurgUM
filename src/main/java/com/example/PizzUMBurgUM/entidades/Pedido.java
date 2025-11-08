@@ -17,29 +17,35 @@ import java.util.Set;
 @Table(name = "pedido")
 public class Pedido {
 
+    // Identificador del pedido, lo genera solo H2
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_pedido")
     private Long idPedido;
 
-    @Column(length = 100)
+    // El estado en el que se encuentra el pedido, es decir, "en cola", "en preparación", "en camino" o "entregado"
+    @Column(length = 100, name = "estado")
     @NotNull
     private String estado;
 
-    @Column
-    @NotNull
-    private String acompanamiento;
+    // Una tabla de todos los acompañamientos que tiene el pedido
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PedidoAcompaniamiento> acompaniamientos = new HashSet<>();
 
-    @Column
-    @NotNull
-    private String bebida;
+    // Una tabla de todas las bebidas que tiene el pedido
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PedidoBebida> bebidas = new HashSet<>();
 
-    @Column
+    // El costo del delivery
+    @Column(name = "costo_envio")
     private Integer costoEnvio;
 
-    @Column
+    // Fecha en la que se efectuó el pedido
+    @Column(name = "fecha")
     @NotNull
     private LocalDate fecha;
 
+    // Todas las creaciones que tiene el pedido
     @ManyToMany
     @JoinTable(
             name = "pedido_creacion",
@@ -47,6 +53,11 @@ public class Pedido {
             inverseJoinColumns = @JoinColumn(name = "id_creacion")
     )
     private Set<Creacion> creaciones = new HashSet<>();
+
+    // Id del cliente dueño del pedido, sirve para obtener el domicilio además de guardar la información del dueño de dicho pedido
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_cliente")
+    private Cliente cliente;
 
     @PrePersist
     public void onCreate() {
