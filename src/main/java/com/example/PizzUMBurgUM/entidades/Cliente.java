@@ -6,9 +6,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -19,6 +17,7 @@ import java.util.Set;
 @Table(name = "cliente")
 @PrimaryKeyJoinColumn(name = "id_usuario")
 public class Cliente extends Usuario{
+
     @NotNull
     @Column(name = "metodo pago")
     private String metodoPago;
@@ -40,12 +39,15 @@ public class Cliente extends Usuario{
     private String numeroTarjeta;
 
     @NotNull
-    @Column(length = 9)
+    @Column(length = 9, name = "telefono")
     @Size(min = 8, max = 13)
     private String telefono;
 
     @OneToMany(mappedBy = "creador", cascade = CascadeType.ALL)
     private List<Creacion> creaciones;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pedido> pedidos;
 
     @PrePersist
     public void onCreate() {

@@ -18,19 +18,19 @@ import java.util.Set;
 public class Producto {
 
     @Id
-    @Column
+    @Column(name = "id_producto")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_producto;
 
-    @Column(length = 50)
+    @Column(length = 50, name = "nombre")
     @NotNull
     private String nombre;
 
-    @Column(length = 10)
+    @Column(length = 10, name = "precio")
     @NotNull
     private float precio;
 
-    @Column(length = 1)
+    @Column(length = 1, name = "tipo")
     @NotNull
     private char tipo;
 

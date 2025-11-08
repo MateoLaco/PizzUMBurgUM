@@ -7,6 +7,7 @@ import com.example.PizzUMBurgUM.repositorios.CreacionRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -26,6 +27,57 @@ public class ClienteServicio {
         clienteRepositorio.save(unCliente);
         return unCliente;
     }
+
+    public Cliente agregarCliente(String nombreUsuario,
+                                  String email,
+                                  String contrasena,
+                                  String metodoPago,
+                                  LocalDate fechaNacimiento,
+                                  String direccion,
+                                  String telefono,
+                                  String numeroTarjeta) {
+
+        // Validaciones básicas
+        if (nombreUsuario == null || nombreUsuario.isBlank()) {
+            throw new RuntimeException("El nombre de usuario no puede estar vacío");
+        }
+        if (email == null || email.isBlank()) {
+            throw new RuntimeException("El email no puede estar vacío");
+        }
+        if (clienteRepositorio.existsByEmail(email)) {
+            throw new RuntimeException("El email ya está registrado");
+        }
+        if (contrasena == null || contrasena.isBlank()) {
+            throw new RuntimeException("La contraseña no puede estar vacía");
+        }
+        if (metodoPago == null || metodoPago.isBlank()) {
+            throw new RuntimeException("Debe especificarse un método de pago");
+        }
+        if (fechaNacimiento == null) {
+            throw new RuntimeException("Debe indicar la fecha de nacimiento");
+        }
+        if (direccion == null || direccion.isBlank()) {
+            throw new RuntimeException("La dirección no puede estar vacía");
+        }
+        if (telefono == null || telefono.length() < 8 || telefono.length() > 13) {
+            throw new RuntimeException("El teléfono debe tener entre 8 y 13 dígitos");
+        }
+
+        Cliente nuevoCliente = Cliente.builder()
+                .nombreUsuario(nombreUsuario)
+                .email(email)
+                .contrasena(contrasena)
+                .metodoPago(metodoPago)
+                .fechaNacimiento(fechaNacimiento)
+                .direccion(direccion)
+                .telefono(telefono)
+                .numeroTarjeta(numeroTarjeta)
+                .build();
+
+        clienteRepositorio.save(nuevoCliente);
+        return nuevoCliente;
+    }
+
 
 
     public Cliente actualizarCliente(Cliente unCliente){

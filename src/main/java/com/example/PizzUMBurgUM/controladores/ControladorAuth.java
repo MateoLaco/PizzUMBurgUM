@@ -1,5 +1,7 @@
 package com.example.PizzUMBurgUM.controladores;
 
+import com.example.PizzUMBurgUM.entidades.Funcionario;
+import com.example.PizzUMBurgUM.servicios.FuncionarioServicio;
 import org.springframework.ui.Model;
 import com.example.PizzUMBurgUM.entidades.Cliente;
 import com.example.PizzUMBurgUM.servicios.ClienteServicio;
@@ -16,8 +18,11 @@ import java.time.LocalDate;
 @Controller
 @RequestMapping("/auth")
 public class ControladorAuth {
+
     @Autowired
     private ClienteServicio clienteServicio;
+    @Autowired
+    private FuncionarioServicio funcionarioServicio;
 
     // MOSTRAR LOGIN
     @GetMapping("/login")
@@ -41,11 +46,15 @@ public class ControladorAuth {
                                 Model model) {
 
         Cliente cliente = clienteServicio.findByEmail(email);
+        Funcionario funcionario = funcionarioServicio.findByEmail(email);
 
         if (cliente != null && cliente.getContrasena().equals(contrasena)) {
             // Login exitoso - guardar en sesión
             session.setAttribute("clienteLogueado", cliente);
             return "redirect:/cliente/panel";
+        } else if (funcionario != null && funcionario.getContrasena().equals(contrasena)) {
+            session.setAttribute("funcionarioLogueado", funcionario);
+            return "redirect:/funcionario/panel";
         } else {
             // Login fallido
             model.addAttribute("error", "Email o contraseña incorrectos");
@@ -113,6 +122,6 @@ public class ControladorAuth {
     public String logout(HttpSession session) {
         session.removeAttribute("clienteLogueado");
         session.invalidate();
-        return "redirect:/auth/login?logout=true";
+        return "redirect:/auth/login";
     }
 }
