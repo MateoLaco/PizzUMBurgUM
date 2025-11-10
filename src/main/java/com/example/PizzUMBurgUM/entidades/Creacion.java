@@ -20,13 +20,13 @@ import java.util.Set;
 public class Creacion {
 
     @Id
-    @Column(name = "id_creacion")
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_creacion;
 
     @NotNull
-    @Column(length = 1, name = "tipo")
-    private char tipo; //pizza ('P') o hamburguesa ('H')
+    @Column(length = 1)
+    private char tipo; //pizza o hamburguesa
 
     @Column(name = "es_favorito")
     private boolean favorito = false;

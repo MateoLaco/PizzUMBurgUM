@@ -17,21 +17,21 @@ import lombok.experimental.SuperBuilder;
 public abstract class Usuario {
 
     @Id
-    @Column(name = "id_usuario")
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUsuario;
 
     @NotBlank
-    @Column(length = 50, name = "nombre_usuario")
+    @Column(length = 50)
     private String nombreUsuario;
 
     @NotBlank
     @Email(message = "El email no contiene el formato indicado. Ej: [usuario@dominio.com]")
-    @Column(length = 50, unique = true, name = "email")
+    @Column(length = 50, unique = true)
     private String email;
 
     @NotBlank
-    @Column(name = "contrasena")
+    @Column
     private String contrasena;
 
 }

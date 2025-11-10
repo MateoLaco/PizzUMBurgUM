@@ -323,9 +323,11 @@
                     <a class="nav-link" href="/cliente/favoritos">
                         <i class="fas fa-heart me-2"></i>Favoritos
                     </a>
-                    <a th:href="@{/auth/logout}" class="nav-link logout-btn">
-                        Salir
-                    </a>
+                    <form th:action="@{/logout}" method="post" style="display: inline;">
+                        <button type="submit" class="nav-link logout-btn">
+                            <i class="fas fa-sign-out-alt me-2"></i>Salir
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
