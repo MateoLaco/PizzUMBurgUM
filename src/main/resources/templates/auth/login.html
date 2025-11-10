@@ -84,6 +84,28 @@
             background: #ffe6e6;
             border-radius: 5px;
         }
+
+        /* ----- Estilos para el ojo de contraseña ----- */
+        .password-container{
+            position:relative;
+        }
+        .toggle-password{
+            position:absolute;
+            right:10px;
+            top:50%;
+            transform:translateY(-50%);
+            background:none;
+            border:none;
+            cursor:pointer;
+            padding:0;
+        }
+        .toggle-password svg{
+            width:22px;
+            height:22px;
+            stroke:#555;
+            transition:stroke .2s;
+        }
+        .toggle-password:focus{ outline:none; box-shadow:none; }
     </style>
 </head>
 <body>
@@ -98,7 +120,15 @@
         <input id="email" name="email" type="email" placeholder="tu@email.com" required />
 
         <label for="contrasena">Contraseña</label>
-        <input id="contrasena" name="contrasena" type="password" placeholder="Tu contraseña" required />
+        <div class="password-container">
+            <input id="contrasena" name="contrasena" type="password" placeholder="Tu contraseña" required />
+            <button type="button" class="toggle-password" id="toggleContrasena" aria-label="Mostrar u ocultar contraseña">
+                <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M4.5 4.5l15 15M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>
+                </svg>
+            </button>
+        </div>
 
         <button type="submit">Ingresar a mi cuenta</button>
 
@@ -107,5 +137,27 @@
         </div>
     </form>
 </div>
+
+<script>
+    /* ----- Toggle de contraseña ----- */
+    const toggleContrasena = document.getElementById('toggleContrasena');
+    const eyeIcon = document.getElementById('eyeIcon');
+    const contrasenaInput = document.getElementById('contrasena');
+
+    toggleContrasena.addEventListener('click', ()=>{
+        const isPassword = contrasenaInput.type === 'password';
+        contrasenaInput.type = isPassword ? 'text' : 'password';
+        if(isPassword){
+            eyeIcon.innerHTML = `
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>
+                <circle cx="12" cy="12" r="3"/>`;
+        } else {
+            eyeIcon.innerHTML = `
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M4.5 4.5l15 15M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>`;
+        }
+    });
+</script>
 </body>
 </html>
