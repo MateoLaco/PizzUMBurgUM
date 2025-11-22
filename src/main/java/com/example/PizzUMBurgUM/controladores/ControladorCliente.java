@@ -1,6 +1,12 @@
 package com.example.PizzUMBurgUM.controladores;
 
+import com.example.PizzUMBurgUM.dto.FavoritoDto;
+import com.example.PizzUMBurgUM.entidades.Favorito;
+import com.example.PizzUMBurgUM.servicios.FavoritoServicio;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import com.example.PizzUMBurgUM.entidades.Cliente;
 import com.example.PizzUMBurgUM.servicios.ClienteServicio;
@@ -10,7 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/cliente")
@@ -18,6 +28,7 @@ public class ControladorCliente {
 
     @Autowired
     private ClienteServicio clienteServicio;
+    private FavoritoServicio favoritoServicio;
 
     // FILTRO MANUAL PARA VERIFICAR SESIÓN
     private boolean verificarSesion(HttpSession session) {
@@ -109,11 +120,35 @@ public class ControladorCliente {
     @GetMapping("/favoritos")
     public String favoritos(Model model, HttpSession session) {
         if (!verificarSesion(session)) return "redirect:/auth/login";
+
         Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
-        if (!verificarSesion(session)) return "redirect:/auth/login";;
+
         if (cliente != null) {
-            model.addAttribute("favoritos", clienteServicio.obtenerFavoritos(cliente, true));
+            try {
+                List<Favorito> favoritos = favoritoServicio.obtenerFavoritosPorCliente(cliente);
+
+                // Separar por tipo para las estadísticas
+                List<Favorito> favoritosPizza = favoritos.stream()
+                        .filter(f -> "PIZZA".equals(f.getTipo()))
+                        .collect(Collectors.toList());
+
+                List<Favorito> favoritosHamburguesa = favoritos.stream()
+                        .filter(f -> "HAMBURGUESA".equals(f.getTipo()))
+                        .collect(Collectors.toList());
+
+                model.addAttribute("favoritos", favoritos);
+                model.addAttribute("favoritosPizza", favoritosPizza);
+                model.addAttribute("favoritosHamburguesa", favoritosHamburguesa);
+                model.addAttribute("totalFavoritos", favoritos.size());
+
+            } catch (Exception e) {
+                model.addAttribute("favoritos", new ArrayList<>());
+                model.addAttribute("favoritosPizza", new ArrayList<>());
+                model.addAttribute("favoritosHamburguesa", new ArrayList<>());
+                model.addAttribute("totalFavoritos", 0);
+            }
         }
+
         return "cliente/favoritos";
     }
 
@@ -136,7 +171,14 @@ public class ControladorCliente {
             model.addAttribute("cliente", cliente);
 
             // Favoritos
-            model.addAttribute("favoritos", clienteServicio.obtenerFavoritos(cliente, true));
+            try {
+                List<Favorito> favoritos = favoritoServicio.obtenerFavoritosPorCliente(cliente);
+                model.addAttribute("favoritos", favoritos);
+                model.addAttribute("totalFavoritos", favoritos.size());
+            } catch (Exception e) {
+                model.addAttribute("favoritos", java.util.Collections.emptyList());
+                model.addAttribute("totalFavoritos", 0);
+            }
 
             // Historial (puedes usar las creaciones como historial)
             model.addAttribute("historialPizzas", clienteServicio.obtenerPizzasRecientes(cliente));
@@ -149,5 +191,73 @@ public class ControladorCliente {
         }
 
         return "cliente/perfil";
+    }
+    // MÉTODOS PARA API DE FAVORITOS (desde ControladorFavorito)
+    @PostMapping("/guardar-favorito")
+    @ResponseBody
+    public ResponseEntity<?> guardarFavorito(
+            @RequestBody FavoritoDto favoritoDto,
+            HttpSession session) {
+
+        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
+        if (cliente == null) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Usuario no autenticado");
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String detalles = objectMapper.writeValueAsString(favoritoDto);
+
+            Favorito favorito = Favorito.builder()
+                    .nombre(favoritoDto.getNombre())
+                    .descripcion(favoritoDto.getDescripcion())
+                    .precio(favoritoDto.getPrecio())
+                    .tipo("HAMBURGUESA")
+                    .detalles(detalles)
+                    .cliente(cliente)
+                    .build();
+
+            Favorito guardado = favoritoServicio.guardarFavorito(favorito);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Hamburguesa guardada en favoritos");
+            response.put("favoritoId", guardado.getId());
+
+            return ResponseEntity.ok(response);
+
+        } catch (JsonProcessingException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Error al procesar los datos");
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+
+    @DeleteMapping("/eliminar-favorito/{id}")
+    @ResponseBody
+    public ResponseEntity<?> eliminarFavorito(@PathVariable Long id, HttpSession session) {
+        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
+        if (cliente == null) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Usuario no autenticado");
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+
+        boolean eliminado = favoritoServicio.eliminarFavorito(cliente, id);
+        Map<String, Object> response = new HashMap<>();
+        if (eliminado) {
+            response.put("success", true);
+            response.put("message", "Favorito eliminado");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("success", false);
+            response.put("message", "Error al eliminar favorito");
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 }

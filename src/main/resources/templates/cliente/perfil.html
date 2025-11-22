@@ -5,6 +5,7 @@
 <head>
     <title>Mi Perfil - PizzUM & BurgUM</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #dc3545;
@@ -35,7 +36,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .navbar-brand {
@@ -117,6 +120,17 @@
             .nav-links {
                 flex-wrap: wrap;
                 justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .user-info {
+                padding: 6px 12px;
+            }
+
+            .user-avatar {
+                width: 30px;
+                height: 30px;
             }
         }
 
@@ -282,6 +296,41 @@
         .tab-content.active {
             display: block;
         }
+        .btn-crear {
+            background:  #ffc107;
+            color: #2c3e50;
+            border: #2c3e50;
+            padding: 8px 16px;
+            border-radius: 18px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 3px;
+        }
+
+        .btn-crear:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(255, 193, 7, 0.3);
+            color: #2c3e50;
+        }
+        /* Footer */
+        .footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .btn-crear {
+                display: block;
+                width: 100%;
+                margin-right: 0 !important;
+                margin-bottom: 15px;
+            }
+        }
 
         /* Responsive para el perfil */
         @media (max-width: 768px) {
@@ -303,32 +352,28 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <!-- Barra de Navegación Horizontal -->
+    <!-- Barra de Navegación Horizontal (IGUAL QUE PANEL) -->
     <nav class="navbar-horizontal">
-        <div class="container">
-            <div class="nav-container">
-                <!-- Logo -->
-                <a class="navbar-brand" href="/cliente/panel">
-                    PizzUM & <span>BurgUM</span>
-                </a>
+        <div class="nav-container">
+            <!-- Logo -->
+            <a class="navbar-brand" href="/cliente/panel">
+                PizzUM & BurgUM
+            </a>
 
-                <!-- Links de Navegación -->
-                <div class="nav-links">
-                    <a class="nav-link" href="/cliente/panel">
-                        <i class="fas fa-home me-2"></i>Inicio
-                    </a>
-                    <a class="nav-link active" href="/cliente/perfil">
-                        <i class="fas fa-user me-2"></i>Perfil
-                    </a>
-                    <a class="nav-link" href="/cliente/favoritos">
-                        <i class="fas fa-heart me-2"></i>Favoritos
-                    </a>
-                    <form th:action="@{/logout}" method="post" style="display: inline;">
-                        <button type="submit" class="nav-link logout-btn">
-                            <i class="fas fa-sign-out-alt me-2"></i>Salir
-                        </button>
-                    </form>
-                </div>
+            <!-- Links de Navegación -->
+            <div class="nav-links">
+                <a class="nav-link" href="/cliente/panel">
+                    Inicio
+                </a>
+                <a class="nav-link active" href="/cliente/perfil">
+                    Perfil
+                </a>
+                <a class="nav-link" href="/cliente/favoritos">
+                    Favoritos
+                </a>
+                <a th:href="@{/auth/logout}" class="nav-link logout-btn">
+                    Salir
+                </a>
             </div>
         </div>
     </nav>
@@ -388,12 +433,15 @@
                 <div id="favoritos" class="tab-content active">
                     <h3 class="section-title">Mis Creaciones Favoritas</h3>
 
-                    <div th:if="${favoritos.empty}">
-                        <div class="empty-state">
+                    <div th:if="${favoritos == null or favoritos.empty}">
+                        <div class="empty-state" style="padding: 40px 20px;">
                             <i class="fas fa-heart"></i>
                             <h3>No tienes favoritos aún</h3>
                             <p>Cuando marques creaciones como favoritas, aparecerán aquí.</p>
-                            <a href="/cliente/crear-pizza" class="btn btn-primary mt-3">Crear Mi Primera Pizza</a>
+                            <div style="margin-top: 20px;">
+                                <a href="/cliente/crear-pizza" class="btn-crear me-2">Crear Mi Primera Pizza Favorita</a>
+                                <a href="/cliente/crear-hamburguesa" class="btn-crear">Crear Mi Primera Hamburguesa Favorita</a>
+                            </div>
                         </div>
                     </div>
 
@@ -458,6 +506,14 @@
             </div>
         </div>
     </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 PizzUM & BurgUM. Todos los derechos reservados.</p>
+            <p class="mb-0">Diseñado por MCN Solutions para amantes de la buena comida</p>
+        </div>
+    </footer>
 </div>
 
 <script>
@@ -479,7 +535,7 @@
         event.currentTarget.classList.add('active');
     }
 
-    // Marcar enlace activo en la navegación (PERFIL en rojo)
+    // Marcar enlace activo en la navegación
     document.addEventListener('DOMContentLoaded', function() {
         const currentPage = window.location.pathname;
         document.querySelectorAll('.nav-link').forEach(link => {
