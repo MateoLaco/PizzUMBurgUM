@@ -40,14 +40,14 @@
             overflow:hidden;
             background:rgba(255,255,255,0.85);
         }
-        /* Selector de país más ancho */
+
         .flag-select{
             border:none;
             background:transparent;
             padding:10px;
             border-right:1px solid #ccc;
             cursor:pointer;
-            width:120px; /* Aumentado de 80px a 120px */
+            width:120px;
         }
         .tel-input{ border:none; flex:1; padding:10px; outline:none; background:transparent; }
         button{
@@ -76,7 +76,7 @@
             right:10px;
             top:50%;
             transform:translateY(-50%);
-            background:none;
+            background:none !important;
             border:none;
             cursor:pointer;
             padding:0;
@@ -88,6 +88,15 @@
             transition:stroke .2s;
         }
         .toggle-password:focus{ outline:none; box-shadow:none; }
+
+
+        .toggle-password:hover,
+        .toggle-password:focus,
+        .toggle-password:active {
+            background:none !important;
+            outline:none !important;
+            box-shadow:none !important;
+        }
 
         /* ---------- MODAL ---------- */
         .modal-overlay{
@@ -133,7 +142,7 @@
 
         body.modal-open{ overflow:hidden; }
 
-        /* Estilos específicos para la sección de fecha de nacimiento */
+
         .birthdate-section {
             margin-bottom: 10px;
         }
@@ -194,9 +203,18 @@
 
         <div>
             <label for="confirmarContrasena">Confirmar Contraseña</label>
-            <input id="confirmarContrasena" name="confirmarContrasena" type="password" required />
-            <div id="passwordMatchMessage" class="password-feedback password-match">✓ Las contraseñas coinciden</div>
-            <div id="passwordMismatchMessage" class="password-feedback password-mismatch">✗ Las contraseñas no coinciden</div>
+            <div class="password-container">
+                <input id="confirmarContrasena" name="confirmarContrasena" type="password" required />
+                <button type="button" class="toggle-password" id="toggleConfirmar" aria-label="Mostrar u ocultar contraseña">
+                    <svg id="eyeIconConfirmar" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M4.5 4.5l15 15M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div id="passwordMatchMessage" class="password-feedback password-match">Las contraseñas coinciden</div>
+            <div id="passwordMismatchMessage" class="password-feedback password-mismatch">Las contraseñas no coinciden</div>
         </div>
 
         <div>
@@ -217,7 +235,7 @@
             <input id="direccion" name="direccion" type="text" placeholder="Calle, número, ciudad" required />
         </div>
 
-        <!-- Sección de fecha de nacimiento reorganizada -->
+        <!-- Sección de fecha de nacimiento  -->
         <div class="birthdate-section">
             <span class="birthdate-label">Fecha de nacimiento</span>
             <div class="birthdate-fields">
@@ -303,12 +321,12 @@
                     <label for="cardExpiryMonth">Mes de Vencimiento</label>
                     <select id="cardExpiryMonth" required>
                         <option value="" disabled selected>Mes</option>
-                        <option value="01">01 - Enero</option><option value="02">02 - Febrero</option>
-                        <option value="03">03 - Marzo</option><option value="04">04 - Abril</option>
-                        <option value="05">05 - Mayo</option><option value="06">06 - Junio</option>
-                        <option value="07">07 - Julio</option><option value="08">08 - Agosto</option>
-                        <option value="09">09 - Septiembre</option><option value="10">10 - Octubre</option>
-                        <option value="11">11 - Noviembre</option><option value="12">12 - Diciembre</option>
+                        <option value="01">Enero</option><option value="02">Febrero</option>
+                        <option value="03">Marzo</option><option value="04">Abril</option>
+                        <option value="05">Mayo</option><option value="06">Junio</option>
+                        <option value="07">Julio</option><option value="08">Agosto</option>
+                        <option value="09">Septiembre</option><option value="10">Octubre</option>
+                        <option value="11">Noviembre</option><option value="12">Diciembre</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -397,7 +415,25 @@
                       d="M4.5 4.5l15 15M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>`;
         }
     });
+    /* ----- Toggle confirmar contraseña ----- */
+    const toggleConfirmar = document.getElementById('toggleConfirmar');
+    const eyeIconConfirmar = document.getElementById('eyeIconConfirmar');
 
+    toggleConfirmar.addEventListener('click', () => {
+        const isPassword = confirmarContrasenaInput.type === 'password';
+        confirmarContrasenaInput.type = isPassword ? 'text' : 'password';
+
+        if (isPassword) {
+            eyeIconConfirmar.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>
+            <circle cx="12" cy="12" r="3"/>`;
+        } else {
+            eyeIconConfirmar.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M4.5 4.5l15 15M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>`;
+        }
+    });
     /* ----- Modal ----- */
     const paymentModal = document.getElementById('paymentModal');
     const paymentMethodButton = document.getElementById('paymentMethodButton');

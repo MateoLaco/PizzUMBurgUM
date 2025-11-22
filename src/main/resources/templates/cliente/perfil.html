@@ -21,7 +21,7 @@
             padding: 0;
         }
 
-        /* Barra de Navegación Horizontal (IGUAL QUE EN PANEL) */
+        /* Barra de Navegación Horizontal  */
         .navbar-horizontal {
             background: var(--dark-color);
             padding: 1rem 0;
@@ -388,16 +388,23 @@
                 <div id="favoritos" class="tab-content active">
                     <h3 class="section-title">Mis Creaciones Favoritas</h3>
 
-                    <div th:if="${favoritos.empty}">
+                    <div th:if="${favoritos.isEmpty()}">
                         <div class="empty-state">
                             <i class="fas fa-heart"></i>
                             <h3>No tienes favoritos aún</h3>
                             <p>Cuando marques creaciones como favoritas, aparecerán aquí.</p>
+
                             <a href="/cliente/crear-pizza" class="btn btn-primary mt-3">Crear Mi Primera Pizza</a>
+
+                            <!-- Nuevo link agregado debajo -->
+                            <br>
+                            <a href="/cliente/crear-hamburguesa" class="btn btn-warning mt-3">
+                                Crear Mi Primera Hamburguesa
+                            </a>
                         </div>
                     </div>
 
-                    <div class="row" th:unless="${favoritos.empty}">
+                    <div class="row" th:unless="${favoritos.isEmpty()}">
                         <div class="col-lg-6 mb-4" th:each="favorito : ${favoritos}">
                             <div class="favorite-card">
                                 <div class="item-name" th:text="${favorito.nombre}">Nombre de la Creación</div>
@@ -417,13 +424,13 @@
                     <h4 class="mt-4 mb-3" style="color: var(--primary-color);">
                         <i class="fas fa-pizza-slice me-2"></i>Pizzas
                     </h4>
-                    <div th:if="${historialPizzas.empty}">
+                    <div th:if="${historialPizzas.isEmpty()}">
                         <div class="empty-state" style="padding: 30px;">
                             <i class="fas fa-pizza-slice"></i>
                             <p>No has creado pizzas aún</p>
                         </div>
                     </div>
-                    <div class="row" th:unless="${historialPizzas.empty}">
+                    <div class="row" th:unless="${historialPizzas.isEmpty()}">
                         <div class="col-lg-6 mb-4" th:each="pizza : ${historialPizzas}">
                             <div class="history-card">
                                 <div class="item-name" th:text="${pizza.nombre}">Pizza Personalizada</div>
@@ -438,13 +445,13 @@
                     <h4 class="mt-5 mb-3" style="color: var(--secondary-color);">
                         <i class="fas fa-hamburger me-2"></i>Hamburguesas
                     </h4>
-                    <div th:if="${historialHamburguesas.empty}">
+                    <div th:if="${historialHamburguesas.isEmpty()}">
                         <div class="empty-state" style="padding: 30px;">
                             <i class="fas fa-hamburger"></i>
                             <p>No has creado hamburguesas aún</p>
                         </div>
                     </div>
-                    <div class="row" th:unless="${historialHamburguesas.empty}">
+                    <div class="row" th:unless="${historialHamburguesas.isEmpty()}">
                         <div class="col-lg-6 mb-4" th:each="hamburguesa : ${historialHamburguesas}">
                             <div class="history-card">
                                 <div class="item-name" th:text="${hamburguesa.nombre}">Hamburguesa Personalizada</div>
