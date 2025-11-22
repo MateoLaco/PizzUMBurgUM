@@ -5,237 +5,251 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Registro de Cliente - PizzUM & BurgUM</title>
     <style>
-        body {
+        /* ---------- Layout base ---------- */
+        body{
             font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #2c3e50;
-            padding: 20px;
+            margin:0; padding:20px;
+            min-height:100vh; background:#2c3e50;
+            display:flex; justify-content:center; align-items:center;
+            overflow-x:hidden;
         }
-        .container {
-            max-width: 500px;
-            width: 100%;
+        .container{ max-width:500px; width:100%; }
+        form{
+            background:rgba(255,255,255,0.9);
+            padding:30px; border-radius:12px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.1);
+            width:100%; display:flex; flex-direction:column; gap:16px;
+            box-sizing:border-box;
         }
-        form {
-            background: rgba(255,255,255,0.9);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+        h2{ margin:0 0 10px; text-align:center; color:#333; }
+        label{ font-weight:600; color:#333; display:block; margin-bottom:5px; }
+        input,select{
+            padding:10px; border-radius:8px; border:1px solid #ccc;
+            font-size:1rem; width:100%; box-sizing:border-box;
         }
-        h2 {
-            margin: 0 0 10px 0;
-            text-align: center;
-            color: #333;
+        .form-row{
+            display:flex;
+            gap:12px;
+            align-items: flex-end;
         }
-        label {
+        .form-group{ flex:1; }
+        .combo{
+            display:flex;
+            border:1px solid #ccc;
+            border-radius:8px;
+            overflow:hidden;
+            background:rgba(255,255,255,0.85);
+        }
+        /* Selector de país más ancho */
+        .flag-select{
+            border:none;
+            background:transparent;
+            padding:10px;
+            border-right:1px solid #ccc;
+            cursor:pointer;
+            width:120px; /* Aumentado de 80px a 120px */
+        }
+        .tel-input{ border:none; flex:1; padding:10px; outline:none; background:transparent; }
+        button{
+            padding:12px; border-radius:8px; border:none;
+            background:#dc3545; color:#fff; font-weight:600; cursor:pointer; font-size:1rem; margin-top:10px;
+        }
+        button:hover{ background:#9C2007; }
+        .login-link{ text-align:center; margin-top:15px; }
+        .login-link a{ color:#2c3e50; text-decoration:none; font-weight:600; }
+        .login-link a:hover{ text-decoration:underline; }
+        .error{ color:#dc3545; font-size:.9rem; text-align:center; padding:10px; background:#ffe6e6; border-radius:5px; }
+
+        .password-feedback{ font-size:.8rem; margin-top:4px; padding-left:5px; display:none; }
+        .password-match{ color:#28a745; }
+        .password-mismatch{ color:#dc3545; }
+        .password-length{ font-size:.8rem; margin-top:4px; padding-left:5px; }
+        .password-valid{ color:#28a745; }
+        .password-invalid{ color:#dc3545; }
+
+        /* ----- contenedor ojo ----- */
+        .password-container{
+            position:relative;
+        }
+        .toggle-password{
+            position:absolute;
+            right:10px;
+            top:50%;
+            transform:translateY(-50%);
+            background:none;
+            border:none;
+            cursor:pointer;
+            padding:0;
+        }
+        .toggle-password svg{
+            width:22px;
+            height:22px;
+            stroke:#555;
+            transition:stroke .2s;
+        }
+        .toggle-password:focus{ outline:none; box-shadow:none; }
+
+        /* ---------- MODAL ---------- */
+        .modal-overlay{
+            position:fixed; inset:0;
+            background-color:rgba(0,0,0,0.5);
+            display:none;
+            justify-content:center; align-items:center;
+            z-index:9999;
+            padding:24px;
+            box-sizing:border-box;
+            overflow:auto;
+            flex:none;
+        }
+        .modal-overlay.is-open{ display:flex; }
+
+        .modal-content{
+            background:#fff; border-radius:12px;
+            width:clamp(320px, 90vw, 560px);
+            margin-inline:auto;
+            padding:30px; box-sizing:border-box;
+            box-shadow:0 4px 20px rgba(0,0,0,0.25);
+            position:relative;
+        }
+        .modal-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+        .modal-title{ font-size:1.25rem; font-weight:600; color:#333; margin:0; }
+        .close-button{
+            background:none; border:none; font-size:1.5rem; cursor:pointer; color:#666; padding:0; margin:0;
+        }
+        .close-button:hover{ color:#333; }
+
+        .payment-method-button{
+            padding:10px; border-radius:8px; border:1px solid #ccc; background:#fff; color:#333;
+            text-align:left; cursor:pointer; font-size:1rem; width:100%; box-sizing:border-box; transition:border-color .2s; margin:0;
+        }
+        .payment-method-button:hover{ border-color:#999; }
+        .hidden-input{ display:none; }
+
+        #savePaymentMethod{
+            background:#dc3545; color:#fff; font-weight:600; cursor:pointer; font-size:1rem;
+            padding:12px; border-radius:8px; border:none; width:100%; margin-top:10px;
+        }
+        #savePaymentMethod:hover{ background:#9C2007; }
+
+        body.modal-open{ overflow:hidden; }
+
+        /* Estilos específicos para la sección de fecha de nacimiento */
+        .birthdate-section {
+            margin-bottom: 10px;
+        }
+        .birthdate-section .birthdate-label {
             font-weight: 600;
             color: #333;
+            margin-bottom: 8px;
             display: block;
-            margin-bottom: 5px;
         }
-        input, select {
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 1rem;
+        .birthdate-fields {
+            display: flex;
+            gap: 12px;
+        }
+        .birthdate-field {
+            flex: 1;
+        }
+        .birthdate-field select {
             width: 100%;
-            box-sizing: border-box;
         }
-        .form-row {
-            display: flex;
-            gap: 15px;
+        .birthdate-field label {
+            font-weight: normal;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            color: #666;
         }
-        .form-group {
-            flex: 1;
-        }
-        .combo {
-            display: flex;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            overflow: hidden;
-            background: rgba(255,255,255,0.85);
-        }
-        .flag-select {
-            border: none;
-            background: transparent;
-            padding: 10px;
-            border-right: 1px solid #ccc;
-            cursor: pointer;
-            width: 80px;
-        }
-        .tel-input {
-            border: none;
-            flex: 1;
-            padding: 10px;
-            outline: none;
-            background: transparent;
-        }
-        button {
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            background: #dc3545;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-top: 10px;
-        }
-        button:hover { background: #9C2007; }
-        .login-link {
-            text-align: center;
-            margin-top: 15px;
-        }
-        .login-link a {
-            color: #2c3e50;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-        .error {
-            color: #dc3545;
-            font-size: 0.9rem;
-            text-align: center;
-            padding: 10px;
-            background: #ffe6e6;
-            border-radius: 5px;
-        }
-        .password-feedback {
-            font-size: 0.8rem;
-            margin-top: 4px;
-            padding-left: 5px;
-            display: none;
-        }
-        .password-match {
-            color: #28a745;
-        }
-        .password-mismatch {
-            color: #dc3545;
-        }
-        .is-invalid { border-color: #dc3545 !important; box-shadow: 0 0 0 2px rgba(220,53,69,.15); }
-        .field-error { color: #dc3545; font-size: .85rem; }
     </style>
 </head>
 <body>
 <div class="container">
-    <form method="POST" action="/auth/register" id="registerForm" th:object="${form}">
+    <form method="POST" action="/auth/register" id="registerForm">
         <h2>Registro de Cliente</h2>
 
-        <!-- Mensaje global -->
         <div th:if="${error}" class="error" th:text="${error}"></div>
 
         <div>
             <label for="nombreUsuario">Nombre de Usuario</label>
-            <input id="nombreUsuario" type="text" th:field="*{nombreUsuario}"
-                   th:classappend="${#fields.hasErrors('nombreUsuario')}? 'is-invalid' : ''" required />
-            <small class="field-error" th:if="${#fields.hasErrors('nombreUsuario')}" th:errors="*{nombreUsuario}"></small>
+            <input id="nombreUsuario" name="nombreUsuario" type="text" required />
         </div>
 
         <div>
             <label for="email">Email</label>
-            <input id="email" type="email" th:field="*{email}"
-                   th:classappend="${#fields.hasErrors('email')}? 'is-invalid' : ''" required />
-            <small class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+            <input id="email" name="email" type="email" required />
         </div>
 
         <div>
             <label for="contrasena">Contraseña</label>
-            <input id="contrasena" type="password" th:field="*{contrasena}"
-                   th:classappend="${#fields.hasErrors('contrasena')}? 'is-invalid' : ''" required />
-            <small class="field-error" th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}"></small>
+            <div class="password-container">
+                <input id="contrasena" name="contrasena" type="password" required />
+                <button type="button" class="toggle-password" id="toggleContrasena" aria-label="Mostrar u ocultar contraseña">
+                    <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M4.5 4.5l15 15M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="passwordLengthMessage" class="password-length">La contraseña debe tener al menos 8 caracteres</div>
         </div>
 
         <div>
             <label for="confirmarContrasena">Confirmar Contraseña</label>
-            <input id="confirmarContrasena" type="password" th:field="*{confirmarContrasena}"
-                   th:classappend="${#fields.hasErrors('confirmarContrasena')}? 'is-invalid' : ''" required />
+            <input id="confirmarContrasena" name="confirmarContrasena" type="password" required />
             <div id="passwordMatchMessage" class="password-feedback password-match">✓ Las contraseñas coinciden</div>
             <div id="passwordMismatchMessage" class="password-feedback password-mismatch">✗ Las contraseñas no coinciden</div>
-            <small class="field-error" th:if="${#fields.hasErrors('confirmarContrasena')}" th:errors="*{confirmarContrasena}"></small>
         </div>
 
         <div>
-            <label for="metodoPago">Método de Pago</label>
-            <select id="metodoPago" th:field="*{metodoPago}"
-                    th:classappend="${#fields.hasErrors('metodoPago')}? 'is-invalid' : ''" required>
-                <option value="" disabled>Selecciona un tipo de tarjeta</option>
-                <option value="Visa">Visa</option>
-                <option value="MasterCard">MasterCard</option>
-                <option value="American Express">American Express</option>
-            </select>
-            <small class="field-error" th:if="${#fields.hasErrors('metodoPago')}" th:errors="*{metodoPago}"></small>
+            <label>Método de Pago</label>
+            <div id="paymentMethodButton" class="payment-method-button">
+                <span id="paymentMethodText">Seleccionar método de pago</span>
+            </div>
         </div>
 
-        <div>
-            <label for="numeroTarjeta">Número de Tarjeta</label>
-            <input id="numeroTarjeta" th:field="*{numeroTarjeta}" placeholder="1234 5678 9012 3456"
-                   th:classappend="${#fields.hasErrors('numeroTarjeta')}? 'is-invalid' : ''" required />
-            <small class="field-error" th:if="${#fields.hasErrors('numeroTarjeta')}" th:errors="*{numeroTarjeta}"></small>
-        </div>
+        <input type="hidden" id="metodoPago" name="metodoPago" required />
+        <input type="hidden" id="numeroTarjeta" name="numeroTarjeta" required />
+        <input type="hidden" id="nombreTarjeta" name="nombreTarjeta" required />
+        <input type="hidden" id="vencimientoTarjeta" name="vencimientoTarjeta" required />
+        <input type="hidden" id="cvvTarjeta" name="cvvTarjeta" required />
 
         <div>
             <label for="direccion">Dirección</label>
-            <input id="direccion" th:field="*{direccion}" placeholder="Calle, número, ciudad"
-                   th:classappend="${#fields.hasErrors('direccion')}? 'is-invalid' : ''" required />
-            <small class="field-error" th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}"></small>
+            <input id="direccion" name="direccion" type="text" placeholder="Calle, número, ciudad" required />
         </div>
 
-        <div class="form-row">
-            <div class="form-group">
-                <label for="diaNacimiento">Día de nacimiento</label>
-                <select id="diaNacimiento" th:field="*{diaNacimiento}"
-                        th:classappend="${#fields.hasErrors('diaNacimiento')}? 'is-invalid' : ''" required>
-                    <option value="" disabled>Dia</option>
-                    <option th:each="d : ${#numbers.sequence(1,31)}" th:value="${d}" th:text="${d}"></option>
-                </select>
-                <small class="field-error" th:if="${#fields.hasErrors('diaNacimiento')}" th:errors="*{diaNacimiento}"></small>
-            </div>
-            <div class="form-group">
-                <label for="mesNacimiento">Mes de nacimiento</label>
-                <select id="mesNacimiento" th:field="*{mesNacimiento}"
-                        th:classappend="${#fields.hasErrors('mesNacimiento')}? 'is-invalid' : ''" required>
-                    <option value="" disabled>Mes</option>
-                    <option value="1">Enero</option>
-                    <option value="2">Febrero</option>
-                    <option value="3">Marzo</option>
-                    <option value="4">Abril</option>
-                    <option value="5">Mayo</option>
-                    <option value="6">Junio</option>
-                    <option value="7">Julio</option>
-                    <option value="8">Agosto</option>
-                    <option value="9">Septiembre</option>
-                    <option value="10">Octubre</option>
-                    <option value="11">Noviembre</option>
-                    <option value="12">Diciembre</option>
-                </select>
-                <small class="field-error" th:if="${#fields.hasErrors('mesNacimiento')}" th:errors="*{mesNacimiento}"></small>
-            </div>
-            <div class="form-group">
-                <label for="anioNacimiento">Año de Nacimiento</label>
-                <select id="anioNacimiento" th:field="*{anioNacimiento}"
-                        th:classappend="${#fields.hasErrors('anioNacimiento')}? 'is-invalid' : ''" required>
-                    <option value="" disabled>Año</option>
-                    <option th:each="y : ${#numbers.sequence(T(java.time.Year).now().getValue(),1920)}"
-                            th:value="${y}" th:text="${y}"></option>
-                </select>
-                <small class="field-error" th:if="${#fields.hasErrors('anioNacimiento')}" th:errors="*{anioNacimiento}"></small>
+        <!-- Sección de fecha de nacimiento reorganizada -->
+        <div class="birthdate-section">
+            <span class="birthdate-label">Fecha de nacimiento</span>
+            <div class="birthdate-fields">
+                <div class="birthdate-field">
+                    <label for="diaNacimiento">Día</label>
+                    <select id="diaNacimiento" name="diaNacimiento" required>
+                        <option value="" disabled selected>Día</option>
+                    </select>
+                </div>
+                <div class="birthdate-field">
+                    <label for="mesNacimiento">Mes</label>
+                    <select id="mesNacimiento" name="mesNacimiento" required>
+                        <option value="" disabled selected>Mes</option>
+                        <option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option>
+                        <option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option>
+                        <option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option>
+                        <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+                    </select>
+                </div>
+                <div class="birthdate-field">
+                    <label for="anioNacimiento">Año</label>
+                    <select id="anioNacimiento" name="anioNacimiento" required>
+                        <option value="" disabled selected>Año</option>
+                    </select>
+                </div>
             </div>
         </div>
 
         <div>
             <label for="tel">Teléfono</label>
-            <div class="combo" th:classappend="${#fields.hasErrors('tel')}? 'is-invalid' : ''">
-                <select class="flag-select" id="codigoPais" th:field="*{codigoPais}">
+            <div class="combo">
+                <select class="flag-select" id="codigoPais" name="codigoPais">
                     <option value="+34">ES +34</option>
                     <option value="+1">US +1</option>
                     <option value="+52">MX +52</option>
@@ -244,15 +258,8 @@
                     <option value="+57">CO +57</option>
                     <option value="+598">UY +598</option>
                 </select>
-                <input id="tel"
-                       class="tel-input"
-                       inputmode="numeric"
-                       th:field="*{tel}"
-                       placeholder="9 dígitos"
-                       required />
+                <input id="tel" name="tel" class="tel-input" type="text" placeholder="9 dígitos" required />
             </div>
-            <small class="field-error"
-                   th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}"></small>
         </div>
 
         <button type="submit" id="submitButton">Crear cuenta</button>
@@ -263,210 +270,177 @@
     </form>
 </div>
 
-<script>
-    // Llenar días del 1 al 31
-    const diaSelect = document.getElementById('diaNacimiento');
-    for (let i = 1; i <= 31; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = i;
-        diaSelect.appendChild(option);
-    }
+<!-- Modal -->
+<div id="paymentModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalTitle">Información de Tarjeta</h3>
+            <button class="close-button" type="button" aria-label="Cerrar">&times;</button>
+        </div>
+        <form id="paymentForm">
+            <div>
+                <label for="cardType">Tipo de Tarjeta</label>
+                <select id="cardType" required>
+                    <option value="" disabled selected>Selecciona un tipo de tarjeta</option>
+                    <option value="Visa">Visa</option>
+                    <option value="MasterCard">MasterCard</option>
+                    <option value="American Express">American Express</option>
+                </select>
+            </div>
 
-    // Llenar años desde 1920 hasta el año actual
+            <div>
+                <label for="cardName">Nombre en la Tarjeta</label>
+                <input id="cardName" type="text" placeholder="Como aparece en la tarjeta" required />
+            </div>
+
+            <div>
+                <label for="cardNumber">Número de Tarjeta</label>
+                <input id="cardNumber" type="text" placeholder="1234 5678 9012 3456" required />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cardExpiryMonth">Mes de Vencimiento</label>
+                    <select id="cardExpiryMonth" required>
+                        <option value="" disabled selected>Mes</option>
+                        <option value="01">01 - Enero</option><option value="02">02 - Febrero</option>
+                        <option value="03">03 - Marzo</option><option value="04">04 - Abril</option>
+                        <option value="05">05 - Mayo</option><option value="06">06 - Junio</option>
+                        <option value="07">07 - Julio</option><option value="08">08 - Agosto</option>
+                        <option value="09">09 - Septiembre</option><option value="10">10 - Octubre</option>
+                        <option value="11">11 - Noviembre</option><option value="12">12 - Diciembre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cardExpiryYear">Año de Vencimiento</label>
+                    <select id="cardExpiryYear" required>
+                        <option value="" disabled selected>Año</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cardCVV">CVV</label>
+                    <input id="cardCVV" type="text" placeholder="123" maxlength="4" required />
+                </div>
+            </div>
+
+            <button type="button" id="savePaymentMethod">Guardar Método de Pago</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    /* ----- Llenado de selects ----- */
+    const diaSelect = document.getElementById('diaNacimiento');
+    for(let i=1;i<=31;i++){ const o=document.createElement('option'); o.value=i; o.textContent=i; diaSelect.appendChild(o); }
+
     const anioSelect = document.getElementById('anioNacimiento');
     const currentYear = new Date().getFullYear();
-    for (let i = currentYear; i >= 1920; i--) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = i;
-        anioSelect.appendChild(option);
-    }
+    for(let i=currentYear;i>=1920;i--){ const o=document.createElement('option'); o.value=i; o.textContent=i; anioSelect.appendChild(o); }
 
-    // Verificar si las contraseñas coinciden
+    const cardExpiryYear = document.getElementById('cardExpiryYear');
+    for(let i=currentYear;i<=currentYear+10;i++){ const o=document.createElement('option'); o.value=i; o.textContent=i; cardExpiryYear.appendChild(o); }
+
+    /* ----- Validación de password ----- */
     const contrasenaInput = document.getElementById('contrasena');
     const confirmarContrasenaInput = document.getElementById('confirmarContrasena');
     const passwordMatchMessage = document.getElementById('passwordMatchMessage');
     const passwordMismatchMessage = document.getElementById('passwordMismatchMessage');
-    const submitButton = document.getElementById('submitButton');
+    const passwordLengthMessage = document.getElementById('passwordLengthMessage');
     const registerForm = document.getElementById('registerForm');
 
-    function verificarContrasenas() {
+    function verificarContrasenas(){
         const contrasena = contrasenaInput.value;
         const confirmarContrasena = confirmarContrasenaInput.value;
-
-        // Ocultar ambos mensajes si ambos campos están vacíos
-        if (contrasena === '' && confirmarContrasena === '') {
-            passwordMatchMessage.style.display = 'none';
-            passwordMismatchMessage.style.display = 'none';
+        if(contrasena.length >= 8){
+            passwordLengthMessage.textContent = "La contraseña tiene al menos 8 caracteres";
+            passwordLengthMessage.className = "password-length password-valid";
+        }else{
+            passwordLengthMessage.textContent = "La contraseña debe tener al menos 8 caracteres";
+            passwordLengthMessage.className = "password-length password-invalid";
+        }
+        if(!contrasena && !confirmarContrasena){
+            passwordMatchMessage.style.display='none';
+            passwordMismatchMessage.style.display='none';
             return;
         }
-
-        // Mostrar mensaje de coincidencia o no coincidencia
-        if (contrasena === confirmarContrasena && contrasena !== '') {
-            passwordMatchMessage.style.display = 'block';
-            passwordMismatchMessage.style.display = 'none';
-        } else {
-            passwordMatchMessage.style.display = 'none';
-            passwordMismatchMessage.style.display = 'block';
+        if(contrasena === confirmarContrasena){
+            passwordMatchMessage.style.display='block';
+            passwordMismatchMessage.style.display='none';
+        }else{
+            passwordMatchMessage.style.display='none';
+            passwordMismatchMessage.style.display='block';
         }
     }
-
-    // Limpiar TEL antes de enviar y chequear longitud 8/9
-    registerForm.addEventListener('submit', function(event) {
-        // ... tu validación de contraseñas aquí ...
-
-        // Teléfono: dejar solo dígitos
-        const telDigits = telInput.value.replace(/\D/g, '');
-
-        // Validar longitud 8 o 9
-        if (!(telDigits.length === 8 || telDigits.length === 9)) {
-            event.preventDefault();
-            alert('El teléfono debe tener 8 o 9 dígitos numéricos.');
-            telInput.focus();
-            return;
-        }
-
-        // Enviar al backend solo dígitos
-        telInput.value = telDigits;
-    });
-
-    // Agregar event listeners para verificar las contraseñas en tiempo real
     contrasenaInput.addEventListener('input', verificarContrasenas);
     confirmarContrasenaInput.addEventListener('input', verificarContrasenas);
 
-    // Prevenir envío del formulario si las contraseñas no coinciden
-    registerForm.addEventListener('submit', function(event) {
-        const contrasena = contrasenaInput.value;
-        const confirmarContrasena = confirmarContrasenaInput.value;
+    registerForm.addEventListener('submit', function(e){
+        if(contrasenaInput.value !== confirmarContrasenaInput.value){ e.preventDefault(); alert('Las contraseñas no coinciden.'); return; }
+        if(contrasenaInput.value.length < 8){ e.preventDefault(); alert('La contraseña debe tener al menos 8 caracteres.'); return; }
+        if(!document.getElementById('metodoPago').value){ e.preventDefault(); alert('Por favor, selecciona un método de pago.'); return; }
+    });
 
-        if (contrasena !== confirmarContrasena) {
-            event.preventDefault();
-            alert('Las contraseñas no coinciden. Por favor, verifica que ambas contraseñas sean iguales.');
-            confirmarContrasenaInput.focus();
+    /* ----- Toggle de contraseña ----- */
+    const toggleContrasena = document.getElementById('toggleContrasena');
+    const eyeIcon = document.getElementById('eyeIcon');
+    toggleContrasena.addEventListener('click', ()=>{
+        const isPassword = contrasenaInput.type === 'password';
+        contrasenaInput.type = isPassword ? 'text' : 'password';
+        if(isPassword){
+            eyeIcon.innerHTML = `
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>
+                <circle cx="12" cy="12" r="3"/>`;
+        } else {
+            eyeIcon.innerHTML = `
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M4.5 4.5l15 15M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>`;
         }
     });
 
-    // Poner foco en el primer campo inválido si existe
-    window.addEventListener('DOMContentLoaded', () => {
-        const firstInvalid = document.querySelector('.is-invalid');
-        if (firstInvalid) firstInvalid.focus();
+    /* ----- Modal ----- */
+    const paymentModal = document.getElementById('paymentModal');
+    const paymentMethodButton = document.getElementById('paymentMethodButton');
+    const paymentMethodText = document.getElementById('paymentMethodText');
+    const closeButton = document.querySelector('.close-button');
+    const savePaymentMethodButton = document.getElementById('savePaymentMethod');
+
+    function openModal(){
+        paymentModal.classList.add('is-open');
+        document.body.classList.add('modal-open');
+    }
+    function closeModal(){
+        paymentModal.classList.remove('is-open');
+        document.body.classList.remove('modal-open');
+    }
+
+    paymentMethodButton.addEventListener('click', openModal);
+    closeButton.addEventListener('click', closeModal);
+    window.addEventListener('click', (e)=>{ if(e.target === paymentModal) closeModal(); });
+    window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+
+    savePaymentMethodButton.addEventListener('click', function(){
+        const cardType = document.getElementById('cardType').value;
+        const cardName = document.getElementById('cardName').value;
+        const cardNumber = document.getElementById('cardNumber').value;
+        const cardExpiryMonth = document.getElementById('cardExpiryMonth').value;
+        const cardExpiryYear = document.getElementById('cardExpiryYear').value;
+        const cardCVV = document.getElementById('cardCVV').value;
+
+        if(!cardType || !cardName || !cardNumber || !cardExpiryMonth || !cardExpiryYear || !cardCVV){
+            alert('Por favor, completa todos los campos de la tarjeta.');
+            return;
+        }
+
+        document.getElementById('metodoPago').value = cardType;
+        document.getElementById('nombreTarjeta').value = cardName;
+        document.getElementById('numeroTarjeta').value = cardNumber;
+        document.getElementById('vencimientoTarjeta').value = `${cardExpiryMonth}/${cardExpiryYear}`;
+        document.getElementById('cvvTarjeta').value = cardCVV;
+
+        paymentMethodText.textContent = `${cardType} terminada en ${cardNumber.slice(-4)}`;
+        closeModal();
     });
-
-    const telInput = document.getElementById('tel');
-
-    telInput.addEventListener('input', () => {
-        // 1️⃣ Eliminar todo lo que no sea dígito
-        let digits = telInput.value.replace(/\D/g, '');
-
-        // 2️⃣ Limitar a 9 dígitos como máximo
-        digits = digits.slice(0, 9);
-
-        // 3️⃣ Aplicar formato
-        let formatted = digits;
-        if (digits.length === 8) {
-            // Si tiene 8 dígitos → separar en mitad (4 + 4)
-            formatted = digits.replace(/(\d{4})(\d{4})/, '$1 $2');
-        } else if (digits.length === 9) {
-            // Si tiene 9 dígitos → separar en tres grupos (3 + 3 + 3)
-            formatted = digits.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
-        }
-
-        // 4️⃣ Actualizar el campo
-        telInput.value = formatted;
-    });
-
-    (function() {
-        const select = document.getElementById('metodoPago');
-        const cardInput = document.getElementById('numeroTarjeta');
-        const form = document.getElementById('registerForm') || document.querySelector('form');
-
-        // Config por tipo
-        const config = {
-            'Visa': { maxDigits: 16, groups: [4,4,4,4] },
-            'MasterCard': { maxDigits: 16, groups: [4,4,4,4] },
-            'American Express': { maxDigits: 15, groups: [4,6,5] }
-        };
-
-        // Devuelve configuración actual (o un fallback)
-        function currentConfig() {
-            const metodo = select.value;
-            return config[metodo] || { maxDigits: 19, groups: [4,4,4,4,3] }; // fallback genérico
-        }
-
-        // Formatea digits según grupos (array de tamaños)
-        function formatByGroups(digits, groups) {
-            let out = [];
-            let i = 0;
-            for (const g of groups) {
-                if (i >= digits.length) break;
-                out.push(digits.substr(i, g));
-                i += g;
-            }
-            // si quedaron dígitos extras (cuando no coinciden exactamente con suma de groups)
-            if (i < digits.length) out.push(digits.substr(i));
-            return out.join(' ');
-        }
-
-        // Actualiza placeholder y maxlength visible (estimado con espacios)
-        function updatePlaceholderAndMax() {
-            const cfg = currentConfig();
-            // placeholder: genera algo acorde a los grupos
-            const ph = cfg.groups.map(g => 'X'.repeat(g)).join(' ');
-            cardInput.placeholder = ph;
-            // longitud máxima visible: sum digits + number of spaces
-            const maxVisible = cfg.maxDigits + (cfg.groups.length - 1);
-            cardInput.maxLength = maxVisible;
-        }
-
-        // Limpia no-dígitos y limita largo
-        function cleanDigits(value, maxDigits) {
-            const digits = value.replace(/\D/g, '').slice(0, maxDigits);
-            return digits;
-        }
-
-        // Evento principal: cuando el usuario escribe
-        cardInput.addEventListener('input', () => {
-            const cfg = currentConfig();
-            let digits = cleanDigits(cardInput.value, cfg.maxDigits);
-            // Formatear solo si hay suficiente info o para mejorar UX
-            const formatted = formatByGroups(digits, cfg.groups);
-            cardInput.value = formatted;
-        });
-
-        // Si cambian el método de pago, reformatemos el valor actual
-        select.addEventListener('change', () => {
-            updatePlaceholderAndMax();
-            const cfg = currentConfig();
-            const digits = cleanDigits(cardInput.value, cfg.maxDigits);
-            cardInput.value = formatByGroups(digits, cfg.groups);
-        });
-
-        // Al cargar la página, sincronizar placeholder/max
-        document.addEventListener('DOMContentLoaded', updatePlaceholderAndMax);
-
-        // Antes de enviar: validamos longitud y convertimos el valor a solo dígitos
-        if (form) {
-            form.addEventListener('submit', (ev) => {
-                const cfg = currentConfig();
-                const digits = cleanDigits(cardInput.value, cfg.maxDigits);
-
-                // Validación: ¿tiene la longitud que corresponde?
-                if (digits.length !== cfg.maxDigits) {
-                    ev.preventDefault();
-                    // Mensaje de error simple; podés integrarlo con BindingResult si querés.
-                    alert(`Número de tarjeta inválido. Debe tener ${cfg.maxDigits} dígitos para ${select.value}.`);
-                    cardInput.focus();
-                    return;
-                }
-
-                // SUSTITUIR el valor del campo por solo dígitos (así lo recibe el backend)
-                cardInput.value = digits;
-                // Si preferís mantener el input visible con formato y enviar otro campo, en vez de
-                // reemplazar el value acá podrías crear un input hidden y setear su value = digits.
-            });
-        }
-    })();
 </script>
 </body>
 </html>

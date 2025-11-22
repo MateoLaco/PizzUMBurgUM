@@ -60,8 +60,8 @@ public class ControladorCliente {
                 .telefono(telefono)
                 .build();
         Cliente a = clienteServicio.agregarCliente(clienteNuevo);
-
         if (a == null) {
+            System.out.println("No se ha podido regostrar el usuario");
             return "redirect:/auth/register";
         }
         else  {
