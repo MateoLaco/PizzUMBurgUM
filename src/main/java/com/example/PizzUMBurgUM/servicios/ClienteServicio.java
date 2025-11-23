@@ -53,18 +53,11 @@ public class ClienteServicio {
     public List<Creacion> obtenerHamburguesasRecientes(Cliente cliente) {
         return creacionRepositorio.findByCreadorAndTipo(cliente, 'H');
     }
-    // Obtener pizzas creadas recientemente
+
     public List<Creacion> obtenerPizzasRecientes(Cliente cliente) {
         return creacionRepositorio.findByCreadorAndTipo(cliente, 'P');
     }
 
-    // Obtener favoritos
-    public List<Creacion> obtenerFavoritos(Cliente cliente, boolean favorito) {
-        if (cliente == null) return List.of();
-        return creacionRepositorio.findByCreadorAndFavorito(cliente, favorito);
-    }
-
-    // Contar para estadísticas (opcional)
     public int contarTotalHamburguesas(Cliente cliente) {
         if (cliente == null) return 0;
         List<Creacion> hamburguesas = creacionRepositorio.findByCreadorAndTipo(cliente, 'H');

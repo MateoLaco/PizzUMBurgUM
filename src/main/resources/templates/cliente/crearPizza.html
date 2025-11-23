@@ -124,7 +124,7 @@
         }
 
         .btn-crear {
-            background: linear-gradient(45deg, #dc3545, #c82333);
+            background: #dc3545;
             color: white;
             border: none;
             padding: 15px 30px;
@@ -139,10 +139,11 @@
         .btn-crear:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+            background: #c82333;
         }
 
         .btn-favorito {
-            background: linear-gradient(45deg, #dc3545, #c82333);
+            background: #dc3545;
             color: white;
             border: none;
             padding: 12px 25px;
@@ -150,6 +151,12 @@
             font-weight: 600;
             transition: all 0.3s ease;
             width: 100%;
+        }
+
+        .btn-favorito:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+            background: #c82333;
         }
 
         .ingredient-list {
@@ -166,6 +173,174 @@
         .form-check-input:checked {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
+        }
+
+        /* Modales personalizados - Tema Moderno Azul y Blanco */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 62, 80, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            font-family: 'Poppins', sans-serif;
+            border: 3px solid #2980b9;
+            text-align: center;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #2980b9;
+            padding-bottom: 20px;
+        }
+
+        .modal-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-body {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .modal-input-container {
+            margin: 25px 0;
+            display: flex;
+            justify-content: center; /* CENTRAR EL INPUT */
+        }
+
+        .modal-input {
+            width: 100%; /* OCUPAR TODO EL ANCHO DISPONIBLE */
+            max-width: 400px; /* MÁXIMO ANCHO */
+            padding: 15px 20px;
+            border: 2px solid #2980b9; /* AZUL MÁS FUERTE */
+            border-radius: 12px;
+            background: white;
+            color: #2c3e50;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin: 0 auto; /* CENTRAR HORIZONTALMENTE */
+        }
+
+        .modal-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.3);
+            border-color: #dc3545;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .modal-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            min-width: 120px;
+        }
+
+        .modal-btn-confirm {
+            background:#dc3545;
+            color: white;
+        }
+
+        .modal-btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(41, 128, 185, 0.4);
+            background: #dc3545;
+        }
+
+        .modal-btn-cancel {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+            color: #2980b9;
+        }
+
+        .creation-preview {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+            border-left: 4px solid #2471a3;
+        }
+
+        .creation-preview h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #2980b9; /* AZUL MÁS FUERTE */
+            padding-bottom: 8px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .creation-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: #2c3e50;
+        }
+
+        .creation-detail span:last-child {
+            color: #2980b9; /* AZUL MÁS FUERTE */
+            font-weight: 600;
+        }
+
+        .creation-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+            color: #856404;
+        }
+
+        .creation-warning h4 {
+            color: #856404;
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -190,21 +365,18 @@
                         <div class="col-md-4">
                             <div class="option-card" onclick="selectOption('size', 'pequena', 8.99)">
                                 <div class="option-name">Pequeña</div>
-
                                 <div class="option-price">$8.99</div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="option-card" onclick="selectOption('size', 'mediana', 12.99)">
                                 <div class="option-name">Mediana</div>
-
                                 <div class="option-price">$12.99</div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="option-card" onclick="selectOption('size', 'grande', 16.99)">
                                 <div class="option-name">Grande</div>
-
                                 <div class="option-price">$16.99</div>
                             </div>
                         </div>
@@ -225,14 +397,12 @@
                         <div class="col-md-6">
                             <div class="option-card" onclick="selectOption('dough', 'integral', 2.00)">
                                 <div class="option-name">Integral</div>
-
                                 <div class="option-price">+$2.00</div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="option-card" onclick="selectOption('dough', 'sin-gluten', 3.00)">
                                 <div class="option-name">Sin Gluten</div>
-
                                 <div class="option-price">+$3.00</div>
                             </div>
                         </div>
@@ -241,19 +411,17 @@
 
                 <!-- Salsa -->
                 <div class="option-section">
-                    <h3 class="section-title"> Tipo de Salsa</h3>
+                    <h3 class="section-title">Tipo de Salsa</h3>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="option-card" onclick="selectOption('sauce', 'tomate', 0)">
                                 <div class="option-name">Salsa de Tomate</div>
-
                                 <div class="option-price">Incluida</div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="option-card" onclick="selectOption('sauce', 'pomodoro', 1.00)">
                                 <div class="option-name">Pomodoro</div>
-
                                 <div class="option-price">+$1.00</div>
                             </div>
                         </div>
@@ -262,19 +430,17 @@
 
                 <!-- Queso -->
                 <div class="option-section">
-                    <h3 class="section-title">Tipo de queso</h3>
+                    <h3 class="section-title">Tipo de Queso</h3>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="option-card" onclick="selectOption('cheese', 'muzzarella', 0)">
                                 <div class="option-name">Muzzarella</div>
-
                                 <div class="option-price">Incluido</div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="option-card" onclick="selectOption('cheese', 'roquefort', 2.50)">
                                 <div class="option-name">Roquefort</div>
-
                                 <div class="option-price">+$2.50</div>
                             </div>
                         </div>
@@ -352,6 +518,60 @@
     </div>
 </div>
 
+<!-- Modal para nombre de favorito -->
+<div id="nameModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalTitle">Guardar en Favoritos</h3>
+        </div>
+        <div class="modal-body">
+            <p id="modalMessage">Dale un nombre especial a tu creación para encontrarla fácilmente después</p>
+            <div class="modal-input-container">
+                <input type="text" id="favoriteNameInput" class="modal-input"
+                       placeholder="Ej: Mi Pizza Especial..." maxlength="30">
+            </div>
+            <div id="creationPreview" class="creation-preview">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancelar</button>
+            <button class="modal-btn modal-btn-confirm" onclick="confirmSave()">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de éxito -->
+<div id="successModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">¡Guardado Exitoso!</h3>
+        </div>
+        <div class="modal-body">
+            <p id="successMessage">Tu creación ha sido guardada en favoritos</p>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-confirm" onclick="closeModal()">Aceptar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de error -->
+<div id="errorModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-icon">⚠️</div>
+            <h3 class="modal-title" id="errorTitle">Acción no disponible</h3>
+        </div>
+        <div class="modal-body">
+            <p id="errorMessage">Necesitas completar tu creación antes de guardarla</p>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-confirm" onclick="closeModal()">Continuar</button>
+        </div>
+    </div>
+</div>
+
 <script>
     let currentPizza = {
         size: null,
@@ -361,6 +581,8 @@
         toppings: [],
         total: 0
     };
+
+    let currentModalType = '';
 
     function selectOption(type, name, price) {
         // Remover selección anterior
@@ -376,9 +598,16 @@
         // Actualizar datos
         currentPizza[type] = { name, price };
 
-        // Actualizar display
+        // Actualizar display - CORREGIR "pequena" a "pequeña"
+        let displayName = name.charAt(0).toUpperCase() + name.slice(1);
+
+        // Corregir la palabra "pequena" a "pequeña"
+        if (displayName === 'Pequena') {
+            displayName = 'Pequeña';
+        }
+
         document.getElementById(`selected${type.charAt(0).toUpperCase() + type.slice(1)}`).textContent =
-            name.charAt(0).toUpperCase() + name.slice(1) + (price > 0 ? ` (+$${price.toFixed(2)})` : '');
+            displayName + (price > 0 ? ` (+$${price.toFixed(2)})` : '');
 
         calculateTotal();
     }
@@ -421,19 +650,203 @@
 
     function addToCart() {
         if (!currentPizza.size) {
-            alert('⚠Por favor selecciona un tamaño para tu pizza');
+            showErrorModal(
+                'Carrito',
+                '¡Completa tu pizza antes de agregarla al carrito!'
+            );
             return;
         }
-        alert(`Pizza agregada al carrito!\nTotal: $${currentPizza.total.toFixed(2)}`);
+
+        showSuccessModal(`¡Pizza agregada al carrito!\nTotal: $${currentPizza.total.toFixed(2)}`);
+
+        // Aquí tu lógica real para agregar al carrito
+        console.log('Agregando al carrito:', currentPizza);
     }
 
     function saveToFavorites() {
-        if (!currentPizza.size) {
-            alert('Crea una pizza primero para guardarla en favoritos');
+        showNameModal('pizza');
+    }
+
+    function showNameModal(tipo) {
+        currentModalType = tipo;
+        const modal = document.getElementById('nameModal');
+        const title = document.getElementById('modalTitle');
+        const message = document.getElementById('modalMessage');
+        const input = document.getElementById('favoriteNameInput');
+        const preview = document.getElementById('creationPreview');
+
+        if (!modal || !title || !message || !input || !preview) {
+            console.error('No se encontraron algunos elementos del modal');
             return;
         }
-        alert('Pizza guardada en tus favoritos');
+
+        if (tipo === 'pizza') {
+            title.textContent = 'Guardar Pizza';
+            message.innerHTML = 'Dale un nombre a tu pizza<br><small style="color: #7f8c8d;">Tu receta perfecta guardada para siempre</small>';
+            input.placeholder = 'Ej: Pizza Suprema, Cuatro Quesos, Especial...';
+            input.value = `Mi Pizza ${new Date().toLocaleDateString('es-ES')}`;
+
+            if (!currentPizza.size) {
+                preview.innerHTML = `
+                <div class="creation-warning">
+                    <h4>Creación Incompleta</h4>
+                    <p>Necesitas seleccionar al menos el tamaño de la pizza</p>
+                </div>
+            `;
+            } else {
+                // CORREGIR "pequena" a "pequeña" en el resumen
+                let tamañoDisplay = currentPizza.size.name;
+                if (tamañoDisplay === 'pequena') {
+                    tamañoDisplay = 'pequeña';
+                }
+
+                let masaDisplay = currentPizza.dough ? currentPizza.dough.name : 'Tradicional';
+                let salsaDisplay = currentPizza.sauce ? currentPizza.sauce.name : 'Tomate';
+                let quesoDisplay = currentPizza.cheese ? currentPizza.cheese.name : 'Muzzarella';
+
+                preview.innerHTML = `
+                <h4>Resumen de tu Pizza</h4>
+                <div class="creation-detail">
+                    <span>Tamaño:</span>
+                    <span>${tamañoDisplay.charAt(0).toUpperCase() + tamañoDisplay.slice(1)}</span>
+                </div>
+                <div class="creation-detail">
+                    <span>Masa:</span>
+                    <span>${masaDisplay.charAt(0).toUpperCase() + masaDisplay.slice(1)}</span>
+                </div>
+                <div class="creation-detail">
+                    <span>Salsa:</span>
+                    <span>${salsaDisplay.charAt(0).toUpperCase() + salsaDisplay.slice(1)}</span>
+                </div>
+                <div class="creation-detail">
+                    <span>Toppings:</span>
+                    <span>${currentPizza.toppings.length} adicionales</span>
+                </div>
+                <div class="creation-detail">
+                    <span><strong>Total:</strong></span>
+                    <span><strong>$${currentPizza.total.toFixed(2)}</strong></span>
+                </div>
+            `;
+            }
+        }
+
+        modal.style.display = 'flex';
+
+        // Esperar un poco para que el modal se muestre antes de enfocar
+        setTimeout(() => {
+            if (input) {
+                input.focus();
+                input.select();
+            }
+        }, 100);
     }
+
+    function showSuccessModal(message) {
+        document.getElementById('successMessage').textContent = message;
+        document.getElementById('successModal').style.display = 'flex';
+    }
+
+    function showErrorModal(title, message) {
+        document.getElementById('errorTitle').textContent = title;
+        document.getElementById('errorMessage').textContent = message;
+        document.getElementById('errorModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.style.display = 'none';
+        });
+    }
+
+    async function confirmSave() {
+        const input = document.getElementById('favoriteNameInput');
+        const nombre = input.value.trim();
+
+        if (!nombre) {
+            input.style.borderColor = '#dc3545';
+            input.placeholder = '¡Por favor ingresa un nombre!';
+            return;
+        }
+
+        // Validar que la creación esté completa
+        if (currentModalType === 'pizza' && !currentPizza.size) {
+            showErrorModal(
+                'Creación Incompleta',
+                'Necesitas seleccionar al menos el tamaño de la pizza para guardar en favoritos'
+            );
+            return;
+        }
+
+        closeModal();
+
+        // CORREGIR "pequena" a "pequeña" en la descripción
+        let tamañoDisplay = currentPizza.size.name;
+        if (tamañoDisplay === 'pequena') {
+            tamañoDisplay = 'pequeña';
+        }
+
+        // Preparar datos para pizza
+        const descripcion = `Pizza ${tamañoDisplay} con masa ${currentPizza.dough?.name || 'tradicional'}, ` +
+            `salsa ${currentPizza.sauce?.name || 'tomate'}, ` +
+            `queso ${currentPizza.cheese?.name || 'muzzarella'}, ` +
+            `${currentPizza.toppings.length} toppings adicionales`;
+
+        const favoritoData = {
+            nombre: nombre,
+            descripcion: descripcion,
+            precio: currentPizza.total,
+            tipo: "PIZZA",
+            detalles: {
+                tamaño: currentPizza.size,
+                masa: currentPizza.dough,
+                salsa: currentPizza.sauce,
+                queso: currentPizza.cheese,
+                toppings: currentPizza.toppings
+            }
+        };
+
+        try {
+            const response = await fetch('/cliente/guardar-favorito', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(favoritoData)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showSuccessModal(`"${nombre}" ha sido guardada en tus favoritos. ¡Pídela cuando quieras!`);
+            } else {
+                showErrorModal('Error al guardar', result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showErrorModal('Error de conexión', 'No se pudo conectar con el servidor. Intenta nuevamente.');
+        }
+    }
+
+    // Cerrar modal al hacer click fuera
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            closeModal();
+        }
+    });
+
+    // Cerrar con ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    // Permitir Enter en el input
+    document.getElementById('favoriteNameInput')?.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            confirmSave();
+        }
+    });
 
     // Inicializar
     document.addEventListener('DOMContentLoaded', function() {
