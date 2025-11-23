@@ -34,8 +34,16 @@ public class FavoritoServicio {
             return false;
         }
     }
+    public boolean existeFavorito(Cliente cliente, String nombre) {
+        return favoritoRepositorio.findByCliente(cliente).stream()
+                .anyMatch(f -> f.getNombre().equals(nombre));
+    }
 
     public Optional<Favorito> obtenerFavoritoPorId(Long id) {
         return favoritoRepositorio.findById(id);
+    }
+
+    public int contarFavoritosPorCliente(Cliente cliente) {
+        return favoritoRepositorio.findByCliente(cliente).size();
     }
 }
