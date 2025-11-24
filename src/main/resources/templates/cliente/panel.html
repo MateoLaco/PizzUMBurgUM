@@ -487,12 +487,9 @@
     <!-- Barra de Navegación Horizontal -->
     <nav class="navbar-horizontal">
         <div class="nav-container">
-            <!-- Logo -->
             <a class="navbar-brand" href="/cliente/panel">
                 PizzUM & BurgUM
             </a>
-
-            <!-- Links de Navegación -->
             <div class="nav-links">
                 <a class="nav-link active" href="/cliente/panel">
                     Inicio
@@ -503,7 +500,6 @@
                 <a class="nav-link" href="/cliente/favoritos">
                     Favoritos
                 </a>
-                <!-- Botón Salir modificado para redirigir al inicio público -->
                 <a th:href="@{/inicio}" class="nav-link logout-btn">
                     Salir
                 </a>
@@ -514,12 +510,12 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
-            <h1 class="hero-title">¡Bienvenido de vuelta!</h1>
+            <h1 class="hero-title">¡Bienvenido de vuelta, <span th:text="${userName}">Usuario</span>!</h1>
             <p class="hero-subtitle">Crea tus propias pizzas y hamburguesas personalizadas</p>
         </div>
     </section>
 
-    <!-- Features Section - Tarjetas de Creación -->
+    <!-- Features Section -->
     <section class="features-section">
         <div class="main-container">
             <h2 class="section-title">¿Qué quieres crear hoy?</h2>
@@ -558,54 +554,94 @@
         </div>
     </section>
 
-    <!-- Estadísticas -->
+    <!-- Estadísticas Section - CON TUS DATOS REALES -->
     <section class="stats-section">
         <div class="main-container">
             <div class="row">
                 <div class="col-md-3">
-                    <div class="stat-number" th:text="${pedidosCompletados ?: '12'}">12</div>
-                    <div class="stat-label">Pedidos Completados</div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-number" th:text="${favoritosGuardados ?: '8'}">8</div>
+                    <!-- Nota: No tienes pedidosCompletados en el controlador, puedes agregarlo después -->
+                    <div class="stat-number" th:text="${totalFavoritos}">0</div>
                     <div class="stat-label">Favoritos Guardados</div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stat-number" th:text="${hamburguesasCreadas ?: '15'}">15</div>
+                    <div class="stat-number" th:text="${totalHamburguesas}">0</div>
                     <div class="stat-label">Hamburguesas Creadas</div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stat-number" th:text="${pizzasCreadas ?: '10'}">10</div>
+                    <div class="stat-number" th:text="${totalPizzas}">0</div>
                     <div class="stat-label">Pizzas Creadas</div>
+                </div>
+                <div class="col-md-3">
+                    <!-- Puedes cambiar esto por otra estadística o dejarlo como total de creaciones -->
+                    <div class="stat-number" th:text="${totalHamburguesas + totalPizzas}">0</div>
+                    <div class="stat-label">Total Creados</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Favoritos -->
+    <!-- Favoritos Section - CON TUS DATOS REALES -->
     <section class="favorites-section">
         <div class="main-container">
             <h2 class="section-title">Tus Favoritos Recientes</h2>
             <div class="row">
-                <div class="col-md-6">
+                <!-- Favoritos dinámicos desde tu controlador -->
+                <div class="col-md-6" th:each="favorito : ${favoritos}" th:if="${favoritoStat.index < 2}">
                     <div class="favorite-card">
-                        <div class="favorite-name">Hamburguesa Clásica Premium</div>
-                        <div class="favorite-details">Carne de vaca, pan de papa, queso cheddar, lechuga, tomate, salsa especial</div>
-                        <div class="favorite-price">$12.50</div>
+                        <div class="favorite-name" th:text="${favorito.nombre}">Nombre del favorito</div>
+                        <div class="favorite-details" th:text="${favorito.descripcion}">Descripción del favorito</div>
+                        <div class="favorite-price" th:text="'$' + ${#numbers.formatDecimal(favorito.precio, 1, 2)}">$0.00</div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="favorite-card">
-                        <div class="favorite-name">Pizza Suprema</div>
-                        <div class="favorite-details">Grande, masa napolitana, pepperoni, champiñones, pimientos, extra queso</div>
-                        <div class="favorite-price">$18.75</div>
+
+                <!-- Mensaje si no hay favoritos -->
+                <div class="col-12" th:if="${#lists.isEmpty(favoritos)}">
+                    <div class="text-center">
+                        <p style="color: #666; font-size: 1.1rem;">
+                            Aún no tienes favoritos. ¡Comienza a crear tus pizzas y hamburguesas!
+                        </p>
                     </div>
                 </div>
             </div>
-            <div class="text-center">
+
+            <!-- Solo mostrar el botón si hay favoritos -->
+            <div class="text-center" th:if="${not #lists.isEmpty(favoritos)}">
                 <a href="/cliente/favoritos" class="btn-view-all">
                     Ver Todos los Favoritos
                 </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Opcional: Historial Reciente -->
+    <section class="favorites-section" style="background: white; padding: 60px 0;" th:if="${not #lists.isEmpty(historialPizzas) or not #lists.isEmpty(historialHamburguesas)}">
+        <div class="main-container">
+            <h2 class="section-title">Tus Creaciones Recientes</h2>
+
+            <!-- Hamburguesas Recientes -->
+            <div th:if="${not #lists.isEmpty(historialHamburguesas)}">
+                <h3 style="color: var(--dark-color); margin-bottom: 20px;">Hamburguesas</h3>
+                <div class="row">
+                    <div class="col-md-6" th:each="hamburguesa : ${historialHamburguesas}" th:if="${hamburguesaStat.index < 2}">
+                        <div class="favorite-card">
+                            <div class="favorite-name" th:text="${hamburguesa.nombre}">Hamburguesa Reciente</div>
+                            <div class="favorite-details" th:text="${hamburguesa.descripcion}">Descripción de hamburguesa</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pizzas Recientes -->
+            <div th:if="${not #lists.isEmpty(historialPizzas)}" style="margin-top: 30px;">
+                <h3 style="color: var(--dark-color); margin-bottom: 20px;">Pizzas</h3>
+                <div class="row">
+                    <div class="col-md-6" th:each="pizza : ${historialPizzas}" th:if="${pizzaStat.index < 2}">
+                        <div class="favorite-card">
+                            <div class="favorite-name" th:text="${pizza.nombre}">Pizza Reciente</div>
+                            <div class="favorite-details" th:text="${pizza.descripcion}">Descripción de pizza</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -634,7 +670,6 @@
         // Hacer que toda la tarjeta sea clickeable
         document.querySelectorAll('.feature-card').forEach(card => {
             card.addEventListener('click', function(e) {
-                // Solo redirigir si no se hizo click en un enlace dentro de la tarjeta
                 if (!e.target.closest('a')) {
                     const link = this.querySelector('a.btn-feature');
                     if (link) {
