@@ -424,21 +424,21 @@
                     <h3 class="section-title">Tamaño de la Pizza</h3>
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="option-card" onclick="selectOption('size', 'pequena', 8.99)">
+                            <div class="option-card" onclick="selectOption('size', 'pequena', 300)">
                                 <div class="option-name">Pequeña</div>
-                                <div class="option-price">$8.99</div>
+                                <div class="option-price">$300</div>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="option-card" onclick="selectOption('size', 'mediana', 12.99)">
+                            <div class="option-card" onclick="selectOption('size', 'mediana', 450)">
                                 <div class="option-name">Mediana</div>
-                                <div class="option-price">$12.99</div>
+                                <div class="option-price">$450</div>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="option-card" onclick="selectOption('size', 'grande', 16.99)">
+                            <div class="option-card" onclick="selectOption('size', 'grande', 600)">
                                 <div class="option-name">Grande</div>
-                                <div class="option-price">$16.99</div>
+                                <div class="option-price">$600</div>
                             </div>
                         </div>
                     </div>
@@ -449,22 +449,22 @@
                     <h3 class="section-title">Tipo de Masa</h3>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('dough', 'napolitana', 1.50)">
+                            <div class="option-card" onclick="selectOption('dough', 'napolitana', 50)">
                                 <div class="option-name">Napolitana</div>
                                 <div class="option-description">Tradicional italiana</div>
-                                <div class="option-price">+$1.50</div>
+                                <div class="option-price">+$50</div>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('dough', 'integral', 2.00)">
+                            <div class="option-card" onclick="selectOption('dough', 'integral', 80)">
                                 <div class="option-name">Integral</div>
-                                <div class="option-price">+$2.00</div>
+                                <div class="option-price">+$80</div>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('dough', 'sin-gluten', 3.00)">
+                            <div class="option-card" onclick="selectOption('dough', 'sin-gluten', 120)">
                                 <div class="option-name">Sin Gluten</div>
-                                <div class="option-price">+$3.00</div>
+                                <div class="option-price">+$120</div>
                             </div>
                         </div>
                     </div>
@@ -475,15 +475,15 @@
                     <h3 class="section-title">Tipo de Salsa</h3>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('sauce', 'tomate', 0)">
+                            <div class="option-card" onclick="selectOption('sauce', 'tomate', 30)">
                                 <div class="option-name">Salsa de Tomate</div>
-                                <div class="option-price">Incluida</div>
+                                <div class="option-price">+$30</div>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('sauce', 'pomodoro', 1.00)">
+                            <div class="option-card" onclick="selectOption('sauce', 'pomodoro', 50)">
                                 <div class="option-name">Pomodoro</div>
-                                <div class="option-price">+$1.00</div>
+                                <div class="option-price">+$50</div>
                             </div>
                         </div>
                     </div>
@@ -494,15 +494,15 @@
                     <h3 class="section-title">Tipo de Queso</h3>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('cheese', 'muzzarella', 0)">
+                            <div class="option-card" onclick="selectOption('cheese', 'muzzarella', 60)">
                                 <div class="option-name">Muzzarella</div>
-                                <div class="option-price">Incluido</div>
+                                <div class="option-price">+$60</div>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('cheese', 'roquefort', 2.50)">
+                            <div class="option-card" onclick="selectOption('cheese', 'roquefort', 100)">
                                 <div class="option-name">Roquefort</div>
-                                <div class="option-price">+$2.50</div>
+                                <div class="option-price">+$100</div>
                             </div>
                         </div>
                     </div>
@@ -513,39 +513,39 @@
                     <h3 class="section-title">Toppings Adicionales</h3>
                     <div class="ingredient-list">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="topping1" onchange="toggleTopping('Pepperoni', 1.50)">
+                            <input class="form-check-input" type="checkbox" id="topping1" onchange="toggleTopping('Pepperoni', 60)">
                             <label class="form-check-label" for="topping1">
-                                Pepperoni <span class="option-price">+$1.50</span>
+                                Pepperoni <span class="option-price">+$60</span>
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="topping2" onchange="toggleTopping('Jamón', 1.25)">
+                            <input class="form-check-input" type="checkbox" id="topping2" onchange="toggleTopping('Jamón', 50)">
                             <label class="form-check-label" for="topping2">
-                                Jamón <span class="option-price">+$1.25</span>
+                                Jamón <span class="option-price">+$50</span>
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="topping3" onchange="toggleTopping('Champiñones', 1.00)">
+                            <input class="form-check-input" type="checkbox" id="topping3" onchange="toggleTopping('Champiñones', 40)">
                             <label class="form-check-label" for="topping3">
-                                Champiñones <span class="option-price">+$1.00</span>
+                                Champiñones <span class="option-price">+$40</span>
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="topping4" onchange="toggleTopping('Aceitunas', 0.75)">
+                            <input class="form-check-input" type="checkbox" id="topping4" onchange="toggleTopping('Aceitunas', 30)">
                             <label class="form-check-label" for="topping4">
-                                Aceitunas <span class="option-price">+$0.75</span>
+                                Aceitunas <span class="option-price">+$30</span>
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="topping5" onchange="toggleTopping('Pimientos', 0.80)">
+                            <input class="form-check-input" type="checkbox" id="topping5" onchange="toggleTopping('Pimientos', 35)">
                             <label class="form-check-label" for="topping5">
-                                Pimientos <span class="option-price">+$0.80</span>
+                                Pimientos <span class="option-price">+$35</span>
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="topping6" onchange="toggleTopping('Extra Queso', 2.00)">
+                            <input class="form-check-input" type="checkbox" id="topping6" onchange="toggleTopping('Extra Queso', 80)">
                             <label class="form-check-label" for="topping6">
-                                Extra Queso <span class="option-price">+$2.00</span>
+                                Extra Queso <span class="option-price">+$80</span>
                             </label>
                         </div>
                     </div>
@@ -565,7 +565,7 @@
                         <p><strong>Toppings:</strong> <span id="selectedToppings">Ninguno</span></p>
                     </div>
 
-                    <div class="total-price">$<span id="totalPrice">0.00</span></div>
+                    <div class="total-price">$<span id="totalPrice">0</span></div>
 
                     <button class="btn-crear" onclick="addToCart()">
                         Agregar al Carrito
@@ -621,7 +621,7 @@
 <div id="errorModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-icon">⚠️</div>
+
             <h3 class="modal-title" id="errorTitle">Acción no disponible</h3>
         </div>
         <div class="modal-body">
@@ -687,7 +687,7 @@
         }
 
         document.getElementById(`selected${type.charAt(0).toUpperCase() + type.slice(1)}`).textContent =
-            displayName + (price > 0 ? ` (+$${price.toFixed(2)})` : '');
+            displayName + (price > 0 ? ` (+$${price})` : '');
 
         calculateTotal();
     }
@@ -725,7 +725,7 @@
         });
 
         currentPizza.total = total;
-        document.getElementById('totalPrice').textContent = total.toFixed(2);
+        document.getElementById('totalPrice').textContent = total;
     }
 
     function addToCart() {
@@ -864,7 +864,7 @@
             </div>
             <div class="creation-detail">
                 <span><strong>Total:</strong></span>
-                <span><strong>$${currentPizza.total.toFixed(2)}</strong></span>
+                <span><strong>$${currentPizza.total}</strong></span>
             </div>
         `;
 
@@ -937,7 +937,7 @@
                 </div>
                 <div class="creation-detail">
                     <span><strong>Total:</strong></span>
-                    <span><strong>$${currentPizza.total.toFixed(2)}</strong></span>
+                    <span><strong>$${currentPizza.total}</strong></span>
                 </div>
             `;
             }
