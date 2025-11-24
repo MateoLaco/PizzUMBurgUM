@@ -66,47 +66,50 @@ public class ControladorAuth {
                                    @RequestParam String contrasena,
                                    @RequestParam String metodoPago,
                                    @RequestParam String direccion,
-                                   @RequestParam (name = "tel") String telefono,
+                                   @RequestParam(name = "tel") String telefono,
                                    @RequestParam(name = "codigoPais") String codigoPais,
                                    @RequestParam(name = "diaNacimiento") Integer diaNacimiento,
                                    @RequestParam(name = "mesNacimiento") Integer mesNacimiento,
                                    @RequestParam(name = "anioNacimiento") Integer anioNacimiento,
                                    @RequestParam String numeroTarjeta,
+                                   @RequestParam(name = "nombreTarjeta") String nombreTarjeta,
+                                   @RequestParam(name = "vencimientoTarjeta") String vencimientoTarjeta,
                                    HttpSession session,
                                    Model model) {
 
         try {
-            // 1. Primero verificar si el email ya existe
             if (clienteServicio.findByEmail(email) != null) {
                 model.addAttribute("error", "El email ya está registrado");
                 return "auth/register";
             }
+
             String telefonoCompleto = codigoPais + " " + telefono;
             LocalDate fechaNacimiento = LocalDate.of(anioNacimiento, mesNacimiento, diaNacimiento);
-
 
             Cliente clienteNuevo = Cliente.builder()
                     .nombreUsuario(nombreUsuario)
                     .email(email)
-                    .contrasena(contrasena) // En producción, deberías encriptar esto
+                    .contrasena(contrasena)
                     .metodoPago(metodoPago)
                     .direccion(direccion)
-                    .telefono(telefono)
-                    .fechaNacimiento(LocalDate.now()) // Fecha por defecto
+                    .telefono(telefonoCompleto)
+                    .fechaNacimiento(fechaNacimiento)
+                    .numeroTarjeta(numeroTarjeta)
+                    .nombreTarjeta(nombreTarjeta)
+                    .vencimientoTarjeta(vencimientoTarjeta)
                     .build();
-
 
             Cliente clienteRegistrado = clienteServicio.agregarCliente(clienteNuevo);
 
-//
             session.setAttribute("clienteLogueado", clienteRegistrado);
             return "redirect:/cliente/panel";
+
         } catch (Exception e) {
             model.addAttribute("error", "Error: " + e.getMessage());
             return "auth/register";
         }
-
     }
+
 
     // CERRAR SESIÓN
     @GetMapping("/logout")

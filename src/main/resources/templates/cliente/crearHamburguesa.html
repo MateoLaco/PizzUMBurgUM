@@ -5,6 +5,7 @@
 <head>
     <title>Crear Hamburguesa - PizzUM & BurgUM</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #dc3545;
@@ -17,6 +18,40 @@
             font-family: 'Poppins', sans-serif;
             background: var(--dark-color);
             min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* BOTÓN FLOTANTE VOLVER AL INICIO */
+        .floating-back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--dark-color);
+            color: white;
+            border: 2px solid var(--primary-color);
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .floating-back-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        .floating-back-btn i {
+            font-size: 1rem;
         }
 
         .creation-hero {
@@ -56,7 +91,7 @@
             font-weight: 600;
             color: var(--dark-color);
             margin-bottom: 20px;
-            border-bottom: 2px solid var(--secondary-color);
+            border-bottom: 2px solid var(--primary-color);
             padding-bottom: 10px;
         }
 
@@ -71,14 +106,14 @@
         }
 
         .option-card:hover {
-            border-color: var(--secondary-color);
+            border-color: var(--primary-color);
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.2);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.2);
         }
 
         .option-card.selected {
-            border-color: var(--secondary-color);
-            background-color: #fffdf4;
+            border-color: var(--primary-color);
+            background-color: #fff5f5;
         }
 
         .option-name {
@@ -95,7 +130,7 @@
 
         .option-price {
             font-weight: 700;
-            color: var(--secondary-color);
+            color: var(--primary-color);
         }
 
         .summary-card {
@@ -118,7 +153,7 @@
         .total-price {
             font-size: 2.5rem;
             font-weight: 700;
-            color: var(--secondary-color);
+            color: var(--primary-color);
             text-align: center;
             margin: 20px 0;
         }
@@ -134,6 +169,7 @@
             transition: all 0.3s ease;
             width: 100%;
             margin-bottom: 10px;
+            cursor: pointer;
         }
 
         .btn-crear:hover {
@@ -151,6 +187,7 @@
             font-weight: 600;
             transition: all 0.3s ease;
             width: 100%;
+            cursor: pointer;
         }
 
         .btn-favorito:hover {
@@ -170,9 +207,13 @@
             padding-left: 2rem;
         }
 
+        .form-check-input {
+            cursor: pointer;
+        }
+
         .form-check-input:checked {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
         .meat-counter {
@@ -191,6 +232,12 @@
             height: 40px;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .counter-btn:hover {
+            background: #e0a800;
+            transform: scale(1.1);
         }
 
         .counter-value {
@@ -200,7 +247,7 @@
             text-align: center;
         }
 
-        /* Modales personalizados - Tema Moderno Azul y Blanco */
+        /* Modales personalizados */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -296,7 +343,7 @@
         }
 
         .modal-btn-confirm {
-            background: #dc3545;
+            background:#dc3545;
             color: white;
         }
 
@@ -367,10 +414,30 @@
             color: #856404;
             margin-bottom: 8px;
         }
+
+        /* Responsive para el botón flotante */
+        @media (max-width: 768px) {
+            .floating-back-btn {
+                top: 15px;
+                left: 15px;
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+
+            .creation-title {
+                font-size: 2.2rem;
+            }
+        }
     </style>
 </head>
 <body>
 <div layout:fragment="content">
+    <!-- Botón Flotante Volver al Inicio -->
+    <a href="/cliente/panel" class="floating-back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver al Inicio
+    </a>
+
     <!-- Hero Section -->
     <section class="creation-hero">
         <div class="container">
@@ -589,6 +656,7 @@
 <div id="errorModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
+            <div class="modal-icon">⚠️</div>
             <h3 class="modal-title" id="errorTitle">Acción no disponible</h3>
         </div>
         <div class="modal-body">
@@ -596,6 +664,25 @@
         </div>
         <div class="modal-buttons">
             <button class="modal-btn modal-btn-confirm" onclick="closeModal()">Continuar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación de carrito -->
+<div id="cartModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">¡Agregado al Carrito!</h3>
+        </div>
+        <div class="modal-body">
+            <p id="cartMessage">Tu hamburguesa ha sido agregada al carrito exitosamente</p>
+            <div id="cartPreview" class="creation-preview">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Seguir Comprando</button>
+            <button class="modal-btn modal-btn-confirm" onclick="goToCart()">Ver Carrito</button>
         </div>
     </div>
 </div>
@@ -617,6 +704,14 @@
         if (newCount >= 1 && newCount <= 3) {
             currentBurger.meatCount = newCount;
             document.getElementById('meatCount').textContent = newCount;
+
+            // Actualizar display de carne si ya hay una seleccionada
+            if (currentBurger.meat) {
+                const displayName = currentBurger.meat.name.charAt(0).toUpperCase() + currentBurger.meat.name.slice(1);
+                const displayPrice = currentBurger.meat.price > 0 ? ` (+$${(currentBurger.meat.price * currentBurger.meatCount).toFixed(2)})` : '';
+                document.getElementById('selectedMeat').textContent = `${currentBurger.meatCount}x ${displayName}${displayPrice}`;
+            }
+
             calculateTotal();
         }
     }
@@ -637,9 +732,15 @@
 
         // Actualizar display
         const displayName = name.charAt(0).toUpperCase() + name.slice(1);
-        const displayPrice = price > 0 ? ` (+$${price.toFixed(2)})` : '';
-        document.getElementById(`selected${type.charAt(0).toUpperCase() + type.slice(1)}`).textContent =
-            type === 'meat' ? `${currentBurger.meatCount}x ${displayName}${displayPrice}` : displayName + displayPrice;
+        const displayPrice = price > 0 ? ` (+$${(price * (type === 'meat' ? currentBurger.meatCount : 1)).toFixed(2)})` : '';
+
+        if (type === 'meat') {
+            document.getElementById(`selected${type.charAt(0).toUpperCase() + type.slice(1)}`).textContent =
+                `${currentBurger.meatCount}x ${displayName}${displayPrice}`;
+        } else {
+            document.getElementById(`selected${type.charAt(0).toUpperCase() + type.slice(1)}`).textContent =
+                displayName + displayPrice;
+        }
 
         calculateTotal();
     }
@@ -711,10 +812,138 @@
             return;
         }
 
-        showSuccessModal(`¡Hamburguesa agregada al carrito!\nTotal: $${currentBurger.total.toFixed(2)}`);
+        // Generar nombre automático para la hamburguesa
+        const burgerName = generateBurgerName();
 
-        // Aquí tu lógica real para agregar al carrito
-        console.log('Agregando al carrito:', currentBurger);
+        // Crear objeto del producto para el carrito
+        const cartItem = {
+            id: Date.now(), // ID único basado en timestamp
+            nombre: burgerName,
+            tipo: 'hamburguesa',
+            precio: currentBurger.total,
+            descripcion: generateBurgerDescription(),
+            detalles: {
+                carne: currentBurger.meat,
+                pan: currentBurger.bread,
+                toppings: currentBurger.toppings,
+                salsas: currentBurger.sauces,
+                cantidadCarnes: currentBurger.meatCount
+            },
+            cantidad: 1
+        };
+
+        // Obtener carrito actual del localStorage
+        let carrito = JSON.parse(localStorage.getItem('pizzumburgum_cart')) || [];
+
+        // Agregar nuevo item al carrito
+        carrito.push(cartItem);
+
+        // Guardar carrito actualizado en localStorage
+        localStorage.setItem('pizzumburgum_cart', JSON.stringify(carrito));
+
+        // Mostrar modal de confirmación
+        showCartModal(cartItem);
+
+        console.log('Hamburguesa agregada al carrito:', cartItem);
+    }
+
+    function generateBurgerName() {
+        let name = 'Hamburguesa Personalizada';
+
+        if (currentBurger.meat) {
+            let carne = currentBurger.meat.name;
+            if (carne === 'vaca') carne = 'Vacuna';
+            else if (carne === 'pollo') carne = 'Pollo';
+            else if (carne === 'cerdo') carne = 'Cerdo';
+            else if (carne === 'vegetariana') carne = 'Vegetariana';
+
+            name = `Hamburguesa ${carne}`;
+        }
+
+        if (currentBurger.toppings.length > 0) {
+            name += ` con ${currentBurger.toppings[0].name}`;
+            if (currentBurger.toppings.length > 1) {
+                name += ` y más`;
+            }
+        }
+
+        return name;
+    }
+
+    function generateBurgerDescription() {
+        let descripcion = '';
+
+        if (currentBurger.meat) {
+            let carne = currentBurger.meat.name;
+            if (carne === 'vaca') carne = 'vacuna';
+            else if (carne === 'pollo') carne = 'pollo';
+            else if (carne === 'cerdo') carne = 'cerdo';
+            else if (carne === 'vegetariana') carne = 'vegetariana';
+
+            descripcion += `Hamburguesa con ${currentBurger.meatCount} carne(s) de ${carne}`;
+        }
+
+        if (currentBurger.bread) {
+            descripcion += `, pan ${currentBurger.bread.name}`;
+        }
+
+        if (currentBurger.toppings.length > 0) {
+            descripcion += `, extras: ${currentBurger.toppings.map(t => t.name).join(', ')}`;
+        }
+
+        if (currentBurger.sauces.length > 0) {
+            descripcion += `, salsas: ${currentBurger.sauces.map(s => s.name).join(', ')}`;
+        }
+
+        return descripcion;
+    }
+
+    function showCartModal(cartItem) {
+        const modal = document.getElementById('cartModal');
+        const message = document.getElementById('cartMessage');
+        const preview = document.getElementById('cartPreview');
+
+        message.textContent = `"${cartItem.nombre}" ha sido agregada al carrito`;
+
+        // Generar resumen detallado
+        let carneDisplay = currentBurger.meat.name;
+        if (carneDisplay === 'vaca') carneDisplay = 'vacuna';
+        else if (carneDisplay === 'pollo') carneDisplay = 'pollo';
+        else if (carneDisplay === 'cerdo') carneDisplay = 'cerdo';
+        else if (carneDisplay === 'vegetariana') carneDisplay = 'vegetariana';
+
+        let panDisplay = currentBurger.bread ? currentBurger.bread.name : 'clásico';
+
+        preview.innerHTML = `
+            <h4>Detalles de tu Hamburguesa</h4>
+            <div class="creation-detail">
+                <span>Carne:</span>
+                <span>${currentBurger.meatCount}x ${carneDisplay.charAt(0).toUpperCase() + carneDisplay.slice(1)}</span>
+            </div>
+            <div class="creation-detail">
+                <span>Pan:</span>
+                <span>${panDisplay.charAt(0).toUpperCase() + panDisplay.slice(1)}</span>
+            </div>
+            <div class="creation-detail">
+                <span>Extras:</span>
+                <span>${currentBurger.toppings.length} adicionales</span>
+            </div>
+            <div class="creation-detail">
+                <span>Salsas:</span>
+                <span>${currentBurger.sauces.length} seleccionadas</span>
+            </div>
+            <div class="creation-detail">
+                <span><strong>Total:</strong></span>
+                <span><strong>$${currentBurger.total.toFixed(2)}</strong></span>
+            </div>
+        `;
+
+        modal.style.display = 'flex';
+    }
+
+    function goToCart() {
+        // Redirigir a la página del carrito
+        window.location.href = 'carrito';
     }
 
     function saveToFavorites() {
@@ -749,6 +978,11 @@
                 `;
             } else {
                 let carneDisplay = currentBurger.meat.name;
+                if (carneDisplay === 'vaca') carneDisplay = 'vacuna';
+                else if (carneDisplay === 'pollo') carneDisplay = 'pollo';
+                else if (carneDisplay === 'cerdo') carneDisplay = 'cerdo';
+                else if (carneDisplay === 'vegetariana') carneDisplay = 'vegetariana';
+
                 let panDisplay = currentBurger.bread ? currentBurger.bread.name : 'No seleccionado';
 
                 preview.innerHTML = `
@@ -762,7 +996,7 @@
                         <span>${panDisplay.charAt(0).toUpperCase() + panDisplay.slice(1)}</span>
                     </div>
                     <div class="creation-detail">
-                        <span>Toppings:</span>
+                        <span>Extras:</span>
                         <span>${currentBurger.toppings.length} adicionales</span>
                     </div>
                     <div class="creation-detail">
@@ -827,9 +1061,15 @@
         closeModal();
 
         // Preparar datos para hamburguesa
-        const descripcion = `Hamburguesa con ${currentBurger.meatCount} carne(s) de ${currentBurger.meat.name}, ` +
+        let carneDisplay = currentBurger.meat.name;
+        if (carneDisplay === 'vaca') carneDisplay = 'vacuna';
+        else if (carneDisplay === 'pollo') carneDisplay = 'pollo';
+        else if (carneDisplay === 'cerdo') carneDisplay = 'cerdo';
+        else if (carneDisplay === 'vegetariana') carneDisplay = 'vegetariana';
+
+        const descripcion = `Hamburguesa con ${currentBurger.meatCount} carne(s) de ${carneDisplay}, ` +
             `pan ${currentBurger.bread?.name || 'clásico'}, ` +
-            `${currentBurger.toppings.length} toppings, ` +
+            `${currentBurger.toppings.length} extras, ` +
             `${currentBurger.sauces.length} salsas`;
 
         const favoritoData = {
@@ -892,6 +1132,12 @@
     // Inicializar
     document.addEventListener('DOMContentLoaded', function() {
         calculateTotal();
+
+        // Verificar que los elementos existan
+        console.log('Elementos cargados:');
+        console.log('- selectedMeat:', document.getElementById('selectedMeat'));
+        console.log('- totalPrice:', document.getElementById('totalPrice'));
+        console.log('- currentBurger:', currentBurger);
     });
 </script>
 </body>

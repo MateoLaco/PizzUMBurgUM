@@ -389,6 +389,261 @@
             text-align: center;
         }
 
+        /* CARRITO EN ESQUINA INFERIOR DERECHA - AGREGADO */
+        .cart-bottom-right {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+
+        /* Cuadro principal del carrito */
+        .cart-box-main {
+            position: relative;
+            background: var(--dark-color);
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            border: 2px solid #2c3e50;
+            backdrop-filter: blur(10px);
+        }
+
+        .cart-box-main:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            background: #34495e;
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .cart-box-main i {
+            font-size: 1.8rem;
+            transition: transform 0.3s ease;
+        }
+        .cart-box-main:hover i {
+            transform: scale(1.1);
+        }
+
+        .cart-box-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid white;
+
+        }
+
+        /* Panel que se desliza hacia arriba */
+        .cart-slide-panel {
+            position: absolute;
+            bottom: 100%; /* Sale desde la base del cuadro */
+            right: 0;
+            width: 350px;
+            background: white;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.25);
+            border: 2px solid #2980b9;
+            border-bottom: none;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .cart-bottom-right:hover .cart-slide-panel {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Header del panel */
+        .cart-panel-header {
+            background: linear-gradient(135deg, #2980b9, #2471a3);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 13px 13px 0 0;
+        }
+
+        .cart-panel-header h4 {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .cart-panel-count {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        /* Items del panel */
+        .cart-panel-items {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 15px 20px;
+        }
+
+        .cart-panel-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #ecf0f1;
+            transition: background 0.3s ease;
+        }
+
+        .cart-panel-item:hover {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px 10px;
+            margin: 0 -10px;
+        }
+
+        .cart-panel-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-info-panel {
+            flex: 1;
+        }
+
+        .item-name-panel {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .item-details-panel {
+            color: #2c3e50;
+            font-size: 0.8rem;
+        }
+
+        .item-price-panel {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 0.95rem;
+            margin-right: 10px;
+        }
+
+        .item-remove-panel {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .item-remove-panel:hover {
+            background: #ffe6e6;
+        }
+
+        /* Total del panel */
+        .cart-panel-total {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            color: #2c3e50;
+            border-top: 1px solid #e9ecef;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .total-amount {
+            color: #dc3545;
+            font-size: 1.3rem;
+        }
+
+        /* Botones del panel */
+        .btn-pedir-ya {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-pedir-ya:hover:not(:disabled) {
+            background: #2c3e50;
+            transform: translateY(-2px);
+        }
+
+        .btn-pedir-ya:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-ver-carrito {
+            background: #2980b9;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            border-radius: 0 0 13px 13px;
+        }
+
+        .btn-ver-carrito:hover {
+            background: #2471a3;
+        }
+
+        /* Mensaje de carrito vacío */
+        .empty-cart-panel {
+            text-align: center;
+            color: #6c757d;
+            padding: 40px 20px;
+        }
+
+        .empty-cart-panel i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #bdc3c7;
+        }
+
+        .empty-cart-panel p {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .empty-cart-panel small {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
         /* Responsive */
         @media (max-width: 1200px) {
             .nav-link {
@@ -462,8 +717,32 @@
             }
 
             .btn-feature {
-                width: 100%; 
+                width: 100%;
                 min-width: auto;
+            }
+
+            /* Responsive para el carrito */
+            .cart-bottom-right {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .cart-box-main {
+                width: 60px;
+                height: 60px;
+            }
+
+            .cart-box-main i {
+                font-size: 1.5rem;
+            }
+
+            .cart-slide-panel {
+                position: fixed;
+                bottom: 80px;
+                right: 15px;
+                left: 15px;
+                width: auto;
+                border-radius: 15px;
             }
         }
 
@@ -510,6 +789,43 @@
             </div>
         </div>
     </nav>
+
+    <!-- Carrito en la esquina inferior derecha - AGREGADO -->
+    <div class="cart-bottom-right" id="cartBottomRight">
+        <div class="cart-box-main" onclick="irAlCarritoCompleto()">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-box-badge" id="cartBoxBadge">0</span>
+        </div>
+
+        <!-- Panel que se despliega hacia arriba -->
+        <div class="cart-slide-panel" id="cartSlidePanel">
+            <div class="cart-panel-header">
+                <h4>Tu Pedido Actual</h4>
+                <span class="cart-panel-count" id="cartPanelCount">0 items</span>
+            </div>
+
+            <div class="cart-panel-items" id="cartPanelItems">
+                <div class="empty-cart-panel">
+                    <i class="fas fa-shopping-basket"></i>
+                    <p>No hay productos en tu pedido</p>
+                    <small>Agrega pizzas o hamburguesas</small>
+                </div>
+            </div>
+
+            <div class="cart-panel-total">
+                <span>Total a pagar:</span>
+                <span class="total-amount" id="cartPanelTotal">$0.00</span>
+            </div>
+
+            <button class="btn-pedir-ya" onclick="pedirYa()" id="btnPedirYa" disabled>
+                Pedir Ya
+            </button>
+
+            <button class="btn-ver-carrito" onclick="irAlCarritoCompleto()">
+                Ver Carrito Completo
+            </button>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -643,7 +959,90 @@
                 }
             });
         });
+
+        // Inicializar carrito al cargar la página
+        actualizarCarritoVisual();
     });
+
+    // Sistema de Carrito - AGREGADO
+    let carrito = JSON.parse(localStorage.getItem('pizzumburgum_cart')) || [];
+
+    // Actualizar carrito visualmente
+    function actualizarCarritoVisual() {
+        const cartBoxBadge = document.getElementById('cartBoxBadge');
+        const cartPanelCount = document.getElementById('cartPanelCount');
+        const cartPanelTotal = document.getElementById('cartPanelTotal');
+        const cartPanelItems = document.getElementById('cartPanelItems');
+        const btnPedirYa = document.getElementById('btnPedirYa');
+
+        // Actualizar contadores
+        cartBoxBadge.textContent = carrito.length;
+        cartPanelCount.textContent = `${carrito.length} ${carrito.length === 1 ? 'producto' : 'productos'}`;
+
+        // Calcular total
+        const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+        cartPanelTotal.textContent = `$${total.toFixed(2)}`;
+
+        // Habilitar/deshabilitar botón "Pedir Ya"
+        btnPedirYa.disabled = carrito.length === 0;
+
+        // Actualizar contenido del panel
+        if (carrito.length === 0) {
+            cartPanelItems.innerHTML = `
+            <div class="empty-cart-panel">
+                <i class="fas fa-shopping-basket"></i>
+                <p>No hay productos en tu pedido</p>
+                <small>Agrega pizzas o hamburguesas</small>
+            </div>
+        `;
+        } else {
+            cartPanelItems.innerHTML = carrito.map((item, index) => `
+            <div class="cart-panel-item">
+                <div class="item-info-panel">
+                    <div class="item-name-panel">${item.nombre}</div>
+                    <div class="item-details-panel">
+                        ${item.tipo === 'pizza' ? '🍕 Pizza' : '🍔 Hamburguesa'}
+                        ${item.descripcion ? `• ${item.descripcion}` : ''}
+                    </div>
+                </div>
+                <div class="item-price-panel">$${item.precio.toFixed(2)}</div>
+                <button class="item-remove-panel" onclick="eliminarDelCarrito(${index})">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `).join('');
+        }
+    }
+
+    function eliminarDelCarrito(index) {
+        carrito.splice(index, 1);
+        localStorage.setItem('pizzumburgum_cart', JSON.stringify(carrito));
+        actualizarCarritoVisual();
+    }
+
+    function irAlCarritoCompleto() {
+        // Redirigir a la página del carrito completo
+        window.location.href = '/cliente/carrito';
+    }
+
+    function pedirYa() {
+        if (carrito.length === 0) return;
+
+        // Mostrar confirmación
+        mostrarConfirmacionCarrito();
+    }
+
+    function mostrarConfirmacionCarrito() {
+        const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+        const confirmacion = confirm(`¿Confirmar pedido por $${total.toFixed(2)}?`);
+
+        if (confirmacion) {
+            alert('¡Pedido realizado con éxito! 🎉');
+            carrito = [];
+            localStorage.setItem('pizzumburgum_cart', JSON.stringify(carrito));
+            actualizarCarritoVisual();
+        }
+    }
 </script>
 </body>
 </html>
