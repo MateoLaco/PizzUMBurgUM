@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Carrito - PizzUM & BurgUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #ffc107;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark-color);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Barra de Navegación */
+        .navbar-horizontal {
+            background: var(--dark-color);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar-brand {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: white !important;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: nowrap;
+        }
+
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            padding: 10px 20px !important;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            white-space: nowrap;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white !important;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .logout-btn:hover {
+            background: white;
+            color: var(--dark-color);
+        }
+
+        /* Hero Section del Carrito */
+        .cart-hero {
+            background: linear-gradient(135deg, var(--primary-color), #c82333);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .cart-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .cart-subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* Contenido Principal */
+        .cart-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .cart-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        /* Lista de Productos */
+        .cart-items {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .cart-section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .cart-item:hover {
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ffc107, #ffb300);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 2rem;
+            color: var(--dark-color);
+        }
+
+        .pizza-icon {
+            color: #dc3545;
+        }
+
+        .burger-icon {
+            color: #ffc107;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .item-description {
+            color:#84b6f4;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .item-type {
+            display: inline-block;
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .item-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8f9fa;
+            border-radius: 25px;
+            padding: 5px 15px;
+        }
+
+        .quantity-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .quantity {
+            font-weight: 600;
+            color: var(--dark-color);
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .item-price {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* Resumen del Pedido */
+        .order-summary {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .summary-label {
+            color: #84b6f4;
+            font-weight: 500;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .summary-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .delivery-time {
+            background: #f8f9fa;  /* COLOR NEUTRO */
+            border: 1px solid #dee2e6; /* COLOR NEUTRO */
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .delivery-time i {
+            color: #ffc107;
+            margin-right: 8px;
+        }
+
+        .btn-pedir {
+            background: #ffc107;
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-pedir:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px #84b6f4;
+        }
+
+        .btn-pedir:disabled {
+            background: #84b6f4;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-seguir {
+            background: var(--dark-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-seguir:hover {
+            background: #1a252f;
+            transform: translateY(-2px);
+        }
+
+        /* Carrito Vacío */
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .empty-cart-icon {
+            font-size: 4rem;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+
+        .empty-cart h3 {
+            color: var(--dark-color);
+            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .empty-cart p {
+            color: #84b6f4;
+            margin-bottom: 30px;
+        }
+
+        .btn-crear {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .btn-crear:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .cart-content {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .item-image {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .item-controls {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 15px;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .cart-hero {
+                padding: 40px 0;
+            }
+
+            .cart-title {
+                font-size: 2.2rem;
+            }
+
+            .btn-crear {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- Barra de Navegación Horizontal (igual que panel) -->
+    <nav class="navbar-horizontal">
+        <div class="nav-container">
+            <!-- Logo -->
+            <a class="navbar-brand" href="/cliente/panel">
+                PizzUM & BurgUM
+            </a>
+
+            <!-- Links de Navegación -->
+            <div class="nav-links">
+                <a class="nav-link" href="/cliente/panel">
+                    Inicio
+                </a>
+                <a class="nav-link" href="/cliente/perfil">
+                    Perfil
+                </a>
+                <a class="nav-link active" href="/cliente/favoritos">
+                    Favoritos
+                </a>
+                <a th:href="@{/auth/logout}" class="nav-link logout-btn">
+                    Salir
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Hero Section -->
+    <section class="cart-hero">
+        <div class="container">
+            <h1 class="cart-title">Tu Carrito</h1>
+            <p class="cart-subtitle">Revisa y confirma tu pedido</p>
+        </div>
+    </section>
+
+    <div class="cart-container">
+        <div class="cart-content">
+            <!-- Lista de Productos -->
+            <div class="cart-items">
+                <h2 class="cart-section-title">Tu Pedido</h2>
+                <div id="cartItemsList">
+                    <!-- Los productos se cargan dinámicamente aquí -->
+                </div>
+            </div>
+
+            <!-- Resumen del Pedido -->
+            <div class="order-summary">
+                <h2 class="cart-section-title">Resumen del Pedido</h2>
+
+                <div class="summary-item">
+                    <span class="summary-label">Subtotal</span>
+                    <span class="summary-value" id="subtotal">$0.00</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">Envío</span>
+                    <span class="summary-value" id="delivery">$2.99</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">Impuestos</span>
+                    <span class="summary-value" id="taxes">$0.00</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-value summary-total" id="total">$0.00</span>
+                </div>
+
+                <div class="delivery-time">
+                    <i class="fas fa-clock"></i>
+                    <strong>Tiempo estimado de entrega: 30-45 min</strong>
+                </div>
+
+                <button class="btn-pedir" id="btnRealizarPedido" onclick="realizarPedido()" disabled>
+                    Realizar Pedido
+                </button>
+
+                <button class="btn-seguir" onclick="seguirComprando()">
+                    ← Seguir Comprando
+                </button>
+            </div>
+        </div>
+
+        <!-- Estado de Carrito Vacío -->
+        <div id="emptyCart" class="empty-cart" style="display: none;">
+            <div class="empty-cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h3>Tu carrito está vacío</h3>
+            <p>Agrega algunas pizzas o hamburguesas deliciosas a tu pedido</p>
+            <div>
+                <a href="/cliente/crear-pizza" class="btn-crear">
+                    <i class="fas fa-pizza-slice"></i> Crear Pizza
+                </a>
+                <a href="/cliente/crear-hamburguesa" class="btn-crear">
+                    <i class="fas fa-hamburger"></i> Crear Hamburguesa
+                </a>
+                <a href="/cliente/panel" class="btn-crear">
+                    <i class="fas fa-home"></i> Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 PizzUM & BurgUM. Todos los derechos reservados.</p>
+            <p class="mb-0">Diseñado por MCN Solutions para amantes de la buena comida</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+        // SOLUCIÓN: Siempre empezar con carrito vacío
+        let carrito = [];
+
+        // Solo cargar del localStorage si existe Y no tiene datos de prueba
+        const cartData = localStorage.getItem('pizzumburgum_cart');
+        if (cartData) {
+        const parsedCart = JSON.parse(cartData);
+        // Solo usar datos del localStorage si son datos reales del usuario
+        const tieneDatosReales = parsedCart.length > 0 &&
+        parsedCart.some(item => item.id && item.precio > 0);
+
+        if (tieneDatosReales) {
+        carrito = parsedCart;
+    } else {
+        // Limpiar datos de prueba
+        localStorage.removeItem('pizzumburgum_cart');
+    }
+    }
+
+        function cargarCarrito() {
+        const cartItemsList = document.getElementById('cartItemsList');
+        const emptyCart = document.getElementById('emptyCart');
+        const btnRealizarPedido = document.getElementById('btnRealizarPedido');
+
+        // LIMPIAR TODO
+        cartItemsList.innerHTML = '';
+
+        if (carrito.length === 0) {
+        emptyCart.style.display = 'block';
+        btnRealizarPedido.disabled = true;
+        document.getElementById('subtotal').textContent = '$0.00';
+        document.getElementById('taxes').textContent = '$0.00';
+        document.getElementById('total').textContent = '$0.00';
+        return;
+    }
+
+        emptyCart.style.display = 'none';
+        btnRealizarPedido.disabled = false;
+
+        // SOLO MOSTRAR ITEMS DEL CARRITO REAL
+        cartItemsList.innerHTML = carrito.map((item, index) => `
+            <div class="cart-item">
+                <div class="item-image">
+                    <i class="fas ${item.tipo === 'pizza' ? 'fa-pizza-slice pizza-icon' : 'fa-hamburger burger-icon'}"></i>
+                </div>
+                <div class="item-details">
+                    <div class="item-name">${item.nombre}</div>
+                    <div class="item-description">${item.descripcion}</div>
+                    <span class="item-type">${item.tipo === 'pizza' ? '🍕 Pizza' : '🍔 Hamburguesa'}</span>
+                </div>
+                <div class="item-controls">
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="cambiarCantidad(${index}, -1)">-</button>
+                        <span class="quantity">${item.cantidad}</span>
+                        <button class="quantity-btn" onclick="cambiarCantidad(${index}, 1)">+</button>
+                    </div>
+                    <div class="item-price">$${(item.precio * item.cantidad).toFixed(2)}</div>
+                    <button class="remove-btn" onclick="eliminarItem(${index})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        actualizarResumen();
+    }
+
+        // El resto del código igual...
+        function cambiarCantidad(index, cambio) {
+        if (cambio === -1 && carrito[index].cantidad === 1) return;
+        carrito[index].cantidad += cambio;
+        localStorage.setItem('pizzumburgum_cart', JSON.stringify(carrito));
+        cargarCarrito();
+    }
+
+        function eliminarItem(index) {
+        const item = carrito[index];
+        if (confirm(`¿Eliminar "${item.nombre}" de tu carrito?`)) {
+        carrito.splice(index, 1);
+        localStorage.setItem('pizzumburgum_cart', JSON.stringify(carrito));
+        cargarCarrito();
+    }
+    }
+
+        function actualizarResumen() {
+        const subtotal = carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
+        const delivery = 2.99;
+        const taxes = subtotal * 0.10;
+        const total = subtotal + delivery + taxes;
+
+        document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('taxes').textContent = `$${taxes.toFixed(2)}`;
+        document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+    }
+
+        function realizarPedido() {
+        if (carrito.length === 0) return;
+        const total = document.getElementById('total').textContent;
+
+        if (confirm(`¿Confirmar pedido por ${total}?`)) {
+        alert('¡Pedido realizado con éxito! 🎉');
+        carrito = [];
+        localStorage.setItem('pizzumburgum_cart', JSON.stringify(carrito));
+        cargarCarrito();
+    }
+    }
+
+        function seguirComprando() {
+        window.location.href = '/cliente/panel';
+    }
+
+        document.addEventListener('DOMContentLoaded', function() {
+        cargarCarrito();
+
+        const currentPage = window.location.pathname;
+        document.querySelectorAll('.nav-link').forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+        link.classList.add('active');
+    }
+    });
+    });
+</script>
+</body>
+</html>

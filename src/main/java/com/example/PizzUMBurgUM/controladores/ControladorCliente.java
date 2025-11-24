@@ -247,6 +247,16 @@ public class ControladorCliente {
         return "cliente/ordenes";
     }
 
+    @Controller
+    @RequestMapping("/cliente")
+    public class ClienteController {
+
+        @GetMapping("/carrito")
+        public String carrito() {
+            return "cliente/carrito";
+        }
+    }
+
     @GetMapping("/perfil")
     public String perfil(Model model, HttpSession session) {
         if (!verificarSesion(session)) {
