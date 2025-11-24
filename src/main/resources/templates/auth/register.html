@@ -347,18 +347,18 @@
 </div>
 
 <script>
-    /* ----- Llenado de selects ----- */
+    /* ====== Llenado de selects ====== */
     const diaSelect = document.getElementById('diaNacimiento');
-    for(let i=1;i<=31;i++){ const o=document.createElement('option'); o.value=i; o.textContent=i; diaSelect.appendChild(o); }
+    for (let i = 1; i <= 31; i++) { const o = document.createElement('option'); o.value = i; o.textContent = i; diaSelect.appendChild(o); }
 
     const anioSelect = document.getElementById('anioNacimiento');
     const currentYear = new Date().getFullYear();
-    for(let i=currentYear;i>=1920;i--){ const o=document.createElement('option'); o.value=i; o.textContent=i; anioSelect.appendChild(o); }
+    for (let i = currentYear; i >= 1920; i--) { const o = document.createElement('option'); o.value = i; o.textContent = i; anioSelect.appendChild(o); }
 
     const cardExpiryYear = document.getElementById('cardExpiryYear');
-    for(let i=currentYear;i<=currentYear+10;i++){ const o=document.createElement('option'); o.value=i; o.textContent=i; cardExpiryYear.appendChild(o); }
+    for (let i = currentYear; i <= currentYear + 10; i++) { const o = document.createElement('option'); o.value = i; o.textContent = i; cardExpiryYear.appendChild(o); }
 
-    /* ----- Validación de password ----- */
+    /* ====== Validación de password ====== */
     const contrasenaInput = document.getElementById('contrasena');
     const confirmarContrasenaInput = document.getElementById('confirmarContrasena');
     const passwordMatchMessage = document.getElementById('passwordMatchMessage');
@@ -367,116 +367,269 @@
     const registerForm = document.getElementById('registerForm');
 
     function verificarContrasenas(){
-        const contrasena = contrasenaInput.value;
-        const confirmarContrasena = confirmarContrasenaInput.value;
-        if(contrasena.length >= 8){
+        const c1 = contrasenaInput.value;
+        const c2 = confirmarContrasenaInput.value;
+        if (c1.length >= 8) {
             passwordLengthMessage.textContent = "La contraseña tiene al menos 8 caracteres";
             passwordLengthMessage.className = "password-length password-valid";
-        }else{
+        } else {
             passwordLengthMessage.textContent = "La contraseña debe tener al menos 8 caracteres";
             passwordLengthMessage.className = "password-length password-invalid";
         }
-        if(!contrasena && !confirmarContrasena){
-            passwordMatchMessage.style.display='none';
-            passwordMismatchMessage.style.display='none';
+        if (!c1 && !c2) {
+            passwordMatchMessage.style.display = 'none';
+            passwordMismatchMessage.style.display = 'none';
             return;
         }
-        if(contrasena === confirmarContrasena){
-            passwordMatchMessage.style.display='block';
-            passwordMismatchMessage.style.display='none';
-        }else{
-            passwordMatchMessage.style.display='none';
-            passwordMismatchMessage.style.display='block';
+        if (c1 === c2) {
+            passwordMatchMessage.style.display = 'block';
+            passwordMismatchMessage.style.display = 'none';
+        } else {
+            passwordMatchMessage.style.display = 'none';
+            passwordMismatchMessage.style.display = 'block';
         }
     }
     contrasenaInput.addEventListener('input', verificarContrasenas);
     confirmarContrasenaInput.addEventListener('input', verificarContrasenas);
 
     registerForm.addEventListener('submit', function(e){
-        if(contrasenaInput.value !== confirmarContrasenaInput.value){ e.preventDefault(); alert('Las contraseñas no coinciden.'); return; }
-        if(contrasenaInput.value.length < 8){ e.preventDefault(); alert('La contraseña debe tener al menos 8 caracteres.'); return; }
-        if(!document.getElementById('metodoPago').value){ e.preventDefault(); alert('Por favor, selecciona un método de pago.'); return; }
+        if (contrasenaInput.value !== confirmarContrasenaInput.value) { e.preventDefault(); alert('Las contraseñas no coinciden.'); return; }
+        if (contrasenaInput.value.length < 8) { e.preventDefault(); alert('La contraseña debe tener al menos 8 caracteres.'); return; }
+        if (!document.getElementById('metodoPago').value) { e.preventDefault(); alert('Por favor, selecciona un método de pago.'); return; }
+        // TEL: limpiar antes de enviar (solo dígitos, 8 o 9)
+        const telInput = document.getElementById('tel');
+        const telDigits = (telInput.value || "").replace(/\D/g,'');
+        if (!(telDigits.length === 8 || telDigits.length === 9)) {
+            e.preventDefault(); alert('El teléfono debe tener 8 o 9 dígitos.'); telInput.focus(); return;
+        }
+        telInput.value = telDigits; // backend recibe limpio
     });
 
-    /* ----- Toggle de contraseña ----- */
+    /* ====== Toggle de contraseña ====== */
     const toggleContrasena = document.getElementById('toggleContrasena');
     const eyeIcon = document.getElementById('eyeIcon');
     toggleContrasena.addEventListener('click', ()=>{
         const isPassword = contrasenaInput.type === 'password';
         contrasenaInput.type = isPassword ? 'text' : 'password';
-        if(isPassword){
-            eyeIcon.innerHTML = `
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>
-                <circle cx="12" cy="12" r="3"/>`;
-        } else {
-            eyeIcon.innerHTML = `
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M4.5 4.5l15 15M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>`;
-        }
+        eyeIcon.innerHTML = isPassword
+            ? `<path stroke-linecap="round" stroke-linejoin="round" d="M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/>`
+            : `<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 4.5l15 15M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>`;
     });
-    /* ----- Toggle confirmar contraseña ----- */
+
     const toggleConfirmar = document.getElementById('toggleConfirmar');
     const eyeIconConfirmar = document.getElementById('eyeIconConfirmar');
-
-    toggleConfirmar.addEventListener('click', () => {
+    toggleConfirmar.addEventListener('click', ()=>{
         const isPassword = confirmarContrasenaInput.type === 'password';
         confirmarContrasenaInput.type = isPassword ? 'text' : 'password';
-
-        if (isPassword) {
-            eyeIconConfirmar.innerHTML = `
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>
-            <circle cx="12" cy="12" r="3"/>`;
-        } else {
-            eyeIconConfirmar.innerHTML = `
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M4.5 4.5l15 15M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>`;
-        }
+        eyeIconConfirmar.innerHTML = isPassword
+            ? `<path stroke-linecap="round" stroke-linejoin="round" d="M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/>`
+            : `<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 4.5l15 15M1.5 12s4.5-7.5 10.5-7.5S22.5 12 22.5 12s-4.5 7.5-10.5 7.5S1.5 12 1.5 12z"/>`;
     });
-    /* ----- Modal ----- */
+
+    /* ====== TEL: solo números + formato 8/9 ====== */
+    (function(){
+        const telInput = document.getElementById('tel');
+        telInput.addEventListener('input', () => {
+            // 1) Posición actual del cursor
+            const prevPos = telInput.selectionStart || 0;
+            const raw = telInput.value;
+
+            // 2) Dígitos antes del cursor
+            const digitsBeforeCaret = raw.slice(0, prevPos).replace(/\D/g, '').length;
+
+            // 3) Limpiar dígitos y limitar a 9
+            let digits = raw.replace(/\D/g, '').slice(0, 9);
+
+            // 4) Formato según longitud
+            let formatted = digits;
+            if (digits.length === 8) {
+                formatted = digits.replace(/(\d{4})(\d{4})/, '$1 $2');
+            } else if (digits.length === 9) {
+                formatted = digits.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
+            }
+
+            telInput.value = formatted;
+
+            // 5) Recalcular posición del cursor
+            let newPos = 0;
+            let digitCount = 0;
+            while (newPos < formatted.length && digitCount < digitsBeforeCaret) {
+                if (/\d/.test(formatted[newPos])) {
+                    digitCount++;
+                }
+                newPos++;
+            }
+
+            telInput.setSelectionRange(newPos, newPos);
+        });
+    })();
+
+
+    /* ====== Modal de Tarjeta ====== */
     const paymentModal = document.getElementById('paymentModal');
     const paymentMethodButton = document.getElementById('paymentMethodButton');
     const paymentMethodText = document.getElementById('paymentMethodText');
     const closeButton = document.querySelector('.close-button');
     const savePaymentMethodButton = document.getElementById('savePaymentMethod');
 
-    function openModal(){
-        paymentModal.classList.add('is-open');
-        document.body.classList.add('modal-open');
-    }
-    function closeModal(){
-        paymentModal.classList.remove('is-open');
-        document.body.classList.remove('modal-open');
-    }
+    function openModal(){ paymentModal.classList.add('is-open'); document.body.classList.add('modal-open'); }
+    function closeModal(){ paymentModal.classList.remove('is-open'); document.body.classList.remove('modal-open'); }
 
     paymentMethodButton.addEventListener('click', openModal);
     closeButton.addEventListener('click', closeModal);
     window.addEventListener('click', (e)=>{ if(e.target === paymentModal) closeModal(); });
     window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
 
-    savePaymentMethodButton.addEventListener('click', function(){
-        const cardType = document.getElementById('cardType').value;
-        const cardName = document.getElementById('cardName').value;
-        const cardNumber = document.getElementById('cardNumber').value;
-        const cardExpiryMonth = document.getElementById('cardExpiryMonth').value;
-        const cardExpiryYear = document.getElementById('cardExpiryYear').value;
-        const cardCVV = document.getElementById('cardCVV').value;
+    /* ====== Formateo y validación de tarjeta ====== */
+    const cardTypeEl   = document.getElementById('cardType');
+    const cardNameEl   = document.getElementById('cardName');
+    const cardNumberEl = document.getElementById('cardNumber');
+    const cardMMEl     = document.getElementById('cardExpiryMonth');
+    const cardYYEl     = document.getElementById('cardExpiryYear');
+    const cardCVVEl    = document.getElementById('cardCVV');
 
-        if(!cardType || !cardName || !cardNumber || !cardExpiryMonth || !cardExpiryYear || !cardCVV){
-            alert('Por favor, completa todos los campos de la tarjeta.');
-            return;
+    const hiddenTipo   = document.getElementById('metodoPago');
+    const hiddenNombre = document.getElementById('nombreTarjeta');
+    const hiddenNumero = document.getElementById('numeroTarjeta');
+    const hiddenVence  = document.getElementById('vencimientoTarjeta');
+    const hiddenCVV    = document.getElementById('cvvTarjeta');
+
+    const cfgByType = {
+        'Visa':          { max: 16, groups: [4,4,4,4], cvv: 3 },
+        'MasterCard':    { max: 16, groups: [4,4,4,4], cvv: 3 },
+        'American Express': { max: 15, groups: [4,6,5], cvv: 4 }
+    };
+
+    function currentCfg(){
+        return cfgByType[cardTypeEl.value] || { max: 19, groups: [4,4,4,4,3], cvv: 3 };
+    }
+
+    function formatByGroups(digits, groups){
+        let out = [], i = 0;
+        for (const g of groups) {
+            if (i >= digits.length) break;
+            out.push(digits.substr(i, g)); i += g;
+        }
+        if (i < digits.length) out.push(digits.substr(i)); // sobrante
+        return out.join(' ');
+    }
+
+    function cleanDigits(value, max){ return (value||'').replace(/\D/g,'').slice(0, max); }
+
+    function luhnOk(num) {
+        // Luhn para Visa/MC/AmEx
+        let sum = 0, dbl = false;
+        for (let i = num.length - 1; i >= 0; i--) {
+            let n = parseInt(num[i],10);
+            if (dbl) { n *= 2; if (n > 9) n -= 9; }
+            sum += n; dbl = !dbl;
+        }
+        return sum % 10 === 0;
+    }
+
+    function updateCardPlaceholderAndMax(){
+        const cfg = currentCfg();
+        cardNumberEl.placeholder = cfg.groups.map(g=>'X'.repeat(g)).join(' ');
+        cardNumberEl.maxLength = cfg.max + (cfg.groups.length - 1); // con espacios
+        cardCVVEl.maxLength = cfg.cvv;
+        cardCVVEl.placeholder = '•'.repeat(cfg.cvv);
+    }
+
+    cardTypeEl.addEventListener('change', ()=>{
+        updateCardPlaceholderAndMax();
+        const cfg = currentCfg();
+        const digits = cleanDigits(cardNumberEl.value, cfg.max);
+        cardNumberEl.value = formatByGroups(digits, cfg.groups);
+        cardCVVEl.value = cleanDigits(cardCVVEl.value, cfg.cvv);
+    });
+
+    cardNumberEl.addEventListener('input', () => {
+        const cfg = currentCfg();
+
+        // 1) Posición del cursor ANTES de formatear
+        const prevPos = cardNumberEl.selectionStart || 0;
+        const raw = cardNumberEl.value;
+
+        // 2) Cuántos dígitos había antes del cursor (ignorando espacios)
+        const digitsBeforeCaret = raw.slice(0, prevPos).replace(/\D/g, '').length;
+
+        // 3) Limpiar y limitar dígitos
+        const digits = cleanDigits(raw, cfg.max);
+
+        // 4) Formatear con grupos (4-4-4-4 o 4-6-5, etc.)
+        const formatted = formatByGroups(digits, cfg.groups);
+        cardNumberEl.value = formatted;
+
+        // 5) Calcular nueva posición del cursor para que quede
+        // justo después del mismo dígito que antes
+        let newPos = 0;
+        let digitCount = 0;
+        while (newPos < formatted.length && digitCount < digitsBeforeCaret) {
+            if (/\d/.test(formatted[newPos])) {
+                digitCount++;
+            }
+            newPos++;
         }
 
-        document.getElementById('metodoPago').value = cardType;
-        document.getElementById('nombreTarjeta').value = cardName;
-        document.getElementById('numeroTarjeta').value = cardNumber;
-        document.getElementById('vencimientoTarjeta').value = `${cardExpiryMonth}/${cardExpiryYear}`;
-        document.getElementById('cvvTarjeta').value = cardCVV;
+        // 6) Volver a colocar el cursor
+        cardNumberEl.setSelectionRange(newPos, newPos);
+    });
 
-        paymentMethodText.textContent = `${cardType} terminada en ${cardNumber.slice(-4)}`;
+
+    cardCVVEl.addEventListener('input', ()=>{
+        const cfg = currentCfg();
+        cardCVVEl.value = cleanDigits(cardCVVEl.value, cfg.cvv);
+    });
+
+    document.addEventListener('DOMContentLoaded', updateCardPlaceholderAndMax);
+
+    // Guardar método de pago desde el modal
+    savePaymentMethodButton.addEventListener('click', function(){
+        const type  = cardTypeEl.value;
+        const name  = (cardNameEl.value || '').trim();
+        const mm    = cardMMEl.value;
+        const yy    = cardYYEl.value;
+        const cvv   = cleanDigits(cardCVVEl.value, currentCfg().cvv);
+        const numDigits = cleanDigits(cardNumberEl.value, currentCfg().max);
+
+        // Checks básicos
+        if (!type || !name || !mm || !yy || !cvv || !numDigits) {
+            alert('Por favor, completa todos los campos de la tarjeta.'); return;
+        }
+
+        // Longitudes por tipo
+        const cfg = currentCfg();
+        if (numDigits.length !== cfg.max) {
+            alert(`El número de tarjeta debe tener ${cfg.max} dígitos para ${type}.`); return;
+        }
+
+        // Luhn
+        // if (!luhnOk(numDigits)) { alert('Número de tarjeta inválido (no pasa validación).'); return; }
+
+        // CVV por tipo
+        if (cvv.length !== cfg.cvv) { alert(`El CVV debe tener ${cfg.cvv} dígitos para ${type}.`); return; }
+
+        // Vencimiento >= mes actual
+        const now = new Date();
+        const exp = new Date(parseInt(yy,10), parseInt(mm,10)-1, 1);
+        // si el primer día del mes vencido ya es menor al primer día del mes actual, no sirve:
+        if (exp.getFullYear() < now.getFullYear() || (exp.getFullYear() === now.getFullYear() && exp.getMonth() < now.getMonth())) {
+            alert('La fecha de vencimiento ya pasó.'); return;
+        }
+
+        // Completar ocultos (valores LIMPIOS)
+        hiddenTipo.value   = type;
+        hiddenNombre.value = name.toUpperCase();          // si querés upper-case
+        hiddenNumero.value = numDigits;                   // sin espacios
+        hiddenVence.value  = `${mm}/${yy}`;               // MM/YYYY
+        hiddenCVV.value    = cvv;
+
+        // UI del botón
+        paymentMethodText.textContent = `${type} terminada en ${numDigits.slice(-4)}`;
+
         closeModal();
     });
 </script>
+
 </body>
 </html>

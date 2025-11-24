@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Panel Funcionario - PizzUM & BurgUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-color:#dc3545; --secondary-color:#ffc107; --dark-color:#2c3e50; --light-color:#f8f9fa; }
+        body { font-family:'Poppins',sans-serif; background:var(--dark-color); min-height:100vh; margin:0; }
+        .navbar-horizontal{ background:var(--dark-color); padding:1rem 0; box-shadow:0 4px 20px rgba(0,0,0,.1); position:sticky; top:0; z-index:1000;}
+        .nav-container{ display:flex; align-items:center; justify-content:space-between; width:100%;}
+        .navbar-brand{ font-family:'Montserrat',sans-serif; font-weight:700; font-size:1.8rem; color:#fff!important; text-decoration:none; white-space:nowrap;}
+        .nav-links{ display:flex; align-items:center; gap:10px; flex-wrap:nowrap;}
+        .nav-link{ color:#fff!important; font-weight:500; padding:10px 20px!important; border-radius:25px; transition:all .3s ease; text-decoration:none; white-space:nowrap; border:none; background:transparent; cursor:pointer; font-family:inherit; font-size:inherit;}
+        .nav-link:hover{ background:rgba(255,255,255,.1); transform:translateY(-2px);}
+        .nav-link.active{ background:var(--primary-color); color:#fff!important;}
+        .logout-btn{ background:transparent; border:2px solid #fff; color:#fff; padding:8px 20px; border-radius:25px; transition:.3s; white-space:nowrap; cursor:pointer; font-family:inherit;}
+        .logout-btn:hover{ background:#fff; color:var(--dark-color);}
+        .hero-section{ background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)), url('https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1967&auto=format&fit=crop'); background-size:cover; background-position:center; background-attachment:fixed; color:#fff; padding:120px 0; text-align:center; position:relative;}
+        .hero-title{ font-family:'Montserrat',sans-serif; font-weight:700; font-size:3rem; margin-bottom:1rem; text-shadow:2px 2px 8px rgba(0,0,0,.5);}
+        .hero-subtitle{ font-size:1.2rem; margin-bottom:2rem; font-weight:300;}
+        .section-title{ font-family:'Montserrat',sans-serif; font-weight:700; color:var(--dark-color); margin-bottom:40px; text-align:center; font-size:2.2rem;}
+        .features-section{ background:#fff; padding:80px 0;}
+        .feature-card{ border:none; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,.1); transition:.3s; overflow:hidden; margin-bottom:30px; height:100%; cursor:pointer; text-decoration:none; color:inherit; display:block;}
+        .feature-card:hover{ transform:translateY(-10px); box-shadow:0 20px 40px rgba(0,0,0,.15);}
+        .feature-card img{ height:220px; object-fit:cover; width:100%;}
+        .feature-card-body{ padding:26px;}
+        .feature-card-title{ font-family:'Montserrat',sans-serif; font-weight:700; color:var(--dark-color); margin-bottom:10px; font-size:1.4rem;}
+        .feature-card-text{ color:#666; margin-bottom:18px; line-height:1.6;}
+        .btn-feature{ padding:12px 22px; border-radius:14px; font-weight:600; transition:.3s; border:none; width:100%; cursor:pointer; text-decoration:none; display:inline-block; text-align:center;}
+        .btn-primary-feature{ background:linear-gradient(45deg,#dc3545,#c82333); color:#fff;}
+        .btn-primary-feature:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(220,53,69,.3);}
+        .btn-secondary-feature{ background:linear-gradient(45deg,#ffc107,#e0a800); color:#000;}
+        .btn-secondary-feature:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(255,193,7,.3);}
+        .stats-section{ background:linear-gradient(135deg,#dc3545,#c82333); color:#fff; padding:60px 0; text-align:center;}
+        .stat-number{ font-size:2.4rem; font-weight:700; margin-bottom:6px; font-family:'Montserrat',sans-serif;}
+        .stat-label{ font-size:1rem; opacity:.95;}
+        .panel-section{ background:#f8f9fa; padding:70px 0;}
+        .card-table{ background:#fff; border-radius:16px; box-shadow:0 10px 25px rgba(0,0,0,.08); overflow:hidden; }
+        .card-table .card-header{ background:#fff; padding:16px 22px; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between;}
+        .card-table .card-header h3{ margin:0; font-size:1.2rem; font-weight:700; color:var(--dark-color);}
+        .table{ width:100%; border-collapse:collapse;}
+        .table th,.table td{ padding:14px 16px; border-bottom:1px solid #f0f0f0; font-size:.95rem;}
+        .table th{ background:#fafafa; text-align:left; font-weight:700; color:#444;}
+        .status-badge{ padding:6px 10px; border-radius:14px; font-size:.85rem; font-weight:600; display:inline-block;}
+        .status-EN_COLA{ background:#fff3cd; color:#856404;}
+        .status-EN_PREPARACION{ background:#cce5ff; color:#004085;}
+        .status-EN_CAMINO{ background:#d4edda; color:#155724;}
+        .status-ENTREGADO{ background:#e2e3e5; color:#383d41;}
+        .filters{ display:flex; gap:10px; flex-wrap:wrap;}
+        .filters input[type="date"], .filters select{ padding:10px 12px; border-radius:10px; border:1px solid #ddd; }
+        .filters button{ padding:10px 16px; border:none; border-radius:10px; background:var(--dark-color); color:#fff; cursor:pointer; font-weight:600;}
+        .filters button:hover{ background:var(--primary-color); }
+        .footer{ background:var(--dark-color); color:#fff; padding:40px 0; text-align:center;}
+        @media (max-width:992px){ .hero-title{ font-size:2.4rem;} }
+        @media (max-width:768px){ .hero-title{ font-size:2rem;} .hero-subtitle{ font-size:1rem;} }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <!-- NAV -->
+    <nav class="navbar-horizontal">
+        <div class="container">
+            <div class="nav-container">
+                <a class="navbar-brand" href="/funcionario/panel">PizzUM & <span>BurgUM</span></a>
+                <div class="nav-links">
+                    <a class="nav-link active" href="/funcionario/panel"><i class="fas fa-home me-2"></i>Inicio</a>
+                    <a class="nav-link" href="/funcionario/productos"><i class="fas fa-boxes me-2"></i>Productos</a>
+                    <a class="nav-link" href="/funcionario/pedidos"><i class="fas fa-receipt me-2"></i>Pedidos</a>
+                    <a class="nav-link" href="/funcionario/reportes"><i class="fas fa-calendar-day me-2"></i>Reportes</a>
+                    <a class="nav-link" href="/funcionario/usuarios"><i class="fas fa-user-shield me-2"></i>Usuarios</a>
+                    <a th:href="@{/auth/logout}" class="nav-link logout-btn">Salir</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Panel del Funcionario</h1>
+            <p class="hero-subtitle">Administra productos, pedidos y usuarios. Cambia estados y genera reportes diarios.</p>
+        </div>
+    </section>
+
+    <!-- ACCIONES RÁPIDAS -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">Acciones Rápidas</h2>
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <a class="feature-card" href="/funcionario/productos/nuevo">
+                        <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&auto=format&fit=crop" alt="Ingresar Producto">
+                        <div class="feature-card-body">
+                            <h3 class="feature-card-title">Ingresar Producto</h3>
+                            <p class="feature-card-text">Pizzas, hamburguesas, toppings, salsas, bebidas y más.</p>
+                            <span class="btn-feature btn-secondary-feature"><i class="fas fa-plus me-2"></i>Nuevo Producto</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a class="feature-card" href="/funcionario/pedidos">
+                        <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&auto=format&fit=crop" alt="Gestionar Pedidos">
+                        <div class="feature-card-body">
+                            <h3 class="feature-card-title">Gestionar Pedidos</h3>
+                            <p class="feature-card-text">Cambia estados: En cola, En preparación, En camino, Entregado.</p>
+                            <span class="btn-feature btn-primary-feature"><i class="fas fa-tasks me-2"></i>Ver Pedidos</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a class="feature-card" href="/funcionario/reportes">
+                        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&auto=format&fit=crop" alt="Reportes por Fecha">
+                        <div class="feature-card-body">
+                            <h3 class="feature-card-title">Reportes por Fecha</h3>
+                            <p class="feature-card-text">Ventas y pedidos filtrados por día y rango.</p>
+                            <span class="btn-feature btn-secondary-feature"><i class="fas fa-calendar-day me-2"></i>Generar Reporte</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-6" th:if="${#authorization == null || #authorization.expression('hasRole(''ADMIN'')')}">
+                    <a class="feature-card" href="/funcionario/usuarios/nuevo">
+                        <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&auto=format&fit=crop" alt="Crear Funcionario">
+                        <div class="feature-card-body">
+                            <h3 class="feature-card-title">Crear Funcionario</h3>
+                            <p class="feature-card-text">Solo administradores pueden dar de alta otro administrador.</p>
+                            <span class="btn-feature btn-primary-feature"><i class="fas fa-user-shield me-2"></i>Nuevo Usuario</span>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ESTADÍSTICAS OPERATIVAS -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="stat-number" th:text="${stats.enCola ?: 0}">0</div>
+                    <div class="stat-label">En cola</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number" th:text="${stats.enPreparacion ?: 0}">0</div>
+                    <div class="stat-label">En preparación</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number" th:text="${stats.enCamino ?: 0}">0</div>
+                    <div class="stat-label">En camino</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number" th:text="${stats.entregadosHoy ?: 0}">0</div>
+                    <div class="stat-label">Entregados hoy</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GESTIÓN DE PEDIDOS -->
+    <section class="panel-section">
+        <div class="container">
+            <div class="card-table">
+                <div class="card-header">
+                    <h3>Pedidos Activos</h3>
+                    <div class="filters">
+                        <form th:action="@{/funcionario/pedidos}" method="get" class="filters" id="filtrosPedidos">
+                            <select name="estado">
+                                <option value="">Todos los estados</option>
+                                <option value="EN_COLA" th:selected="${param.estado=='EN_COLA'}">En cola</option>
+                                <option value="EN_PREPARACION" th:selected="${param.estado=='EN_PREPARACION'}">En preparación</option>
+                                <option value="EN_CAMINO" th:selected="${param.estado=='EN_CAMINO'}">En camino</option>
+                                <option value="ENTREGADO" th:selected="${param.estado=='ENTREGADO'}">Entregado</option>
+                            </select>
+                            <input type="date" name="fecha" th:value="${param.fecha}">
+                            <button type="submit"><i class="fas fa-filter me-1"></i>Filtrar</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Cliente</th>
+                            <th>Creación</th>
+                            <th>Total</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Cambiar Estado</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p : ${pedidos}">
+                            <td th:text="${p.id}">123</td>
+                            <td>
+                                <span th:text="${p.cliente?.nombreUsuario}">juan</span>
+                                <small class="text-muted d-block" th:text="${p.cliente?.email}">juan@ejemplo.com</small>
+                            </td>
+                            <td th:text="${p.descripcionResumen}">Pizza grande napolitana + bebida</td>
+                            <td th:text="${#numbers.formatDecimal(p.total,1,'POINT',2,'POINT')}">$ 0.00</td>
+                            <td th:text="${#temporals.format(p.fechaHora,'dd/MM/yyyy HH:mm')}">01/11/2025 20:31</td>
+                            <td>
+                                <span class="status-badge"
+                                      th:classappend="${' status-' + p.estado}"
+                                      th:text="${p.estado}">EN_COLA</span>
+                            </td>
+                            <td>
+                                <form th:action="@{/funcionario/pedidos/{id}/estado(id=${p.id})}" method="post" class="change-state-form">
+                                    <select name="estado" required>
+                                        <option value="EN_COLA" th:selected="${p.estado.name()=='EN_COLA'}">En cola</option>
+                                        <option value="EN_PREPARACION" th:selected="${p.estado.name()=='EN_PREPARACION'}">En preparación</option>
+                                        <option value="EN_CAMINO" th:selected="${p.estado.name()=='EN_CAMINO'}">En camino</option>
+                                        <option value="ENTREGADO" th:selected="${p.estado.name()=='ENTREGADO'}">Entregado</option>
+                                    </select>
+                                    <button type="submit" class="btn-feature btn-primary-feature" style="width:auto;margin-left:8px;">Actualizar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(pedidos)}">
+                            <td colspan="7" class="text-center" style="padding:24px;">No hay pedidos para los filtros seleccionados.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- REPORTES POR FECHA -->
+    <section class="panel-section">
+        <div class="container">
+            <div class="card-table">
+                <div class="card-header">
+                    <h3>Ventas por Fecha</h3>
+                    <form th:action="@{/funcionario/reportes}" method="get" class="filters" id="reporteForm">
+                        <input type="date" name="desde" th:value="${param.desde}" required>
+                        <input type="date" name="hasta" th:value="${param.hasta}" required>
+                        <button type="submit"><i class="fas fa-search me-1"></i>Buscar</button>
+                    </form>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Cant. Pedidos</th>
+                            <th>Ingresos (UYU)</th>
+                            <th>Ticket Promedio</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="r : ${reporte}">
+                            <td th:text="${#temporals.format(r.fecha,'dd/MM/yyyy')}">01/11/2025</td>
+                            <td th:text="${r.cantidad}">0</td>
+                            <td th:text="${#numbers.formatDecimal(r.total,1,'POINT',2,'POINT')}">0.00</td>
+                            <td th:text="${#numbers.formatDecimal(r.ticketPromedio,1,'POINT',2,'POINT')}">0.00</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(reporte)}">
+                            <td colspan="4" class="text-center" style="padding:24px;">Sin resultados para el rango.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 PizzUM & BurgUM. Todos los derechos reservados.</p>
+            <p class="mb-0">Backoffice con ❤️ para que todo salga caliente y a tiempo</p>
+        </div>
+    </footer>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Active link
+        const currentPage = window.location.pathname;
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPage) link.classList.add('active');
+            else link.classList.remove('active');
+        });
+
+        // Confirmación de cambio de estado
+        document.querySelectorAll('.change-state-form').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                const sel = this.querySelector('select[name="estado"]');
+                const nuevo = sel ? sel.value : '';
+                if(!confirm('¿Confirmar cambio de estado a "' + nuevo + '"?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    });
+
+    // Si la página vuelve desde el back/forward cache, recargar
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+</script>
+</body>
+</html>
