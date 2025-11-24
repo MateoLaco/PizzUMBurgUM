@@ -1,12 +1,13 @@
 package com.example.PizzUMBurgUM.dto;
 
-// RegistroClienteDto.java
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Getter
 @Setter
 public class RegistroClienteDto {
+
+    /* ===== Datos de cuenta ===== */
 
     @NotBlank(message = "El nombre de usuario es obligatorio")
     private String nombreUsuario;
@@ -16,42 +17,60 @@ public class RegistroClienteDto {
     private String email;
 
     @NotBlank(message = "La contraseña es obligatoria")
-    @Size(min = 6, message = "Mínimo 6 caracteres")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String contrasena;
 
     @NotBlank(message = "Debes confirmar la contraseña")
     private String confirmarContrasena;
 
-    @NotBlank(message = "Selecciona un método de pago")
-    private String metodoPago;
+    /* ===== Dirección ===== */
 
     @NotBlank(message = "La dirección es obligatoria")
     private String direccion;
 
-    // Teléfono LOCAL (sin código país): 7 a 9 dígitos (ajústalo a tu regla)
-    @NotBlank(message = "El teléfono es obligatorio")
-    @Pattern(regexp = "\\d{7,9}", message = "Teléfono local: 7 a 9 dígitos")
-    private String tel;
+    /* ===== Fecha de nacimiento ===== */
 
-    @NotBlank(message = "Selecciona un código de país")
-    // +598, +54, +1, etc.
-    @Pattern(regexp = "\\+\\d{1,3}", message = "Código país inválido")
-    private String codigoPais;
-
-    @NotNull(message = "Selecciona el día")
+    @NotNull(message = "Selecciona el día de nacimiento")
     private Integer diaNacimiento;
 
-    @NotNull(message = "Selecciona el mes")
+    @NotNull(message = "Selecciona el mes de nacimiento")
     private Integer mesNacimiento;
 
-    @NotNull(message = "Selecciona el año")
+    @NotNull(message = "Selecciona el año de nacimiento")
     private Integer anioNacimiento;
 
-    // Solo dígitos, 13 a 19 (regla usual). Si usas espacios, limpiaremos en el controlador.
+    /* ===== Teléfono ===== */
+
+    @NotBlank(message = "Selecciona el código de país")
+    @Pattern(regexp = "\\+\\d{1,3}", message = "Código de país inválido")
+    private String codigoPais;
+
+    // El JS ya envía solo dígitos; aquí validamos longitud
+    @NotBlank(message = "El teléfono es obligatorio")
+    @Pattern(regexp = "\\d{8,9}", message = "El teléfono debe tener 8 o 9 dígitos")
+    private String tel;
+
+    /* ===== Tarjeta (desde el modal) ===== */
+
+    @NotBlank(message = "Debes seleccionar un método de pago")
+    private String metodoPago;  // Visa / MasterCard / American Express
+
     @NotBlank(message = "El número de tarjeta es obligatorio")
-    @Pattern(regexp = "[\\d ]{13,23}", message = "Tarjeta: 13 a 19 dígitos (puede tener espacios)")
-    private String numeroTarjeta;
+    @Pattern(regexp = "\\d{13,19}", message = "El número de tarjeta debe tener entre 13 y 19 dígitos")
+    private String numeroTarjeta;   // sin espacios (JS lo limpia)
 
-    // getters/setters
+    @NotBlank(message = "El nombre en la tarjeta es obligatorio")
+    private String nombreTarjeta;
+
+    @NotBlank(message = "La fecha de vencimiento es obligatoria")
+    // Formato MM/YYYY
+    @Pattern(
+            regexp = "(0[1-9]|1[0-2])/\\d{4}",
+            message = "El vencimiento debe tener formato MM/YYYY"
+    )
+    private String vencimientoTarjeta;
+
+    @NotBlank(message = "El CVV es obligatorio")
+    @Pattern(regexp = "\\d{3,4}", message = "El CVV debe tener 3 o 4 dígitos")
+    private String cvvTarjeta;
 }
-

@@ -1,9 +1,6 @@
 package com.example.PizzUMBurgUM;
 
-import com.example.PizzUMBurgUM.entidades.Cliente;
-import com.example.PizzUMBurgUM.entidades.Creacion;
-import com.example.PizzUMBurgUM.entidades.Funcionario;
-import com.example.PizzUMBurgUM.entidades.Producto;
+import com.example.PizzUMBurgUM.entidades.*;
 import com.example.PizzUMBurgUM.repositorios.*;
 import com.example.PizzUMBurgUM.servicios.CreacionServicio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +12,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @SpringBootApplication
 @Component
@@ -30,6 +26,9 @@ public class PizzUmBurgUmApplication {
 
     @Autowired
     private CreacionRepositorio creacionRepositorio;
+
+    @Autowired
+    private PedidoRepositorio pedidoRepositorio;
 
     @Autowired
     private ClienteRepositorio clienteRepositorio;
@@ -87,6 +86,16 @@ public class PizzUmBurgUmApplication {
 
         funcionarioRepositorio.save(funcionario);
 
+        Pedido pedido = Pedido.builder()
+                .fecha(LocalDate.now())
+                .acompanamiento("p")
+                .creaciones(Set.of(c1))
+                .bebida("bebida")
+                .costoEnvio(100)
+                .estado("EN_COLA")
+                .build();
+
+        pedidoRepositorio.save(pedido);
 
     }
 

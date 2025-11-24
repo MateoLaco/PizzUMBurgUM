@@ -94,7 +94,7 @@ public class ControladorAuth {
         }
 
         // Fallback por tipo de usuario
-        return okCliente ? "redirect:/cliente/panel" : "redirect:/funcionario/panel";
+        return okCliente ? "redirect:/cliente/panel" : "redirect:/admin/panel";
     }
 
     @GetMapping("/register")
@@ -112,58 +112,56 @@ public class ControladorAuth {
             Model model
     ) {
         // 1) Validación cruzada de contraseñas
-        if (form.getContrasena() != null && form.getConfirmarContrasena() != null
-                && !form.getContrasena().equals(form.getConfirmarContrasena())) {
-            binding.addError(new FieldError("form", "confirmarContrasena", "Las contraseñas no coinciden"));
+        if (form.getContrasena() != null && form.getConfirmarContrasena() != null &&
+                !form.getContrasena().equals(form.getConfirmarContrasena())) {
+            binding.rejectValue("confirmarContrasena", "contrasena.mismatch", "Las contraseñas no coinciden");
         }
 
         // 2) Email único
         if (form.getEmail() != null && clienteServicio.findByEmail(form.getEmail()) != null) {
-            binding.addError(new FieldError("form", "email", "El email ya está registrado"));
-        }
-
-        // 3) Validar teléfono (E.164: máx 15 dígitos)
-        String local = form.getTel() == null ? "" : form.getTel().replaceAll("\\s+", "");
-        String codigo = form.getCodigoPais() == null ? "" : form.getCodigoPais().replaceAll("\\s+", "");
-        String fullE164 = (codigo + local).replace("+", "");
-        if (!fullE164.matches("\\d+")) {
-            binding.addError(new FieldError("form", "tel", "Teléfono inválido"));
-        } else if (fullE164.length() > 15) {
-            binding.addError(new FieldError("form", "tel", "Demasiados dígitos (máx. 15 con código país)"));
-        }
-
-        // 4) Validar número de tarjeta (13–19 dígitos)
-        String tarjeta = form.getNumeroTarjeta() == null ? "" : form.getNumeroTarjeta().replaceAll("\\s+", "");
-        if (!tarjeta.matches("\\d{13,19}")) {
-            binding.addError(new FieldError("form", "numeroTarjeta", "La tarjeta debe tener 13 a 19 dígitos"));
+            binding.rejectValue("email", "email.duplicado", "El email ya está registrado");
         }
 
         if (binding.hasErrors()) {
-            model.addAttribute("error", "Revisa los campos marcados en rojo.");
+            model.addAttribute("error", "Revisa los campos marcados.");
             return "auth/register";
         }
 
-        // 5) Mapear DTO -> Entidad
-        LocalDate fnac = LocalDate.of(form.getAnioNacimiento(), form.getMesNacimiento(), form.getDiaNacimiento());
-        String telefonoE164 = codigo + local;
-        if (!telefonoE164.startsWith("+")) telefonoE164 = "+" + telefonoE164;
+        // 3) Armar fecha de nacimiento
+        LocalDate fechaNacimiento = LocalDate.of(
+                form.getAnioNacimiento(),
+                form.getMesNacimiento(),
+                form.getDiaNacimiento()
+        );
 
+        // 4) Armar teléfono completo en formato internacional (ej: +59891234567)
+        String telefonoCompleto = form.getCodigoPais() + form.getTel(); // tel ya viene sin espacios
+
+        // 5) (Opcional) parsear vencimientoTarjeta si lo quisieras como YearMonth o LocalDate
+        // String[] partes = form.getVencimientoTarjeta().split("/");
+        // int mes = Integer.parseInt(partes[0]);
+        // int anio = Integer.parseInt(partes[1]);
+        // YearMonth vencimiento = YearMonth.of(anio, mes);
+
+        // 6) Mapear a entidad Cliente (sin guardar CVV)
         Cliente clienteNuevo = Cliente.builder()
                 .nombreUsuario(form.getNombreUsuario().trim())
                 .email(form.getEmail().trim())
-                .contrasena(form.getContrasena()) // en prod: encriptar
+                .contrasena(form.getContrasena())          // en prod: encriptar
                 .metodoPago(form.getMetodoPago())
                 .direccion(form.getDireccion().trim())
-                .fechaNacimiento(fnac)
-                .telefono(telefonoE164)
-                .numeroTarjeta(tarjeta)
+                .fechaNacimiento(fechaNacimiento)
+                .telefono(telefonoCompleto)
+                .numeroTarjeta(form.getNumeroTarjeta())    // sin espacios
+                // .nombreTarjeta(...) solo si tu entidad lo tiene
+                // .vencimientoTarjeta(vencimiento) si tu entidad tiene ese campo
                 .build();
 
         Cliente clienteRegistrado = clienteServicio.guardarCliente(clienteNuevo);
-
         session.setAttribute("clienteLogueado", clienteRegistrado);
         return "redirect:/cliente/panel";
     }
+
 
     // CERRAR SESIÓN
     @GetMapping("/logout")
