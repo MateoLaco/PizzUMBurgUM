@@ -837,6 +837,13 @@
         event.currentTarget.classList.add('active');
     }
 
+    // Si la página vuelve desde el back/forward cache, recargar
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+
     // Marcar enlace activo en la navegación
     document.addEventListener('DOMContentLoaded', function() {
         const currentPage = window.location.pathname;
