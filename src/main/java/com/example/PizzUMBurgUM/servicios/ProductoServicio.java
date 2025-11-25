@@ -5,8 +5,7 @@ import com.example.PizzUMBurgUM.repositorios.ProductoRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ProductoServicio {
@@ -32,39 +31,53 @@ public class ProductoServicio {
             throw new RuntimeException("El precio debe ser mayor o igual a cero");
         }
 
-        // ahora tipo es String, no char
         if (producto.getTipo() == null || producto.getTipo().isBlank()) {
             throw new RuntimeException("El tipo de producto es obligatorio");
         }
 
-        // (opcional pero prolijo) normalizar a una sola letra mayúscula
+        // normalizamos tipo a una sola letra mayúscula
         producto.setTipo(producto.getTipo().trim().substring(0, 1).toUpperCase());
 
-        // siempre lo dejamos activo al crearlo
+        // siempre activo al crearlo
         producto.setActivo(true);
 
         return productoRepositorio.save(producto);
     }
 
+    // ⬇⬇⬇ NUEVO: actualizar precios + activos en lote
+    public void actualizarPreciosYActivosEnLote(List<Long> idsActivos,
+                                                Map<String, String> requestParams) {
 
-    public void actualizarActivo(Long idProducto, boolean activo) {
-        Producto producto = productoRepositorio.findById(idProducto)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + idProducto));
-
-        producto.setActivo(activo);
-        productoRepositorio.save(producto);
-    }
-
-    public void actualizarActivosEnLote(List<Long> idsActivos) {
-
-        // Si la lista viene null, lo tomamos como "ninguno activo"
-        Set<Long> activosSet = (idsActivos == null) ? Set.of() : new java.util.HashSet<>(idsActivos);
+        Set<Long> activosSet = (idsActivos == null)
+                ? Collections.emptySet()
+                : new HashSet<>(idsActivos);
 
         List<Producto> todos = productoRepositorio.findAll();
 
         for (Producto p : todos) {
-            boolean debeEstarActivo = activosSet.contains(p.getId_producto());
-            p.setActivo(debeEstarActivo);
+
+            // ----- activo/inactivo -----
+            p.setActivo(activosSet.contains(p.getId_producto()));
+
+            // ----- precio -----
+            String key = "precio_" + p.getId_producto(); // 👈 misma convención que en el HTML
+            String valor = requestParams.get(key);
+
+            if (valor != null && !valor.isBlank()) {
+                try {
+                    float precio = Float.parseFloat(valor.replace(",", "."));
+                    if (precio < 0) {
+                        throw new IllegalArgumentException(
+                                "El precio no puede ser negativo (producto ID " + p.getId_producto() + ")"
+                        );
+                    }
+                    p.setPrecio(precio);
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException(
+                            "Precio inválido para el producto ID " + p.getId_producto()
+                    );
+                }
+            }
         }
 
         productoRepositorio.saveAll(todos);
