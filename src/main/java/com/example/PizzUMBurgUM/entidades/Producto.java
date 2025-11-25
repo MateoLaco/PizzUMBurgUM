@@ -32,7 +32,11 @@ public class Producto {
 
     @Column(length = 1)
     @NotNull
-    private char tipo;
+    private String tipo;
+
+    @Column
+    @NotNull
+    private boolean activo;
 
     @ManyToMany(mappedBy = "productos")
     private Set<Creacion> creaciones = new HashSet<>();

@@ -14,13 +14,13 @@ public class ControladorPublico {
         // Si hay un cliente logueado, lo llevo a su panel
         Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
         if (cliente != null) {
-            return "/cliente/panel";
+            return "redirect:/cliente/panel";
         }
 
         // Si hay un funcionario logueado, lo llevo a su panel
         Funcionario funcionario = (Funcionario) session.getAttribute("funcionarioLogueado");
         if (funcionario != null) {
-            return "/admin/panel";
+            return "redirect:/admin/panel";
         }
 
         // Si no hay nadie logueado, muestro el inicio normal

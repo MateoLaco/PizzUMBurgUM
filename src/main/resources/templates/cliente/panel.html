@@ -500,7 +500,7 @@
                 <a class="nav-link" href="/cliente/favoritos">
                     Favoritos
                 </a>
-                <a th:href="@{/inicio}" class="nav-link logout-btn">
+                <a th:href="@{/auth/logout}" class="nav-link logout-btn">
                     Salir
                 </a>
             </div>
@@ -573,7 +573,7 @@
                 </div>
                 <div class="col-md-3">
                     <!-- Puedes cambiar esto por otra estadística o dejarlo como total de creaciones -->
-                    <div class="stat-number" th:text="${totalHamburguesas + totalPizzas}">0</div>
+                    <div class="stat-number" th:text="${(totalHamburguesas ?: 0) + (totalPizzas ?: 0)}">0</div>
                     <div class="stat-label">Total Creados</div>
                 </div>
             </div>
