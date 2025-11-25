@@ -5,6 +5,7 @@
 <head>
     <title>Crear Hamburguesa - PizzUM & BurgUM</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #dc3545;
@@ -367,10 +368,58 @@
             color: #856404;
             margin-bottom: 8px;
         }
+        /* BOTÓN FLOTANTE VOLVER AL INICIO */
+        .floating-back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--dark-color);
+            color: white;
+            border: 2px solid var(--primary-color);
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .floating-back-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        .floating-back-btn i {
+            font-size: 1rem;
+        }
+
+        /* Responsive para el botón flotante */
+        @media (max-width: 768px) {
+            .floating-back-btn {
+                top: 15px;
+                left: 15px;
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+        }
+
     </style>
 </head>
 <body>
 <div layout:fragment="content">
+    <!-- Botón Flotante Volver al Inicio -->
+    <a href="/cliente/panel" class="floating-back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver al Inicio
+    </a>
+
     <!-- Hero Section -->
     <section class="creation-hero">
         <div class="container">
@@ -599,6 +648,25 @@
         </div>
     </div>
 </div>
+<!-- Modal de confirmación de carrito -->
+<div id="cartModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">¡Agregado al Carrito!</h3>
+        </div>
+        <div class="modal-body">
+            <p id="cartMessage">Tu hamburguesa ha sido agregada al carrito exitosamente</p>
+            <div id="cartPreview" class="creation-preview">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Seguir Comprando</button>
+            <button class="modal-btn modal-btn-confirm" onclick="goToCart()">Ver Carrito</button>
+        </div>
+    </div>
+</div>
+
 
 <script>
     let currentBurger = {
@@ -711,11 +779,130 @@
             return;
         }
 
-        showSuccessModal(`¡Hamburguesa agregada al carrito!\nTotal: $${currentBurger.total}`);
+        // Generar nombre automático para la hamburguesa
+        const burgerName = generateBurgerName();
 
-        // Aquí tu lógica real para agregar al carrito
-        console.log('Agregando al carrito:', currentBurger);
+        // Crear objeto del producto para el carrito
+        const cartItem = {
+            id: Date.now(), // ID único
+            nombre: burgerName,
+            tipo: 'hamburguesa', // si tu carrito espera otro valor, cámbialo acá
+            precio: currentBurger.total,
+            descripcion: generateBurgerDescription(),
+            detalles: {
+                carne: currentBurger.meat,
+                pan: currentBurger.bread,
+                toppings: currentBurger.toppings,
+                salsas: currentBurger.sauces,
+                cantidadCarnes: currentBurger.meatCount
+            },
+            cantidad: 1
+        };
+
+        // Obtener carrito actual del localStorage
+        let carrito = JSON.parse(localStorage.getItem('pizzumburgum_cart')) || [];
+
+        // Agregar nuevo item al carrito
+        carrito.push(cartItem);
+
+        // Guardar carrito actualizado
+        localStorage.setItem('pizzumburgum_cart', JSON.stringify(carrito));
+
+        // Mostrar modal de confirmación
+        showCartModal(cartItem);
+
+        console.log('Hamburguesa agregada al carrito:', cartItem);
     }
+
+    function generateBurgerName() {
+        let name = 'Hamburguesa Personalizada';
+
+        if (currentBurger.meat) {
+            let carne = currentBurger.meat.name;
+            // Capitalizar
+            carne = carne.charAt(0).toUpperCase() + carne.slice(1);
+            name = `Hamburguesa de ${carne}`;
+        }
+
+        if (currentBurger.meatCount > 1) {
+            name += ` x${currentBurger.meatCount}`;
+        }
+
+        if (currentBurger.toppings.length > 0) {
+            name += ` con ${currentBurger.toppings[0].name}`;
+            if (currentBurger.toppings.length > 1) {
+                name += ' y más';
+            }
+        }
+
+        return name;
+    }
+
+    function generateBurgerDescription() {
+        let descripcion = 'Hamburguesa';
+
+        if (currentBurger.meat) {
+            descripcion += ` con ${currentBurger.meatCount} carne(s) de ${currentBurger.meat.name}`;
+        }
+
+        if (currentBurger.bread) {
+            descripcion += `, pan ${currentBurger.bread.name}`;
+        }
+
+        if (currentBurger.toppings.length > 0) {
+            descripcion += `, toppings: ${currentBurger.toppings.map(t => t.name).join(', ')}`;
+        }
+
+        if (currentBurger.sauces.length > 0) {
+            descripcion += `, salsas: ${currentBurger.sauces.map(s => s.name).join(', ')}`;
+        }
+
+        return descripcion;
+    }
+
+    function showCartModal(cartItem) {
+        const modal = document.getElementById('cartModal');
+        const message = document.getElementById('cartMessage');
+        const preview = document.getElementById('cartPreview');
+
+        message.textContent = `"${cartItem.nombre}" ha sido agregada al carrito`;
+
+        let carneDisplay = currentBurger.meat ? currentBurger.meat.name : 'No seleccionada';
+        let panDisplay = currentBurger.bread ? currentBurger.bread.name : 'No seleccionado';
+
+        preview.innerHTML = `
+        <h4>Detalles de tu Hamburguesa</h4>
+        <div class="creation-detail">
+            <span>Carne:</span>
+            <span>${currentBurger.meatCount}x ${carneDisplay.charAt(0).toUpperCase() + carneDisplay.slice(1)}</span>
+        </div>
+        <div class="creation-detail">
+            <span>Pan:</span>
+            <span>${panDisplay.charAt(0).toUpperCase() + panDisplay.slice(1)}</span>
+        </div>
+        <div class="creation-detail">
+            <span>Toppings:</span>
+            <span>${currentBurger.toppings.length} adicionales</span>
+        </div>
+        <div class="creation-detail">
+            <span>Salsas:</span>
+            <span>${currentBurger.sauces.length} seleccionadas</span>
+        </div>
+        <div class="creation-detail">
+            <span><strong>Total:</strong></span>
+            <span><strong>$${currentBurger.total}</strong></span>
+        </div>
+    `;
+
+        modal.style.display = 'flex';
+    }
+
+    function goToCart() {
+        // Redirigir a la página del carrito
+        window.location.href = 'carrito';
+    }
+
+
 
     function saveToFavorites() {
         showNameModal('hamburguesa');
