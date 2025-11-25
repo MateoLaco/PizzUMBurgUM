@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<head>
+    <title>Mi perfil - PizzUM & BurgUM</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --primary-color:#dc3545; --secondary-color:#ffc107; --dark-color:#2c3e50; --light-color:#f8f9fa; }
+
+        body { font-family:'Poppins',sans-serif; background:var(--dark-color); margin:0; }
+
+        .navbar-horizontal{
+            background:var(--dark-color);
+            padding:1rem 0;
+            box-shadow:0 4px 20px rgba(0,0,0,.1);
+        }
+        .nav-container{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .navbar-brand{
+            font-family:'Montserrat';
+            font-weight:700;
+            color:white !important;
+            font-size:1.8rem;
+            text-decoration:none;
+        }
+        .nav-links{ display:flex; gap:10px; }
+        .nav-link{
+            padding:10px 20px;
+            border-radius:25px;
+            color:white;
+            text-decoration:none;
+            font-weight:500;
+        }
+        .nav-link.active{ background:var(--primary-color); }
+        .logout-btn{ border:2px solid #fff; border-radius:25px; }
+
+        .hero-section{
+            padding:90px 0;
+            text-align:center;
+            color:white;
+            background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+            url('https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&auto=format&fit=crop');
+            background-size:cover;
+            background-position:center;
+        }
+        .hero-title{
+            font-size:2.4rem;
+            font-weight:700;
+            margin-bottom:.3rem;
+        }
+        .hero-subtitle{
+            font-size:1.05rem;
+            max-width:650px;
+            margin:auto;
+        }
+
+        .page-section{
+            background:#f8f9fa;
+            padding:50px 0;
+        }
+        .card{
+            background:white;
+            padding:20px 25px;
+            border-radius:15px;
+            margin-bottom:25px;
+            box-shadow:0 10px 25px rgba(0,0,0,.08);
+        }
+        .card h3{
+            margin:0 0 15px 0;
+            font-size:1.3rem;
+        }
+
+        .profile-info{
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+            font-size:.95rem;
+        }
+        .profile-label{
+            font-weight:600;
+        }
+
+        .form-group{
+            margin-bottom:15px;
+        }
+        .form-group label{
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+        .form-group input{
+            width:100%;
+            padding:10px 12px;
+            border-radius:10px;
+            border:1px solid #dcdcdc;
+            font-size:.95rem;
+        }
+
+        .btn-primary{
+            background:linear-gradient(45deg,#dc3545,#c82333);
+            border:none;
+            padding:10px 20px;
+            border-radius:14px;
+            color:white;
+            font-weight:600;
+            cursor:pointer;
+            font-size:.95rem;
+        }
+        .btn-primary:hover{
+            transform:translateY(-2px);
+            box-shadow:0 8px 20px rgba(220,53,69,.3);
+        }
+
+        .alert{
+            border-radius:10px;
+            padding:10px 14px;
+            font-size:.9rem;
+            margin-bottom:15px;
+        }
+        .alert-success{
+            background:#d4edda;
+            color:#155724;
+            border:1px solid #c3e6cb;
+        }
+        .alert-danger{
+            background:#f8d7da;
+            color:#721c24;
+            border:1px solid #f5c6cb;
+        }
+
+        .badge-rol{
+            padding:5px 10px;
+            border-radius:12px;
+            font-size:.8rem;
+            font-weight:600;
+            display:inline-block;
+        }
+        .badge-ADMIN{
+            background:#cce5ff;
+            color:#004085;
+        }
+        .badge-OPERADOR{
+            background:#fff3cd;
+            color:#856404;
+        }
+        .badge-OTRO{
+            background:#e2e3e5;
+            color:#383d41;
+        }
+
+        .footer{
+            background:var(--dark-color);
+            color:#fff;
+            padding:30px 0;
+            text-align:center;
+            margin-top:30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <!-- NAVBAR -->
+    <nav class="navbar-horizontal">
+        <div class="container nav-container">
+            <a href="/admin/panel" class="navbar-brand">PizzUM & BurgUM</a>
+
+            <div class="nav-links">
+                <a class="nav-link" href="/admin/panel">Inicio</a>
+                <a class="nav-link" href="/admin/productos">Productos</a>
+                <a class="nav-link" href="/admin/pedidos">Pedidos</a>
+                <a class="nav-link" href="/admin/usuarios">Usuarios</a>
+                <a class="nav-link active" href="/admin/perfil">Mi perfil</a>
+                <a class="nav-link logout-btn" th:href="@{/auth/logout}">Salir</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Mi perfil</h1>
+            <p class="hero-subtitle">
+                Aquí puedes ver tus datos como funcionario y actualizar tu nombre de usuario y contraseña.
+            </p>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <section class="page-section">
+        <div class="container">
+
+            <!-- Mensajes -->
+            <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
+            <div th:if="${mensajeError}" class="alert alert-danger" th:text="${mensajeError}"></div>
+
+            <!-- Información básica del funcionario -->
+            <div class="card">
+                <h3>Información del funcionario logueado</h3>
+
+                <div class="profile-info" th:if="${funcionarioActual != null}">
+                    <div>
+                        <span class="profile-label">Nombre de usuario:</span>
+                        <span th:text="${funcionarioActual.nombreUsuario}">juan.admin</span>
+                    </div>
+                    <div>
+                        <span class="profile-label">Email:</span>
+                        <span th:text="${funcionarioActual.email}">usuario@dominio.com</span>
+                    </div>
+                    <div>
+                        <span class="profile-label">Rol:</span>
+                        <span class="badge-rol"
+                              th:classappend="${' badge-' + (funcionarioActual.rol != null ? funcionarioActual.rol : 'OTRO')}"
+                              th:text="${funcionarioActual.rol}">
+                            ADMIN
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actualizar nombre de usuario -->
+            <div class="card">
+                <h3>Cambiar nombre de usuario</h3>
+
+                <form th:action="@{/admin/perfil/actualizar-datos}" method="post">
+                    <div class="form-group">
+                        <label for="nombreUsuario">Nuevo nombre de usuario</label>
+                        <input id="nombreUsuario"
+                               name="nombreUsuario"
+                               type="text"
+                               th:value="${funcionarioActual != null ? funcionarioActual.nombreUsuario : ''}"
+                               placeholder="Ingresa tu nuevo nombre de usuario">
+                    </div>
+                    <button type="submit" class="btn-primary">Guardar cambios</button>
+                </form>
+            </div>
+
+            <!-- Cambiar contraseña -->
+            <div class="card">
+                <h3>Cambiar contraseña</h3>
+
+                <form th:action="@{/admin/perfil/cambiar-password}" method="post">
+                    <div class="form-group">
+                        <label for="contrasenaActual">Contraseña actual</label>
+                        <input id="contrasenaActual"
+                               name="contrasenaActual"
+                               type="password"
+                               placeholder="Tu contraseña actual">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nuevaContrasena">Nueva contraseña</label>
+                        <input id="nuevaContrasena"
+                               name="nuevaContrasena"
+                               type="password"
+                               placeholder="Mínimo 8 caracteres">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmarContrasena">Confirmar nueva contraseña</label>
+                        <input id="confirmarContrasena"
+                               name="confirmarContrasena"
+                               type="password"
+                               placeholder="Repite la nueva contraseña">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Actualizar contraseña</button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 PizzUMBurgUM. Todos los derechos reservados.</p>
+            <p class="mb-0">Backoffice para que el equipo interno tenga todo bajo control ⚙️</p>
+        </div>
+    </footer>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

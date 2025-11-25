@@ -40,6 +40,9 @@ public class Pedido {
     @NotNull
     private LocalDate fecha;
 
+    @Column
+    private Integer precioTotal;
+
     @ManyToMany
     @JoinTable(
             name = "pedido_creacion",

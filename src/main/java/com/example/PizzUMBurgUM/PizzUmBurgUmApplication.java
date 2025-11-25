@@ -49,13 +49,13 @@ public class PizzUmBurgUmApplication {
         Producto p1 = Producto.builder()
                 .nombre("Tomate")
                 .precio(100)
-                .tipo('P')
+                .tipo("P")
                 .build();
 
         Producto p2 = Producto.builder()
                 .nombre("Pepperoni")
                 .precio(200)
-                .tipo('P')
+                .tipo("P")
                 .build();
 
         productoRepositorio.save(p1);
@@ -81,10 +81,18 @@ public class PizzUmBurgUmApplication {
                 .nombreUsuario("Juan")
                 .contrasena("pepepepe")
                 .email("juean@mail")
-                .rol("Admin")
+                .rol("ADMIN")
+                .build();
+
+        Funcionario funcionario1 = Funcionario.builder()
+                .nombreUsuario("Mateo")
+                .contrasena("pepepepe")
+                .email("m@op")
+                .rol("OPERADOR")
                 .build();
 
         funcionarioRepositorio.save(funcionario);
+        funcionarioRepositorio.save(funcionario1);
 
         Pedido pedido = Pedido.builder()
                 .fecha(LocalDate.now())

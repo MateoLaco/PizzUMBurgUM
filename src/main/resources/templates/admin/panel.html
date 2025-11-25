@@ -12,7 +12,7 @@
 
         .navbar-horizontal{ background:var(--dark-color); padding:1rem 0; box-shadow:0 4px 20px rgba(0,0,0,.1); position:sticky; top:0; z-index:1000;}
         .nav-container{ display:flex; align-items:center; justify-content:space-between; width:100%;}
-        .navbar-brand{ font-family:'Montserrat',sans-serif; font-weight:700; font-size:1.8rem; color:#fff!important; text-decoration:none; white-space:nowrap;}
+        .navbar-brand{ font-family:'Montserrat',sans-serif;margin-left: 2rem; font-weight:700; font-size:1.8rem; color:#fff!important; text-decoration:none; white-space:nowrap;}
         .nav-links{ display:flex; align-items:center; gap:10px; flex-wrap:nowrap;}
         .nav-link{ color:#fff!important; font-weight:500; padding:10px 20px!important; border-radius:25px; transition:all .3s ease; text-decoration:none; white-space:nowrap; border:none; background:transparent; cursor:pointer; font-family:inherit; font-size:inherit;}
         .nav-link:hover{ background:rgba(255,255,255,.1); transform:translateY(-2px);}
@@ -48,8 +48,8 @@
                     <a class="nav-link active" href="/admin/panel">Inicio</a>
                     <a class="nav-link" href="/admin/productos">Productos</a>
                     <a class="nav-link" href="/admin/pedidos">Pedidos</a>
-                    <a class="nav-link" href="/admin/reportes">Reportes</a>
                     <a class="nav-link" href="/admin/usuarios">Usuarios</a>
+                    <a class="nav-link" href="/admin/perfil">Perfil</a>
                     <a th:href="@{/auth/logout}" class="nav-link logout-btn">Salir</a>
                 </div>
             </div>
@@ -84,12 +84,6 @@
                     <div class="qa-title">Gestionar productos</div>
                     <div class="qa-text">Crear, editar o desactivar productos del menú.</div>
                     <span class="qa-btn">Ir a productos</span>
-                </a>
-
-                <a href="/admin/reportes" class="qa-card">
-                    <div class="qa-title">Ver reportes</div>
-                    <div class="qa-text">Consultá el rendimiento por día, rango de fechas y más.</div>
-                    <span class="qa-btn">Ir a reportes</span>
                 </a>
 
                 <a href="/admin/usuarios" class="qa-card">
