@@ -30,7 +30,7 @@ public class Producto {
     @NotNull
     private float precio;
 
-    @Column(length = 1)
+    @Column(length = 2)
     @NotNull
     private String tipo;
 

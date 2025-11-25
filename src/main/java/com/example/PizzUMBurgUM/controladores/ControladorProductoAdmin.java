@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin/productos")
@@ -48,21 +49,27 @@ public class ControladorProductoAdmin {
         return "redirect:/admin/productos";
     }
 
-    // 🔥 Nuevo: actualizar todos los "activo" con un solo botón
-    @PostMapping("/actualizar-activos")
-    public String actualizarActivos(@RequestParam(value = "activos", required = false) List<Long> idsActivos,
-                                    RedirectAttributes redirectAttributes,
-                                    HttpSession session) {
+    // ⬇⬇⬇ NUEVO: guardar cambios de ACTIVO + PRECIO en lote
+    @PostMapping("/guardar-cambios")
+    public String guardarCambios(@RequestParam(value = "activos", required = false) List<Long> idsActivos,
+                                 @RequestParam Map<String, String> requestParams,
+                                 RedirectAttributes redirectAttributes,
+                                 HttpSession session) {
 
-        if (!verificarSesion(session)) return "redirect:/auth/login";
+        if (session.getAttribute("funcionarioLogueado") == null) {
+            return "redirect:/auth/login";
+        }
 
         try {
-            productoServicio.actualizarActivosEnLote(idsActivos);
-            redirectAttributes.addFlashAttribute("mensajeExito", "Estados de productos actualizados.");
+            // el servicio se encarga de filtrar las keys que empiezan con "precio_"
+            productoServicio.actualizarPreciosYActivosEnLote(idsActivos, requestParams);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Productos actualizados correctamente.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeError", e.getMessage());
         }
 
         return "redirect:/admin/productos";
     }
+
+
 }
