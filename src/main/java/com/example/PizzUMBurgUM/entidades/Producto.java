@@ -30,9 +30,13 @@ public class Producto {
     @NotNull
     private float precio;
 
-    @Column(length = 1)
+    @Column(length = 2)
     @NotNull
-    private char tipo;
+    private String tipo;
+
+    @Column
+    @NotNull
+    private boolean activo;
 
     @ManyToMany(mappedBy = "productos")
     private Set<Creacion> creaciones = new HashSet<>();

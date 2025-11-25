@@ -1,15 +1,18 @@
 package com.example.PizzUMBurgUM.controladores;
 
+import com.example.PizzUMBurgUM.dto.RegistroClienteDto;
 import org.springframework.ui.Model;
 import com.example.PizzUMBurgUM.entidades.Cliente;
+import com.example.PizzUMBurgUM.entidades.Funcionario;
 import com.example.PizzUMBurgUM.servicios.ClienteServicio;
+import com.example.PizzUMBurgUM.servicios.FuncionarioServicio;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -17,20 +20,38 @@ import java.time.LocalDate;
 @Controller
 @RequestMapping("/auth")
 public class ControladorAuth {
+
     @Autowired
     private ClienteServicio clienteServicio;
+
+    @Autowired
+    private FuncionarioServicio funcionarioServicio;
 
     // MOSTRAR LOGIN
     @GetMapping("/login")
     public String mostrarLogin(@RequestParam(value = "error", required = false) String error,
                                @RequestParam(value = "registro", required = false) String registro,
+                               @RequestParam(value = "next", required = false) String nextFromQuery,
+                               HttpSession session,
                                Model model) {
         if (error != null) {
             model.addAttribute("error", "Email o contraseña incorrectos");
         }
         if (registro != null) {
-            model.addAttribute("mensaje","¡Registro exitoso!");
+            model.addAttribute("mensaje", "¡Registro exitoso!");
         }
+
+        // Prioridad: si viene ?next=... en la URL → usarlo
+        if (nextFromQuery != null && !nextFromQuery.isBlank()) {
+            model.addAttribute("next", nextFromQuery);
+        } else {
+            // Si no, mirar si el interceptor dejó algo en sesión
+            String next = (String) session.getAttribute("NEXT_URL");
+            if (next != null) {
+                model.addAttribute("next", next);
+            }
+        }
+
         return "auth/login";
     }
 
@@ -38,29 +59,47 @@ public class ControladorAuth {
     @PostMapping("/login")
     public String procesarLogin(@RequestParam String email,
                                 @RequestParam String contrasena,
+                                @RequestParam(value = "next", required = false) String nextParam,
                                 HttpSession session,
                                 Model model) {
 
         Cliente cliente = clienteServicio.findByEmail(email);
+        Funcionario funcionario = funcionarioServicio.findByEmail(email);
 
-        if (cliente != null && cliente.getContrasena().equals(contrasena)) {
-            // Login exitoso - guardar en sesión
-            session.setAttribute("clienteLogueado", cliente);
-            return "redirect:/cliente/panel";
-        } else {
-            // Login fallido
+        boolean okCliente = cliente != null && cliente.getContrasena().equals(contrasena);
+        boolean okFunc = funcionario != null && funcionario.getContrasena().equals(contrasena);
+
+        if (!(okCliente || okFunc)) {
             model.addAttribute("error", "Email o contraseña incorrectos");
             return "auth/login";
         }
+
+        if (okCliente) session.setAttribute("clienteLogueado", cliente);
+        if (okFunc)    session.setAttribute("funcionarioLogueado", funcionario);
+
+        // 1) next del form
+        String next = nextParam;
+        // 2) o lo que guardó el interceptor en sesión
+        if (next == null) next = (String) session.getAttribute("NEXT_URL");
+        // Limpieza
+        session.removeAttribute("NEXT_URL");
+
+        // Seguridad básica → no permitir redirecciones externas
+        if (next != null && next.startsWith("/")) {
+            return "redirect:" + next;
+        }
+
+        // Fallback por tipo de usuario
+        return okCliente ? "redirect:/cliente/panel" : "redirect:/admin/panel";
     }
 
-    // MOSTRAR REGISTRO
     @GetMapping("/register")
-    public String mostrarRegistro() {
+    public String mostrarRegistro(Model model) {
+        model.addAttribute("form", new RegistroClienteDto());
         return "auth/register";
     }
 
-    // PROCESAR REGISTRO (SIMPLIFICADO)
+    // PROCESAR REGISTRO (tu versión, ya sin conflicto)
     @PostMapping("/register")
     public String procesarRegistro(
             @RequestParam String nombreUsuario,
@@ -114,7 +153,7 @@ public class ControladorAuth {
             // 7) Limpiar y formatear número de tarjeta (quitar espacios)
             String numeroTarjetaLimpio = numeroTarjeta.replaceAll("\\s+", "");
 
-            // 8) Crear y guardar cliente (SIN fechaRegistro - se establece automáticamente)
+            // 8) Crear y guardar cliente (fechaRegistro se setea en @PrePersist)
             Cliente clienteNuevo = Cliente.builder()
                     .nombreUsuario(nombreUsuario.trim())
                     .email(email.trim().toLowerCase())
@@ -145,12 +184,12 @@ public class ControladorAuth {
         }
     }
 
-
     // CERRAR SESIÓN
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.removeAttribute("clienteLogueado");
+        session.removeAttribute("funcionarioLogueado");
         session.invalidate();
-        return "redirect:/auth/login?logout=true";
+        return "redirect:/inicio";
     }
 }

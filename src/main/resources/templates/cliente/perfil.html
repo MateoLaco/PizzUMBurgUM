@@ -1227,10 +1227,10 @@
         event.currentTarget.classList.add('active');
     }
 
-    // Funciones para Direcciones (SIMPLIFICADAS)
+    /* ------------------------------ DIRECCIONES ------------------------------ */
+
     function mostrarModalDireccion() {
         document.getElementById('modalDireccion').style.display = 'flex';
-        // Limpiar formulario
         document.getElementById('direccionCompleta').value = '';
         document.getElementById('direccionPrincipal').checked = false;
     }
@@ -1243,9 +1243,7 @@
         if (confirm('¿Estás seguro de que quieres eliminar esta dirección?')) {
             fetch(`/cliente/direcciones/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
+                headers: { 'Content-Type': 'application/json' }
             })
                 .then(response => response.json())
                 .then(data => {
@@ -1266,9 +1264,7 @@
     function marcarComoPrincipal(id) {
         fetch(`/cliente/direcciones/${id}/principal`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }
+            headers: { 'Content-Type': 'application/json' }
         })
             .then(response => response.json())
             .then(data => {
@@ -1299,31 +1295,21 @@
             return;
         }
 
-        // Usar URLSearchParams para enviar los datos
         const params = new URLSearchParams();
         params.append('direccionCompleta', direccionCompleta);
         params.append('principal', principal.toString());
 
         fetch('/cliente/direcciones/guardar', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: params
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error del servidor: ' + response.status);
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     mostrarNotificacion('notificationDireccion');
                     cerrarModalDireccion();
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1500);
+                    setTimeout(() => location.reload(), 1500);
                 } else {
                     alert('Error: ' + data.message);
                 }
@@ -1333,10 +1319,11 @@
                 alert('Error de conexión: ' + error.message);
             });
     }
-    // Funciones para Tarjetas
+
+    /* ------------------------------ TARJETAS ------------------------------ */
+
     function mostrarModalTarjeta() {
         document.getElementById('modalTarjeta').style.display = 'flex';
-        // Limpiar formulario
         document.getElementById('tarjetaTitular').value = '';
         document.getElementById('tarjetaNumero').value = '';
         document.getElementById('tarjetaVencimiento').value = '';
@@ -1349,7 +1336,6 @@
     }
 
     function editarTarjeta(id) {
-        // Aquí cargarías los datos de la tarjeta existente para editar
         alert('Editar tarjeta con ID: ' + id);
     }
 
@@ -1357,9 +1343,7 @@
         if (confirm('¿Estás seguro de que quieres eliminar esta tarjeta?')) {
             fetch(`/cliente/tarjetas/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
+                headers: { 'Content-Type': 'application/json' }
             })
                 .then(response => response.json())
                 .then(data => {
@@ -1395,7 +1379,7 @@
         formData.append('vencimiento', vencimiento);
         formData.append('cvv', cvv);
         formData.append('marca', marca);
-        formData.append('tipo', 'credito'); // Por defecto
+        formData.append('tipo', 'credito');
         formData.append('principal', false);
 
         fetch('/cliente/tarjetas/guardar', {
@@ -1407,9 +1391,7 @@
                 if (data.success) {
                     mostrarNotificacion('notificationTarjeta');
                     cerrarModalTarjeta();
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000);
+                    setTimeout(() => location.reload(), 2000);
                 } else {
                     alert('Error al agregar la tarjeta: ' + data.message);
                 }
@@ -1420,77 +1402,70 @@
             });
     }
 
-    // Mostrar notificación moderna
+    /* ------------------------------ UTILIDADES ------------------------------ */
+
     function mostrarNotificacion(id) {
         const notification = document.getElementById(id);
         notification.classList.add('show');
-
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 3000);
+        setTimeout(() => notification.classList.remove('show'), 3000);
     }
 
-    // Formatear número de tarjeta
-    document.getElementById('tarjetaNumero')?.addEventListener('input', function(e) {
+    document.getElementById('tarjetaNumero')?.addEventListener('input', function (e) {
         let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
         let matches = value.match(/\d{4,16}/g);
         let match = matches && matches[0] || '';
         let parts = [];
 
-        for (let i=0, len=match.length; i<len; i+=4) {
-            parts.push(match.substring(i, i+4));
+        for (let i = 0; i < match.length; i += 4) {
+            parts.push(match.substring(i, i + 4));
         }
-
-        if (parts.length) {
-            e.target.value = parts.join(' ');
-        } else {
-            e.target.value = value;
-        }
+        e.target.value = parts.length ? parts.join(' ') : value;
     });
 
-    // Formatear fecha de vencimiento
-    document.getElementById('tarjetaVencimiento')?.addEventListener('input', function(e) {
+    document.getElementById('tarjetaVencimiento')?.addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
-        if (value.length >= 2) {
+        if (value.length >= 2)
             e.target.value = value.substring(0, 2) + '/' + value.substring(2, 4);
-        }
     });
 
-    // Funciones del carrito
+    /* ------------------------------ CARRITO ------------------------------ */
+
+    let carrito = JSON.parse(localStorage.getItem('pizzumburgum_cart')) || [];
+
     function irAlCarritoCompleto() {
         window.location.href = '/cliente/carrito';
     }
 
-    // Inicializar
-    document.addEventListener('DOMContentLoaded', function() {
-        // Cerrar modales al hacer click fuera
+    function actualizarCarritoVisual() {
+        const badge = document.getElementById('cartBoxBadge');
+        if (badge) badge.textContent = carrito.length;
+    }
+
+    /* ------------------------------ CONTROL DE CACHE (MAIN) ------------------------------ */
+
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+
+    /* ------------------------------ INIT ------------------------------ */
+
+    document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.style.display = 'none';
-                }
+            modal.addEventListener('click', function (e) {
+                if (e.target === this) this.style.display = 'none';
             });
         });
 
-        // Marcar enlace activo en la navegación
         const currentPage = window.location.pathname;
         document.querySelectorAll('.nav-link').forEach(link => {
-            if (link.getAttribute('href') === currentPage) {
-                link.classList.add('active');
-            }
+            if (link.getAttribute('href') === currentPage) link.classList.add('active');
         });
 
-        // Inicializar carrito
         actualizarCarritoVisual();
     });
-
-    // Sistema de carrito
-    let carrito = JSON.parse(localStorage.getItem('pizzumburgum_cart')) || [];
-
-    function actualizarCarritoVisual() {
-        const cartBoxBadge = document.getElementById('cartBoxBadge');
-        cartBoxBadge.textContent = carrito.length;
-    }
 </script>
+
 </body>
 </html>

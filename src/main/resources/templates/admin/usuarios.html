@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<head>
+    <title>Gestión de Funcionarios - Admin</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --primary-color:#dc3545; --secondary-color:#ffc107; --dark-color:#2c3e50; --light-color:#f8f9fa; }
+
+        body { font-family:'Poppins',sans-serif; background:var(--dark-color); margin:0; }
+
+        .navbar-horizontal{
+            background:var(--dark-color);
+            padding:1rem 0;
+            box-shadow:0 4px 20px rgba(0,0,0,.1);
+        }
+        .nav-container{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .navbar-brand{
+            font-family:'Montserrat';
+            margin-left: 2rem;
+            font-weight:700;
+            color:white !important;
+            font-size:1.8rem;
+            text-decoration:none;
+        }
+        .nav-links{ display:flex; gap:10px; }
+        .nav-link{
+            padding:10px 20px;
+            border-radius:25px;
+            color:white;
+            text-decoration:none;
+            font-weight:500;
+        }
+        .nav-link.active{ background:var(--primary-color); }
+        .logout-btn{ border:2px solid #fff; border-radius:25px; }
+
+        /* HERO */
+        .hero-section{
+            padding:90px 0;
+            text-align:center;
+            color:white;
+            background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+            url('https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&auto=format&fit=crop');
+            background-size:cover;
+            background-position:center;
+        }
+        .hero-title{
+            font-size:2.6rem;
+            font-weight:700;
+            margin-bottom:.3rem;
+        }
+        .hero-subtitle{
+            font-size:1.1rem;
+            max-width:650px;
+            margin:auto;
+        }
+
+        /* CONTENT */
+        .page-section{
+            background:#f8f9fa;
+            padding:50px 0;
+        }
+        .card{
+            background:white;
+            padding:20px 25px;
+            border-radius:15px;
+            margin-bottom:25px;
+            box-shadow:0 10px 25px rgba(0,0,0,.08);
+        }
+        .card h3{
+            margin:0 0 15px 0;
+            font-size:1.3rem;
+        }
+
+        /* FORM NUEVO FUNCIONARIO */
+        .form-grid{
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+            gap:20px;
+        }
+
+        .form-group label{
+            font-weight:600;
+            margin-bottom:6px;
+            display:block;
+        }
+        .form-group input,
+        .form-group select{
+            width:100%;
+            padding:10px 12px;
+            border-radius:10px;
+            border:1px solid #dcdcdc;
+            font-size:.95rem;
+        }
+
+        /* BUTTONS */
+        .btn-primary{
+            background:linear-gradient(45deg,#dc3545,#c82333);
+            border:none;
+            padding:10px 20px;
+            border-radius:14px;
+            color:white;
+            font-weight:600;
+            cursor:pointer;
+            font-size:.95rem;
+        }
+        .btn-primary:hover{
+            transform:translateY(-2px);
+            box-shadow:0 8px 20px rgba(220,53,69,.3);
+        }
+
+        .btn-small{
+            padding:8px 14px;
+            border-radius:10px;
+            border:none;
+            background:#2c3e50;
+            color:white;
+            cursor:pointer;
+            font-weight:600;
+            font-size:.85rem;
+        }
+        .btn-small.btn-danger{
+            background:#dc3545;
+        }
+        .btn-small.btn-danger:hover{
+            background:#a71d2a;
+        }
+
+        /* TABLE */
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+        th,td{
+            padding:12px 14px;
+            border-bottom:1px solid #e9e9e9;
+            font-size:.95rem;
+        }
+        /* centramos todas las celdas */
+        table th, table td{
+            text-align:center !important;
+            vertical-align:middle;
+        }
+        th{
+            background:#fafafa;
+            font-weight:600;
+        }
+
+        .badge-rol{
+            padding:5px 10px;
+            border-radius:12px;
+            font-size:.8rem;
+            font-weight:600;
+            display:inline-block;
+        }
+        .badge-ADMIN{
+            background:#cce5ff;
+            color:#004085;
+        }
+        .badge-OPERADOR{
+            background:#fff3cd;
+            color:#856404;
+        }
+        .badge-OTRO{
+            background:#e2e3e5;
+            color:#383d41;
+        }
+
+        .alert{
+            border-radius:10px;
+            padding:10px 14px;
+            font-size:.9rem;
+            margin-bottom:15px;
+        }
+        .alert-success{
+            background:#d4edda;
+            color:#155724;
+            border:1px solid #c3e6cb;
+        }
+        .alert-danger{
+            background:#f8d7da;
+            color:#721c24;
+            border:1px solid #f5c6cb;
+        }
+
+        /* MODAL CONFIRMACIÓN */
+        .confirm-modal{
+            display:none;
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.5);
+            justify-content:center;
+            align-items:center;
+            z-index:2000;
+        }
+        .confirm-modal.show{
+            display:flex;
+        }
+        .confirm-modal-content{
+            background:#fff;
+            padding:20px 24px;
+            border-radius:14px;
+            box-shadow:0 8px 20px rgba(0,0,0,.3);
+            max-width:320px;
+            width:90%;
+            text-align:center;
+            font-size:.95rem;
+        }
+        .confirm-buttons{
+            margin-top:16px;
+            display:flex;
+            justify-content:space-between;
+            gap:10px;
+        }
+        #confirmYes, #confirmNo{
+            flex:1;
+            padding:8px 10px;
+            border-radius:10px;
+            border:none;
+            cursor:pointer;
+            font-weight:600;
+            font-size:.9rem;
+        }
+        #confirmYes{
+            background:linear-gradient(45deg,#dc3545,#c82333);
+            color:#fff;
+        }
+        #confirmNo{
+            background:#e2e3e5;
+            color:#333;
+        }
+        #confirmYes:hover{
+            transform:translateY(-1px);
+            box-shadow:0 6px 16px rgba(220,53,69,.3);
+        }
+
+        .footer{
+            background:var(--dark-color);
+            color:#fff;
+            padding:30px 0;
+            text-align:center;
+            margin-top:30px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <!-- NAVBAR -->
+    <nav class="navbar-horizontal">
+        <div class="container nav-container">
+            <a href="/admin/panel" class="navbar-brand">PizzUM & BurgUM</a>
+
+            <div class="nav-links">
+                <a class="nav-link" href="/admin/panel">Inicio</a>
+                <a class="nav-link" href="/admin/productos">Productos</a>
+                <a class="nav-link" href="/admin/pedidos">Pedidos</a>
+                <a class="nav-link active" href="/admin/usuarios">Usuarios</a>
+                <a class="nav-link" href="/admin/perfil">Perfil</a>
+                <a class="nav-link logout-btn" th:href="@{/auth/logout}">Salir</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Gestión de Funcionarios</h1>
+            <p class="hero-subtitle">
+                Crea y administra los usuarios internos que gestionan productos, pedidos y reportes.
+            </p>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <section class="page-section">
+        <div class="container">
+
+            <!-- Mensajes -->
+            <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
+            <div th:if="${mensajeError}" class="alert alert-danger" th:text="${mensajeError}"></div>
+
+            <!-- FORM NUEVO FUNCIONARIO -->
+            <div class="card">
+                <h3>Crear nuevo funcionario</h3>
+
+                <form th:action="@{/admin/usuarios/crear}" method="post">
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="nombreUsuario">Nombre de usuario</label>
+                            <input id="nombreUsuario"
+                                   name="nombreUsuario"
+                                   type="text"
+                                   placeholder="Ej: juan.admin">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input id="email"
+                                   name="email"
+                                   type="email"
+                                   placeholder="usuario@dominio.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contrasena">Contraseña</label>
+                            <input id="contrasena"
+                                   name="contrasena"
+                                   type="password"
+                                   placeholder="Contraseña segura">
+                        </div>
+
+                        <!-- Select de rol distinto según quién está logueado -->
+                        <!-- ADMIN: puede elegir ADMIN u OPERADOR -->
+                        <div class="form-group" th:if="${funcionarioActual != null and funcionarioActual.rol == 'ADMIN'}">
+                            <label for="rol">Rol</label>
+                            <select id="rol" name="rol">
+                                <option value="" disabled selected>Seleccionar rol</option>
+                                <option value="ADMIN">ADMIN</option>
+                                <option value="OPERADOR">OPERADOR</option>
+                            </select>
+                        </div>
+
+                        <!-- OPERADOR: solo puede crear OPERADOR -->
+                        <div class="form-group" th:if="${funcionarioActual != null and funcionarioActual.rol == 'OPERADOR'}">
+                            <label for="rol">Rol</label>
+                            <select id="rol" name="rol">
+                                <option value="OPERADOR" selected>OPERADOR</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <br>
+                    <button type="submit" class="btn-primary">Crear funcionario</button>
+                </form>
+            </div>
+
+            <!-- TABLA FUNCIONARIOS -->
+            <div class="card">
+                <h3>Listado de funcionarios</h3>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre usuario</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="f : ${funcionarios}">
+                            <td th:text="${f.idUsuario}">1</td>
+                            <td th:text="${f.nombreUsuario}">juan.admin</td>
+                            <td th:text="${f.email}">juan@mail.com</td>
+                            <td>
+                                <span class="badge-rol"
+                                      th:classappend="${' badge-' + (f.rol != null ? f.rol : 'OTRO')}"
+                                      th:text="${f.rol}">
+                                    ADMIN
+                                </span>
+                            </td>
+                            <td>
+                                <!-- Mostrar botón eliminar solo cuando:
+                                     - no es el mismo usuario logueado
+                                     - y:
+                                        * si ADMIN: puede eliminar a cualquiera
+                                        * si OPERADOR: solo puede eliminar a otros OPERADOR
+                                -->
+                                <div th:if="${funcionarioActual != null
+                                             and f.idUsuario != funcionarioActual.idUsuario
+                                             and (
+                                                   funcionarioActual.rol == 'ADMIN'
+                                                   or (funcionarioActual.rol == 'OPERADOR' and f.rol == 'OPERADOR')
+                                             )}">
+                                    <form th:action="@{/admin/usuarios/{id}/eliminar(id=${f.idUsuario})}"
+                                          method="post"
+                                          class="form-eliminar-funcionario">
+                                        <button type="submit" class="btn-small btn-danger">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Si no se puede eliminar (mismo usuario o rol no permitido), botón deshabilitado -->
+                                <div th:if="${funcionarioActual == null
+                                             or f.idUsuario == funcionarioActual.idUsuario
+                                             or (funcionarioActual.rol == 'OPERADOR' and f.rol != 'OPERADOR')}">
+                                    <button class="btn-small btn-danger"
+                                            disabled
+                                            style="opacity:0.5; cursor:not-allowed;">
+                                        No disponible
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(funcionarios)}">
+                            <td colspan="5" style="padding:18px;">
+                                No hay funcionarios registrados.
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- MODAL CONFIRMACIÓN ELIMINAR -->
+    <div id="confirmModal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <p id="confirmText">¿Seguro que deseas eliminar este funcionario?</p>
+            <div class="confirm-buttons">
+                <button type="button" id="confirmYes">Sí, eliminar</button>
+                <button type="button" id="confirmNo">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 PizzUMBurgUM. Todos los derechos reservados.</p>
+            <p class="mb-0">Backoffice para que el equipo interno tenga todo bajo control ⚙️</p>
+        </div>
+    </footer>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            }
+        });
+
+        // --- LÓGICA DEL MODAL DE CONFIRMACIÓN ---
+        const modal = document.getElementById('confirmModal');
+        const confirmText = document.getElementById('confirmText');
+        const btnYes = document.getElementById('confirmYes');
+        const btnNo = document.getElementById('confirmNo');
+        let formPendiente = null;
+
+        document.querySelectorAll('.form-eliminar-funcionario').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                formPendiente = this;
+
+                const fila = this.closest('tr');
+                const nombre = fila ? fila.querySelector('td:nth-child(2)').innerText : 'este funcionario';
+
+                confirmText.textContent = '¿Seguro que deseas eliminar a "' + nombre + '"?';
+                modal.classList.add('show');
+            });
+        });
+
+        btnYes.addEventListener('click', function() {
+            if (formPendiente) {
+                formPendiente.submit();
+            }
+            modal.classList.remove('show');
+            formPendiente = null;
+        });
+
+        btnNo.addEventListener('click', function() {
+            modal.classList.remove('show');
+            formPendiente = null;
+        });
+    });
+</script>
+
+</body>
+</html>

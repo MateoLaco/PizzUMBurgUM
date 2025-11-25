@@ -1011,6 +1011,13 @@
         // Inicializar carrito al cargar la página
         actualizarCarritoVisual();
     });
+
+    // Si la página vuelve desde el back/forward cache, recargar
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
 </script>
 </body>
 </html>
