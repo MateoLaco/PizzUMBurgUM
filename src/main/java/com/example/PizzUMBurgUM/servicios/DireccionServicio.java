@@ -35,9 +35,9 @@ public class DireccionServicio {
     }
     // EN DireccionServicio - AGREGAR estos métodos:
 
-    public boolean existeDireccionConNombre(Cliente cliente, String nombre) {
-        return direccionRepositorio.existsByClienteAndNombreIgnoreCase(cliente, nombre);
-    }
+//    public boolean existeDireccionConNombre(Cliente cliente, String nombre) {
+//        return direccionRepositorio.existsByClienteAndNombreIgnoreCase(cliente, nombre);
+//    }
     public void quitarPrincipalDeTodas(Cliente cliente) {
         List<Direccion> direcciones = direccionRepositorio.findByCliente(cliente);
         for (Direccion dir : direcciones) {

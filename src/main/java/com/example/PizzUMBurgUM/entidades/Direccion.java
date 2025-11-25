@@ -15,13 +15,13 @@ public class Direccion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String nombre; // Ej: "Casa", "Trabajo", "Departamento"
+//    @Column(nullable = false)
+//    private String nombre; // Ej: "Casa", "Trabajo", "Departamento"
 
     @Column(nullable = false)
     private String calle;
 
-    private String referencias;
+//    private String referencias;
 
     @Column(nullable = false)
     private Boolean principal = false;

@@ -1,6 +1,10 @@
 package com.example.PizzUMBurgUM.controladores;
 
 import com.example.PizzUMBurgUM.dto.RegistroClienteDto;
+import com.example.PizzUMBurgUM.entidades.Direccion;
+import com.example.PizzUMBurgUM.entidades.Tarjeta;
+import com.example.PizzUMBurgUM.repositorios.DireccionRepositorio;
+import com.example.PizzUMBurgUM.repositorios.TarjetaRepositorio;
 import org.springframework.ui.Model;
 import com.example.PizzUMBurgUM.entidades.Cliente;
 import com.example.PizzUMBurgUM.entidades.Funcionario;
@@ -26,6 +30,11 @@ public class ControladorAuth {
 
     @Autowired
     private FuncionarioServicio funcionarioServicio;
+    @Autowired
+    private DireccionRepositorio direccionRepositorio;
+
+    @Autowired
+    private TarjetaRepositorio tarjetaRepositorio;
 
     // MOSTRAR LOGIN
     @GetMapping("/login")
@@ -168,6 +177,28 @@ public class ControladorAuth {
                     .build();
 
             Cliente clienteRegistrado = clienteServicio.guardarCliente(clienteNuevo);
+            // Crear dirección PRINCIPAL a partir del campo "direccion" del registro
+            if (direccion != null && !direccion.isBlank()) {
+                Direccion dir = Direccion.builder()
+                        .cliente(clienteRegistrado)
+                        .principal(true)
+                        .build();
+                direccionRepositorio.save(dir);
+            }
+
+// Crear tarjeta PRINCIPAL a partir de los datos del registro
+            if (numeroTarjetaLimpio != null && !numeroTarjetaLimpio.isBlank()) {
+                Tarjeta tarjeta = Tarjeta.builder()
+                        .cliente(clienteRegistrado)
+                        .titular(nombreTarjeta.trim())
+                        .numero(numeroTarjetaLimpio)
+                        .vencimiento(vencimientoTarjeta.trim())
+                        .marca(metodoPago)   // Visa / MasterCard / etc.
+                        .principal(true)
+                        .build();
+                tarjetaRepositorio.save(tarjeta);
+            }
+
 
             // 9) Establecer en sesión
             session.setAttribute("clienteLogueado", clienteRegistrado);
