@@ -33,4 +33,32 @@ public class DireccionServicio {
         return direccionRepositorio.findById(id)
                 .filter(direccion -> direccion.getCliente().getIdUsuario().equals(cliente.getIdUsuario()));
     }
+    // EN DireccionServicio - AGREGAR estos métodos:
+
+    public boolean existeDireccionConNombre(Cliente cliente, String nombre) {
+        return direccionRepositorio.existsByClienteAndNombreIgnoreCase(cliente, nombre);
+    }
+    public void quitarPrincipalDeTodas(Cliente cliente) {
+        List<Direccion> direcciones = direccionRepositorio.findByCliente(cliente);
+        for (Direccion dir : direcciones) {
+            dir.setPrincipal(false);
+        }
+        direccionRepositorio.saveAll(direcciones);
+    }
+
+    public void marcarComoPrincipal(Cliente cliente, Long direccionId) {
+        // Quitar principal de todas
+        quitarPrincipalDeTodas(cliente);
+
+        // Marcar la nueva como principal
+        Direccion direccion = direccionRepositorio.findById(direccionId)
+                .orElseThrow(() -> new RuntimeException("Dirección no encontrada"));
+
+        if (!direccion.getCliente().getIdUsuario().equals(cliente.getIdUsuario())) {
+            throw new RuntimeException("La dirección no pertenece al cliente");
+        }
+
+        direccion.setPrincipal(true);
+        direccionRepositorio.save(direccion);
+    }
 }

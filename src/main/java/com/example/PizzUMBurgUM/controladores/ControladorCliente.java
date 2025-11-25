@@ -278,7 +278,6 @@ public class ControladorCliente {
             model.addAttribute("cliente", cliente);
 
             // Direcciones y tarjetas adicionales
-            model.addAttribute("direcciones", direccionServicio.obtenerDireccionesPorCliente(cliente));
             model.addAttribute("tarjetas", tarjetaServicio.obtenerTarjetasPorCliente(cliente));
 
             // Favoritos
@@ -313,13 +312,7 @@ public class ControladorCliente {
     @PostMapping("/direcciones/guardar")
     @ResponseBody
     public ResponseEntity<?> guardarDireccion(
-            @RequestParam String nombre,
-            @RequestParam String calle,
-            @RequestParam(required = false) String colonia,
-            @RequestParam(required = false) String ciudad,
-            @RequestParam(required = false) String estado,
-            @RequestParam(required = false) String codigoPostal,
-            @RequestParam(required = false) String referencias,
+            @RequestParam String direccionCompleta,
             @RequestParam(defaultValue = "false") Boolean principal,
             HttpSession session) {
 
@@ -329,23 +322,36 @@ public class ControladorCliente {
         }
 
         try {
+            // Validar que la dirección no esté vacía
+            if (direccionCompleta == null || direccionCompleta.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "success", false,
+                        "message", "La dirección no puede estar vacía"
+                ));
+            }
+
+            // Si se marca como principal, quitar principal de las demás
+            if (principal) {
+                direccionServicio.quitarPrincipalDeTodas(cliente);
+            }
+
             Direccion direccion = Direccion.builder()
-                    .nombre(nombre)
-                    .calle(calle)
-                    .colonia(colonia)
-                    .ciudad(ciudad)
-                    .estado(estado)
-                    .codigoPostal(codigoPostal)
-                    .referencias(referencias)
                     .principal(principal)
                     .cliente(cliente)
                     .build();
 
             direccionServicio.guardarDireccion(direccion);
-            return ResponseEntity.ok(Map.of("success", true, "message", "Dirección guardada correctamente"));
+
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Dirección guardada correctamente"
+            ));
 
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Error al guardar la dirección"));
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Error al guardar la dirección: " + e.getMessage()
+            ));
         }
     }
 
@@ -365,57 +371,18 @@ public class ControladorCliente {
         }
     }
 
-    // Endpoints para tarjetas
-    @PostMapping("/tarjetas/guardar")
+    @PostMapping("/direcciones/{id}/principal")
     @ResponseBody
-    public ResponseEntity<?> guardarTarjeta(
-            @RequestParam String titular,
-            @RequestParam String numero,
-            @RequestParam String vencimiento,
-            @RequestParam String cvv,
-            @RequestParam String tipo,
-            @RequestParam String marca,
-            @RequestParam(defaultValue = "false") Boolean principal,
-            HttpSession session) {
-
+    public ResponseEntity<?> marcarComoPrincipal(@PathVariable Long id, HttpSession session) {
         Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
         if (cliente == null) {
             return ResponseEntity.status(401).body(Map.of("success", false, "message", "No autenticado"));
         }
 
         try {
-            Tarjeta tarjeta = Tarjeta.builder()
-                    .titular(titular)
-                    .numero(numero.replaceAll("\\s+", "")) // Remover espacios
-                    .vencimiento(vencimiento)
-                    .cvv(cvv)
-                    .tipo(tipo)
-                    .marca(marca)
-                    .principal(principal)
-                    .cliente(cliente)
-                    .build();
-
-            tarjetaServicio.guardarTarjeta(tarjeta);
-            return ResponseEntity.ok(Map.of("success", true, "message", "Tarjeta guardada correctamente"));
-
+            direccionServicio.marcarComoPrincipal(cliente, id);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Dirección principal actualizada"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Error al guardar la tarjeta"));
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Error al actualizar dirección principal"));
         }
-    }
-
-    @DeleteMapping("/tarjetas/{id}")
-    @ResponseBody
-    public ResponseEntity<?> eliminarTarjeta(@PathVariable Long id, HttpSession session) {
-        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
-        if (cliente == null) {
-            return ResponseEntity.status(401).body(Map.of("success", false, "message", "No autenticado"));
-        }
-
-        try {
-            tarjetaServicio.eliminarTarjeta(cliente, id);
-            return ResponseEntity.ok(Map.of("success", true, "message", "Tarjeta eliminada correctamente"));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Error al eliminar la tarjeta"));
-        }}
-
-}
+    }}

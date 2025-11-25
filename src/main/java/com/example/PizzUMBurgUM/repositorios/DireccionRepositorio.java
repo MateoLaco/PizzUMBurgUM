@@ -9,4 +9,6 @@ public interface DireccionRepositorio extends JpaRepository<Direccion, Long> {
     List<Direccion> findByCliente(Cliente cliente);
     List<Direccion> findByClienteAndPrincipal(Cliente cliente, Boolean principal);
     void deleteByClienteAndId(Cliente cliente, Long id);
+    boolean existsByClienteAndNombreIgnoreCase(Cliente cliente, String nombre);
+    List<Direccion> findByClienteOrderByPrincipalDesc(Cliente cliente);
 }

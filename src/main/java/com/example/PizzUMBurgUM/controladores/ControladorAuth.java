@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 
 @Controller
@@ -61,51 +62,85 @@ public class ControladorAuth {
 
     // PROCESAR REGISTRO (SIMPLIFICADO)
     @PostMapping("/register")
-    public String procesarRegistro(@RequestParam String nombreUsuario,
-                                   @RequestParam String email,
-                                   @RequestParam String contrasena,
-                                   @RequestParam String metodoPago,
-                                   @RequestParam String direccion,
-                                   @RequestParam(name = "tel") String telefono,
-                                   @RequestParam(name = "codigoPais") String codigoPais,
-                                   @RequestParam(name = "diaNacimiento") Integer diaNacimiento,
-                                   @RequestParam(name = "mesNacimiento") Integer mesNacimiento,
-                                   @RequestParam(name = "anioNacimiento") Integer anioNacimiento,
-                                   @RequestParam String numeroTarjeta,
-                                   @RequestParam(name = "nombreTarjeta") String nombreTarjeta,
-                                   @RequestParam(name = "vencimientoTarjeta") String vencimientoTarjeta,
-                                   HttpSession session,
-                                   Model model) {
+    public String procesarRegistro(
+            @RequestParam String nombreUsuario,
+            @RequestParam String email,
+            @RequestParam String contrasena,
+            @RequestParam String confirmarContrasena,
+            @RequestParam String metodoPago,
+            @RequestParam String direccion,
+            @RequestParam(name = "tel") String telefono,
+            @RequestParam(name = "codigoPais") String codigoPais,
+            @RequestParam(name = "diaNacimiento") Integer diaNacimiento,
+            @RequestParam(name = "mesNacimiento") Integer mesNacimiento,
+            @RequestParam(name = "anioNacimiento") Integer anioNacimiento,
+            @RequestParam String numeroTarjeta,
+            @RequestParam String nombreTarjeta,
+            @RequestParam String vencimientoTarjeta,
+            HttpSession session,
+            Model model) {
 
         try {
+            // 1) Validación de contraseñas
+            if (!contrasena.equals(confirmarContrasena)) {
+                model.addAttribute("error", "Las contraseñas no coinciden");
+                return "auth/register";
+            }
+
+            // 2) Verificar email único
             if (clienteServicio.findByEmail(email) != null) {
                 model.addAttribute("error", "El email ya está registrado");
                 return "auth/register";
             }
 
-            String telefonoCompleto = codigoPais + " " + telefono;
+            // 3) Validar fecha de nacimiento
+            if (diaNacimiento == null || mesNacimiento == null || anioNacimiento == null) {
+                model.addAttribute("error", "Fecha de nacimiento incompleta");
+                return "auth/register";
+            }
+
+            // 4) Crear fecha de nacimiento
             LocalDate fechaNacimiento = LocalDate.of(anioNacimiento, mesNacimiento, diaNacimiento);
 
+            // 5) Validar que la fecha no sea futura
+            if (fechaNacimiento.isAfter(LocalDate.now())) {
+                model.addAttribute("error", "La fecha de nacimiento no puede ser futura");
+                return "auth/register";
+            }
+
+            // 6) Formatear teléfono completo
+            String telefonoCompleto = codigoPais + " " + telefono;
+
+            // 7) Limpiar y formatear número de tarjeta (quitar espacios)
+            String numeroTarjetaLimpio = numeroTarjeta.replaceAll("\\s+", "");
+
+            // 8) Crear y guardar cliente (SIN fechaRegistro - se establece automáticamente)
             Cliente clienteNuevo = Cliente.builder()
-                    .nombreUsuario(nombreUsuario)
-                    .email(email)
+                    .nombreUsuario(nombreUsuario.trim())
+                    .email(email.trim().toLowerCase())
                     .contrasena(contrasena)
                     .metodoPago(metodoPago)
-                    .direccion(direccion)
+                    .direccion(direccion.trim())
                     .telefono(telefonoCompleto)
                     .fechaNacimiento(fechaNacimiento)
-                    .numeroTarjeta(numeroTarjeta)
-                    .nombreTarjeta(nombreTarjeta)
+                    .numeroTarjeta(numeroTarjetaLimpio)
+                    .nombreTarjeta(nombreTarjeta.trim())
                     .vencimientoTarjeta(vencimientoTarjeta)
                     .build();
 
-            Cliente clienteRegistrado = clienteServicio.agregarCliente(clienteNuevo);
+            Cliente clienteRegistrado = clienteServicio.guardarCliente(clienteNuevo);
 
+            // 9) Establecer en sesión
             session.setAttribute("clienteLogueado", clienteRegistrado);
+
+            // 10) Redirigir al panel
             return "redirect:/cliente/panel";
 
+        } catch (DateTimeException e) {
+            model.addAttribute("error", "Fecha de nacimiento inválida");
+            return "auth/register";
         } catch (Exception e) {
-            model.addAttribute("error", "Error: " + e.getMessage());
+            model.addAttribute("error", "Error en el registro: " + e.getMessage());
             return "auth/register";
         }
     }

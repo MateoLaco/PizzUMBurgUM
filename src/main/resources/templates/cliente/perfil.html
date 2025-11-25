@@ -741,6 +741,22 @@
             font-weight: bold;
             border: 2px solid white;
         }
+        .direccion-principal {
+            background: #e8f5e8;
+            border-left: 4px var(--secondary-color);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
     </style>
 </head>
 <body>
@@ -930,12 +946,12 @@
         </div>
     </section>
 
-    <!-- SECCIÓN: MIS DIRECCIONES -->
+    <!-- SECCIÓN: MIS DIRECCIONES (SIMPLIFICADA) -->
     <section class="addresses-section">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3 class="section-subtitle">
-                    <i class="fas fa-map-marker-alt me-2  "></i>  Mis Direcciones
+                    <i class="fas fa-map-marker-alt me-2"></i>Mis Direcciones
                 </h3>
                 <button class="btn-add" onclick="mostrarModalDireccion()">
                     <i class="fas fa-plus me-2"></i>Agregar Nueva Dirección
@@ -943,37 +959,27 @@
             </div>
 
             <div class="row">
-                <!-- Dirección Principal del Registro -->
-                <div class="col-lg-6 mb-3" th:if="${cliente.direccion != null and cliente.direccion != ''}">
-                    <div class="address-card">
-                        <span class="address-badge address-primary">Principal</span>
-                        <div class="address-info">
-                            <div class="item-name">Dirección de Registro</div>
-                            <div class="item-details" th:text="${cliente.direccion}">
-                                Dirección principal del usuario
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Direcciones Adicionales -->
+                <!-- Direcciones Existentes -->
                 <div class="col-lg-6 mb-3" th:each="direccion : ${direcciones}">
-                    <div class="address-card">
-                        <span class="address-badge badge-secondary" th:text="${direccion.nombre}">
-                            Dirección
-                        </span>
+                    <div class="address-card" th:classappend="${direccion.principal} ? 'direccion-principal' : ''">
+                        <th:block th:if="${direccion.principal}">
+                            <span class="address-badge address-primary">Principal</span>
+                        </th:block>
+                        <th:block th:unless="${direccion.principal}">
+                            <span class="address-badge badge-secondary">Secundaria</span>
+                        </th:block>
+
                         <div class="address-info">
                             <div class="item-details">
-                                <strong>Dirección:</strong> <span th:text="${direccion.calle}">Calle</span><br>
-                                <th:block th:if="${direccion.referencias != null and direccion.referencias != ''}">
-                                    <strong>Referencias:</strong> <span th:text="${direccion.referencias}">Referencias</span>
-                                </th:block>
+                                <span th:text="${direccion.direccionCompleta}">Dirección completa del usuario</span>
                             </div>
                         </div>
                         <div class="address-actions">
-                            <button class="btn-action btn-edit" th:onclick="'editarDireccion(' + ${direccion.id} + ')'">
-                                <i class="fas fa-edit me-2"></i>Editar
-                            </button>
+                            <th:block th:unless="${direccion.principal}">
+                                <button class="btn-action btn-edit" th:onclick="'marcarComoPrincipal(' + ${direccion.id} + ')'">
+                                    <i class="fas fa-star me-2"></i>Hacer Principal
+                                </button>
+                            </th:block>
                             <button class="btn-action btn-delete" th:onclick="'eliminarDireccion(' + ${direccion.id} + ')'">
                                 <i class="fas fa-trash me-2"></i>Eliminar
                             </button>
@@ -981,8 +987,8 @@
                     </div>
                 </div>
 
-                <!-- Mensaje si no hay direcciones adicionales -->
-                <div class="col-12" th:if="${(direcciones == null or direcciones.isEmpty()) and (cliente.direccion == null or cliente.direccion == '')}">
+                <!-- Mensaje si no hay direcciones -->
+                <div class="col-12" th:if="${direcciones == null or direcciones.isEmpty()}">
                     <div class="empty-state">
                         <i class="fas fa-map-marker-alt"></i>
                         <h4>No tienes direcciones registradas</h4>
@@ -992,7 +998,6 @@
             </div>
         </div>
     </section>
-
     <!-- SECCIÓN: MIS TARJETAS -->
     <section class="cards-section">
         <div class="container">
@@ -1105,7 +1110,7 @@
     </footer>
 </div>
 
-<!-- Modal para Agregar Dirección (SIMPLIFICADO) -->
+<!-- Modal para Agregar/Cambiar Dirección (SIMPLIFICADO) -->
 <div id="modalDireccion" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
@@ -1113,16 +1118,17 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="form-label">Nombre de la Dirección</label>
-                <input type="text" class="form-input" id="direccionNombre" placeholder="Ej: Casa, Trabajo, Departamento...">
+                <label class="form-label">Dirección Completa</label>
+                <textarea class="form-input" id="direccionCompleta"
+                          placeholder="Ej: Calle Principal #123, Colonia, Ciudad, Estado, Código Postal..."
+                          rows="4" required></textarea>
+                <small class="form-text text-muted">Ingresa tu dirección completa para entregas</small>
             </div>
-            <div class="form-group">
-                <label class="form-label">Calle y Número</label>
-                <input type="text" class="form-input" id="direccionCalle" placeholder="Ej: Calle Principal #123" required>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Referencias</label>
-                <textarea class="form-input" id="direccionReferencias" placeholder="Referencias para encontrar la dirección..." rows="3"></textarea>
+            <div class="checkbox-group">
+                <input type="checkbox" id="direccionPrincipal" class="form-input">
+                <label class="form-label" for="direccionPrincipal" style="margin: 0;">
+                    Marcar como dirección principal
+                </label>
             </div>
         </div>
         <div class="modal-buttons">
@@ -1221,22 +1227,16 @@
         event.currentTarget.classList.add('active');
     }
 
-    // Funciones para Direcciones
+    // Funciones para Direcciones (SIMPLIFICADAS)
     function mostrarModalDireccion() {
         document.getElementById('modalDireccion').style.display = 'flex';
         // Limpiar formulario
-        document.getElementById('direccionNombre').value = '';
-        document.getElementById('direccionCalle').value = '';
-        document.getElementById('direccionReferencias').value = '';
+        document.getElementById('direccionCompleta').value = '';
+        document.getElementById('direccionPrincipal').checked = false;
     }
 
     function cerrarModalDireccion() {
         document.getElementById('modalDireccion').style.display = 'none';
-    }
-
-    function editarDireccion(id) {
-        // Aquí cargarías los datos de la dirección existente para editar
-        alert('Editar dirección con ID: ' + id);
     }
 
     function eliminarDireccion(id) {
@@ -1263,44 +1263,76 @@
         }
     }
 
-    function guardarDireccion() {
-        const nombre = document.getElementById('direccionNombre').value;
-        const calle = document.getElementById('direccionCalle').value;
-        const referencias = document.getElementById('direccionReferencias').value;
+    function marcarComoPrincipal(id) {
+        fetch(`/cliente/direcciones/${id}/principal`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Dirección principal actualizada');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Error al actualizar dirección principal');
+                console.error('Error:', error);
+            });
+    }
 
-        if (!nombre || !calle) {
-            alert('Por favor, completa al menos el nombre y la calle de la dirección');
+    function guardarDireccion() {
+        const direccionCompleta = document.getElementById('direccionCompleta').value.trim();
+        const principal = document.getElementById('direccionPrincipal').checked;
+
+        if (!direccionCompleta) {
+            alert('Por favor, ingresa tu dirección completa');
             return;
         }
 
-        const formData = new FormData();
-        formData.append('nombre', nombre);
-        formData.append('calle', calle);
-        formData.append('referencias', referencias);
-        formData.append('principal', false);
+        if (direccionCompleta.length < 10) {
+            alert('Por favor, ingresa una dirección más específica (mínimo 10 caracteres)');
+            return;
+        }
+
+        // Usar URLSearchParams para enviar los datos
+        const params = new URLSearchParams();
+        params.append('direccionCompleta', direccionCompleta);
+        params.append('principal', principal.toString());
 
         fetch('/cliente/direcciones/guardar', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error del servidor: ' + response.status);
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     mostrarNotificacion('notificationDireccion');
                     cerrarModalDireccion();
                     setTimeout(() => {
                         location.reload();
-                    }, 2000);
+                    }, 1500);
                 } else {
-                    alert('Error al agregar la dirección: ' + data.message);
+                    alert('Error: ' + data.message);
                 }
             })
             .catch(error => {
-                alert('Error al agregar la dirección');
-                console.error('Error:', error);
+                console.error('Error completo:', error);
+                alert('Error de conexión: ' + error.message);
             });
     }
-
     // Funciones para Tarjetas
     function mostrarModalTarjeta() {
         document.getElementById('modalTarjeta').style.display = 'flex';

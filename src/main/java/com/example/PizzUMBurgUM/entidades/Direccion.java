@@ -21,14 +21,6 @@ public class Direccion {
     @Column(nullable = false)
     private String calle;
 
-    private String colonia;
-
-    private String ciudad;
-
-    private String estado;
-
-    private String codigoPostal;
-
     private String referencias;
 
     @Column(nullable = false)

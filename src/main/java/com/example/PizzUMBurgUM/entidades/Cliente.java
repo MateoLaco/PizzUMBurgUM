@@ -55,9 +55,14 @@ public class Cliente extends Usuario{
     @OneToMany(mappedBy = "creador", cascade = CascadeType.ALL)
     private List<Creacion> creaciones;
 
-    // NUEVAS RELACIONES
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Direccion> direcciones = new ArrayList<>();
+
+    // Y MANTENER estos métodos:
+    public void agregarDireccion(Direccion direccion) {
+        direcciones.add(direccion);
+        direccion.setCliente(this);}
+
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Tarjeta> tarjetas = new ArrayList<>();
@@ -67,11 +72,6 @@ public class Cliente extends Usuario{
         this.fechaRegistro = LocalDate.now();
     }
 
-    // Métodos helper para agregar direcciones/tarjetas
-    public void agregarDireccion(Direccion direccion) {
-        direcciones.add(direccion);
-        direccion.setCliente(this);
-    }
 
     public void agregarTarjeta(Tarjeta tarjeta) {
         tarjetas.add(tarjeta);

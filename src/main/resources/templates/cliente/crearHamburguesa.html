@@ -815,6 +815,9 @@
         // Generar nombre automático para la hamburguesa
         const burgerName = generateBurgerName();
 
+        showSuccessModal(`¡${burgerName} agregada al carrito!\nTotal: $${currentBurger.total}`);
+
+
         // Crear objeto del producto para el carrito
         const cartItem = {
             id: Date.now(), // ID único basado en timestamp
