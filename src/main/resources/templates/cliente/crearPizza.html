@@ -22,7 +22,6 @@
             padding: 0;
         }
 
-        /* BOTÓN FLOTANTE VOLVER AL INICIO */
         .floating-back-btn {
             position: fixed;
             top: 20px;
@@ -216,7 +215,6 @@
             border-color: var(--primary-color);
         }
 
-        /* Modales personalizados */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -332,13 +330,6 @@
             transform: translateY(-2px);
         }
 
-        .modal-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            display: block;
-            color: #2980b9;
-        }
-
         .creation-preview {
             background: #f8f9fa;
             border-radius: 10px;
@@ -384,7 +375,6 @@
             margin-bottom: 8px;
         }
 
-        /* Responsive para el botón flotante */
         @media (max-width: 768px) {
             .floating-back-btn {
                 top: 15px;
@@ -424,19 +414,22 @@
                     <h3 class="section-title">Tamaño de la Pizza</h3>
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="option-card" onclick="selectOption('size', 'pequena', 300)">
+                            <div class="option-card option-card-size"
+                                 onclick="selectOption('size', 'pequena', 300, this)">
                                 <div class="option-name">Pequeña</div>
                                 <div class="option-price">$300</div>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="option-card" onclick="selectOption('size', 'mediana', 450)">
+                            <div class="option-card option-card-size"
+                                 onclick="selectOption('size', 'mediana', 450, this)">
                                 <div class="option-name">Mediana</div>
                                 <div class="option-price">$450</div>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="option-card" onclick="selectOption('size', 'grande', 600)">
+                            <div class="option-card option-card-size"
+                                 onclick="selectOption('size', 'grande', 600, this)">
                                 <div class="option-name">Grande</div>
                                 <div class="option-price">$600</div>
                             </div>
@@ -444,108 +437,69 @@
                     </div>
                 </div>
 
-                <!-- Masa -->
+                <!-- Masa (desde BD, solo activas) -->
                 <div class="option-section">
                     <h3 class="section-title">Tipo de Masa</h3>
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('dough', 'napolitana', 50)">
-                                <div class="option-name">Napolitana</div>
-                                <div class="option-description">Tradicional italiana</div>
-                                <div class="option-price">+$50</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('dough', 'integral', 80)">
-                                <div class="option-name">Integral</div>
-                                <div class="option-price">+$80</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('dough', 'sin-gluten', 120)">
-                                <div class="option-name">Sin Gluten</div>
-                                <div class="option-price">+$120</div>
+                        <div class="col-md-6"
+                             th:each="masa : ${masas}">
+                            <div class="option-card option-card-dough"
+                                 th:attr="data-nombre=${masa.nombre},data-precio=${masa.precio}">
+                                <div class="option-name" th:text="${masa.nombre}">Masa</div>
+                                <div class="option-price"
+                                     th:text="'$' + ${masa.precio}">+$0</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Salsa -->
+                <!-- Salsa (desde BD, solo activas) -->
                 <div class="option-section">
                     <h3 class="section-title">Tipo de Salsa</h3>
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('sauce', 'tomate', 30)">
-                                <div class="option-name">Salsa de Tomate</div>
-                                <div class="option-price">+$30</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('sauce', 'pomodoro', 50)">
-                                <div class="option-name">Pomodoro</div>
-                                <div class="option-price">+$50</div>
+                        <div class="col-md-6"
+                             th:each="salsa : ${salsas}">
+                            <div class="option-card option-card-sauce"
+                                 th:attr="data-nombre=${salsa.nombre},data-precio=${salsa.precio}">
+                                <div class="option-name" th:text="${salsa.nombre}">Salsa</div>
+                                <div class="option-price"
+                                     th:text="'$' + ${salsa.precio}">+$0</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Queso -->
+                <!-- Queso (desde BD, solo activos) -->
                 <div class="option-section">
                     <h3 class="section-title">Tipo de Queso</h3>
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('cheese', 'muzzarella', 60)">
-                                <div class="option-name">Muzzarella</div>
-                                <div class="option-price">+$60</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="option-card" onclick="selectOption('cheese', 'roquefort', 100)">
-                                <div class="option-name">Roquefort</div>
-                                <div class="option-price">+$100</div>
+                        <div class="col-md-6"
+                             th:each="queso : ${quesosPizza}">
+                            <div class="option-card option-card-cheese"
+                                 th:attr="data-nombre=${queso.nombre},data-precio=${queso.precio}">
+                                <div class="option-name" th:text="${queso.nombre}">Queso</div>
+                                <div class="option-price"
+                                     th:text="'$' + ${queso.precio}">+$0</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Toppings -->
+                <!-- Toppings (desde BD, solo activos) - CORREGIDO -->
                 <div class="option-section">
                     <h3 class="section-title">Toppings Adicionales</h3>
                     <div class="ingredient-list">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="topping1" onchange="toggleTopping('Pepperoni', 60)">
-                            <label class="form-check-label" for="topping1">
-                                Pepperoni <span class="option-price">+$60</span>
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="topping2" onchange="toggleTopping('Jamón', 50)">
-                            <label class="form-check-label" for="topping2">
-                                Jamón <span class="option-price">+$50</span>
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="topping3" onchange="toggleTopping('Champiñones', 40)">
-                            <label class="form-check-label" for="topping3">
-                                Champiñones <span class="option-price">+$40</span>
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="topping4" onchange="toggleTopping('Aceitunas', 30)">
-                            <label class="form-check-label" for="topping4">
-                                Aceitunas <span class="option-price">+$30</span>
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="topping5" onchange="toggleTopping('Pimientos', 35)">
-                            <label class="form-check-label" for="topping5">
-                                Pimientos <span class="option-price">+$35</span>
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="topping6" onchange="toggleTopping('Extra Queso', 80)">
-                            <label class="form-check-label" for="topping6">
-                                Extra Queso <span class="option-price">+$80</span>
+                        <div class="form-check"
+                             th:each="topping : ${toppingsGenerales}">
+                            <input class="form-check-input topping-checkbox"
+                                   type="checkbox"
+                                   th:id="'topping-' + ${topping.id_producto}"
+                                   th:attr="data-nombre=${topping.nombre},data-precio=${topping.precio}">
+                            <label class="form-check-label"
+                                   th:for="'topping-' + ${topping.id_producto}">
+                                <span th:text="${topping.nombre}">Topping</span>
+                                <span class="option-price"
+                                      th:text="'$' + ${topping.precio}">+$0</span>
                             </label>
                         </div>
                     </div>
@@ -579,7 +533,7 @@
     </div>
 </div>
 
-<!-- Modal para nombre de favorito -->
+<!-- Modales -->
 <div id="nameModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
@@ -591,9 +545,7 @@
                 <input type="text" id="favoriteNameInput" class="modal-input"
                        placeholder="Ej: Mi Pizza Especial..." maxlength="30">
             </div>
-            <div id="creationPreview" class="creation-preview">
-                <!-- Se llena dinámicamente -->
-            </div>
+            <div id="creationPreview" class="creation-preview"></div>
         </div>
         <div class="modal-buttons">
             <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancelar</button>
@@ -602,7 +554,6 @@
     </div>
 </div>
 
-<!-- Modal de éxito -->
 <div id="successModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
@@ -617,11 +568,9 @@
     </div>
 </div>
 
-<!-- Modal de error -->
 <div id="errorModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
-
             <h3 class="modal-title" id="errorTitle">Acción no disponible</h3>
         </div>
         <div class="modal-body">
@@ -633,7 +582,6 @@
     </div>
 </div>
 
-<!-- Modal de confirmación de carrito -->
 <div id="cartModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
@@ -641,9 +589,7 @@
         </div>
         <div class="modal-body">
             <p id="cartMessage">Tu pizza ha sido agregada al carrito exitosamente</p>
-            <div id="cartPreview" class="creation-preview">
-                <!-- Se llena dinámicamente -->
-            </div>
+            <div id="cartPreview" class="creation-preview"></div>
         </div>
         <div class="modal-buttons">
             <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Seguir Comprando</button>
@@ -664,36 +610,40 @@
 
     let currentModalType = '';
 
-    function selectOption(type, name, price) {
-        // Remover selección anterior
-        document.querySelectorAll('.option-card').forEach(card => {
-            if (card.onclick && card.onclick.toString().includes(`selectOption('${type}'`)) {
-                card.classList.remove('selected');
-            }
+    function selectOption(type, name, price, element) {
+        document.querySelectorAll('.option-card-' + type).forEach(card => {
+            card.classList.remove('selected');
         });
 
-        // Agregar selección actual
-        event.currentTarget.classList.add('selected');
+        if (element) {
+            element.classList.add('selected');
+        }
 
-        // Actualizar datos
         currentPizza[type] = { name, price };
 
-        // Actualizar display - CORREGIR "pequena" a "pequeña"
         let displayName = name.charAt(0).toUpperCase() + name.slice(1);
-
-        // Corregir la palabra "pequena" a "pequeña"
         if (displayName === 'Pequena') {
             displayName = 'Pequeña';
         }
 
-        document.getElementById(`selected${type.charAt(0).toUpperCase() + type.slice(1)}`).textContent =
-            displayName + (price > 0 ? ` (+$${price})` : '');
+        const spanId =
+            type === 'size' ? 'selectedSize' :
+                type === 'dough' ? 'selectedDough' :
+                    type === 'sauce' ? 'selectedSauce' :
+                        type === 'cheese' ? 'selectedCheese' : null;
+
+        if (spanId) {
+            document.getElementById(spanId).textContent =
+                displayName + (price > 0 ? ` (+$${price})` : '');
+        }
 
         calculateTotal();
     }
 
-    function toggleTopping(name, price) {
-        const checkbox = event.target;
+    function toggleTopping(checkbox) {
+        const name = checkbox.dataset.nombre;
+        const price = parseFloat(checkbox.dataset.precio);
+
         if (checkbox.checked) {
             currentPizza.toppings.push({ name, price });
         } else {
@@ -729,47 +679,56 @@
     }
 
     function addToCart() {
-        if (!currentPizza.size) {
+        // Validación: debe tener tamaño Y masa
+        if (!currentPizza.size || !currentPizza.dough) {
             showErrorModal(
-                'Carrito',
-                '¡Completa tu pizza antes de agregarla al carrito!'
+                'Pizza Incompleta',
+                '¡Tu pizza debe tener tamaño y masa para agregarla al carrito!'
             );
             return;
         }
 
-        // Generar nombre automático para la pizza
         const pizzaName = generatePizzaName();
 
-        // Crear objeto del producto para el carrito
-        const cartItem = {
-            id: Date.now(), // ID único basado en timestamp
+        const creacionData = {
             nombre: pizzaName,
-            tipo: 'pizza',
-            precio: currentPizza.total,
             descripcion: generatePizzaDescription(),
-            detalles: {
-                tamaño: currentPizza.size,
-                masa: currentPizza.dough,
-                salsa: currentPizza.sauce,
-                queso: currentPizza.cheese,
-                toppings: currentPizza.toppings
-            },
-            cantidad: 1
+            precio: currentPizza.total,
+            tipo: 'P',
+            productosIds: [],
+            favorito: false
         };
 
-        // Obtener carrito actual del localStorage
-        let carrito = JSON.parse(localStorage.getItem('pizzumburgum_cart')) || [];
+        // Guardar creación en base de datos y agregarla al carrito
+        guardarCreacionEnBaseDatos(creacionData, pizzaName);
+    }
 
-        // Agregar nuevo item al carrito
-        carrito.push(cartItem);
+    async function guardarCreacionEnBaseDatos(creacionData, pizzaName) {
+        try {
+            const response = await fetch('/cliente/guardar-creacion', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(creacionData)
+            });
 
-        // Guardar carrito actualizado en localStorage
-        localStorage.setItem('pizzumburgum_cart', JSON.stringify(carrito));
+            const result = await response.json();
+            
+            if (result.success) {
+                // Mostrar modal de confirmación
+                showCartModal({
+                    nombre: pizzaName,
+                    precio: creacionData.precio
+                });
+            } else {
+                showErrorModal('Error', result.message);
+            }
 
-        // Mostrar modal de confirmación
-        showCartModal(cartItem);
-
-        console.log('Pizza agregada al carrito:', cartItem);
+        } catch (error) {
+            console.error('Error al guardar creación en BD:', error);
+            showErrorModal('Error de conexión', 'No se pudo conectar con el servidor.');
+        }
     }
 
     function generatePizzaName() {
@@ -832,7 +791,6 @@
 
         message.textContent = `"${cartItem.nombre}" ha sido agregada al carrito`;
 
-        // Generar resumen detallado
         let tamañoDisplay = currentPizza.size.name;
         if (tamañoDisplay === 'pequena') tamañoDisplay = 'pequeña';
 
@@ -872,8 +830,7 @@
     }
 
     function goToCart() {
-        // Redirigir a la página del carrito
-        window.location.href = 'carrito';
+        window.location.href = '/cliente/carrito';
     }
 
     function saveToFavorites() {
@@ -888,11 +845,6 @@
         const input = document.getElementById('favoriteNameInput');
         const preview = document.getElementById('creationPreview');
 
-        if (!modal || !title || !message || !input || !preview) {
-            console.error('No se encontraron algunos elementos del modal');
-            return;
-        }
-
         if (tipo === 'pizza') {
             title.textContent = 'Guardar Pizza';
             message.innerHTML = 'Dale un nombre a tu pizza<br><small style="color: #7f8c8d;">Tu receta perfecta guardada para siempre</small>';
@@ -901,56 +853,50 @@
 
             if (!currentPizza.size) {
                 preview.innerHTML = `
-                <div class="creation-warning">
-                    <h4>Creación Incompleta</h4>
-                    <p>Necesitas seleccionar al menos el tamaño de la pizza</p>
-                </div>
-            `;
+                    <div class="creation-warning">
+                        <h4>Creación Incompleta</h4>
+                        <p>Necesitas seleccionar al menos el tamaño de la pizza</p>
+                    </div>
+                `;
             } else {
-                // CORREGIR "pequena" a "pequeña" en el resumen
                 let tamañoDisplay = currentPizza.size.name;
-                if (tamañoDisplay === 'pequena') {
-                    tamañoDisplay = 'pequeña';
-                }
+                if (tamañoDisplay === 'pequena') tamañoDisplay = 'pequeña';
 
                 let masaDisplay = currentPizza.dough ? currentPizza.dough.name : 'Tradicional';
                 let salsaDisplay = currentPizza.sauce ? currentPizza.sauce.name : 'Tomate';
                 let quesoDisplay = currentPizza.cheese ? currentPizza.cheese.name : 'Muzzarella';
 
                 preview.innerHTML = `
-                <h4>Resumen de tu Pizza</h4>
-                <div class="creation-detail">
-                    <span>Tamaño:</span>
-                    <span>${tamañoDisplay.charAt(0).toUpperCase() + tamañoDisplay.slice(1)}</span>
-                </div>
-                <div class="creation-detail">
-                    <span>Masa:</span>
-                    <span>${masaDisplay.charAt(0).toUpperCase() + masaDisplay.slice(1)}</span>
-                </div>
-                <div class="creation-detail">
-                    <span>Salsa:</span>
-                    <span>${salsaDisplay.charAt(0).toUpperCase() + salsaDisplay.slice(1)}</span>
-                </div>
-                <div class="creation-detail">
-                    <span>Toppings:</span>
-                    <span>${currentPizza.toppings.length} adicionales</span>
-                </div>
-                <div class="creation-detail">
-                    <span><strong>Total:</strong></span>
-                    <span><strong>$${currentPizza.total}</strong></span>
-                </div>
-            `;
+                    <h4>Resumen de tu Pizza</h4>
+                    <div class="creation-detail">
+                        <span>Tamaño:</span>
+                        <span>${tamañoDisplay.charAt(0).toUpperCase() + tamañoDisplay.slice(1)}</span>
+                    </div>
+                    <div class="creation-detail">
+                        <span>Masa:</span>
+                        <span>${masaDisplay.charAt(0).toUpperCase() + masaDisplay.slice(1)}</span>
+                    </div>
+                    <div class="creation-detail">
+                        <span>Salsa:</span>
+                        <span>${salsaDisplay.charAt(0).toUpperCase() + salsaDisplay.slice(1)}</span>
+                    </div>
+                    <div class="creation-detail">
+                        <span>Toppings:</span>
+                        <span>${currentPizza.toppings.length} adicionales</span>
+                    </div>
+                    <div class="creation-detail">
+                        <span><strong>Total:</strong></span>
+                        <span><strong>${currentPizza.total}</strong></span>
+                    </div>
+                `;
             }
         }
 
         modal.style.display = 'flex';
 
-        // Esperar un poco para que el modal se muestre antes de enfocar
         setTimeout(() => {
-            if (input) {
-                input.focus();
-                input.select();
-            }
+            input.focus();
+            input.select();
         }, 100);
     }
 
@@ -981,7 +927,6 @@
             return;
         }
 
-        // Validar que la creación esté completa
         if (currentModalType === 'pizza' && !currentPizza.size) {
             showErrorModal(
                 'Creación Incompleta',
@@ -992,14 +937,11 @@
 
         closeModal();
 
-        // CORREGIR "pequena" a "pequeña" en la descripción
         let tamañoDisplay = currentPizza.size.name;
-        if (tamañoDisplay === 'pequena') {
-            tamañoDisplay = 'pequeña';
-        }
+        if (tamañoDisplay === 'pequena') tamañoDisplay = 'pequeña';
 
-        // Preparar datos para pizza
-        const descripcion = `Pizza ${tamañoDisplay} con masa ${currentPizza.dough?.name || 'tradicional'}, ` +
+        const descripcion =
+            `Pizza ${tamañoDisplay} con masa ${currentPizza.dough?.name || 'tradicional'}, ` +
             `salsa ${currentPizza.sauce?.name || 'tomate'}, ` +
             `queso ${currentPizza.cheese?.name || 'muzzarella'}, ` +
             `${currentPizza.toppings.length} toppings adicionales`;
@@ -1021,9 +963,7 @@
         try {
             const response = await fetch('/cliente/guardar-favorito', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(favoritoData)
             });
 
@@ -1040,36 +980,59 @@
         }
     }
 
-    // Cerrar modal al hacer click fuera
     document.addEventListener('click', function(event) {
         if (event.target.classList.contains('modal-overlay')) {
             closeModal();
         }
     });
 
-    // Cerrar con ESC
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
             closeModal();
         }
     });
 
-    // Permitir Enter en el input
-    document.getElementById('favoriteNameInput')?.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            confirmSave();
-        }
-    });
-
-    // Inicializar
     document.addEventListener('DOMContentLoaded', function() {
         calculateTotal();
 
-        // Verificar que los elementos existan
-        console.log('Elementos cargados:');
-        console.log('- selectedSize:', document.getElementById('selectedSize'));
-        console.log('- totalPrice:', document.getElementById('totalPrice'));
-        console.log('- currentPizza:', currentPizza);
+        document.querySelectorAll('.option-card-dough').forEach(card => {
+            card.addEventListener('click', function() {
+                const nombre = this.dataset.nombre;
+                const precio = parseFloat(this.dataset.precio);
+                selectOption('dough', nombre, precio, this);
+            });
+        });
+
+        document.querySelectorAll('.option-card-sauce').forEach(card => {
+            card.addEventListener('click', function() {
+                const nombre = this.dataset.nombre;
+                const precio = parseFloat(this.dataset.precio);
+                selectOption('sauce', nombre, precio, this);
+            });
+        });
+
+        document.querySelectorAll('.option-card-cheese').forEach(card => {
+            card.addEventListener('click', function() {
+                const nombre = this.dataset.nombre;
+                const precio = parseFloat(this.dataset.precio);
+                selectOption('cheese', nombre, precio, this);
+            });
+        });
+
+        document.querySelectorAll('.topping-checkbox').forEach(cb => {
+            cb.addEventListener('change', function() {
+                toggleTopping(this);
+            });
+        });
+
+        const favInput = document.getElementById('favoriteNameInput');
+        if (favInput) {
+            favInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    confirmSave();
+                }
+            });
+        }
     });
 </script>
 </body>

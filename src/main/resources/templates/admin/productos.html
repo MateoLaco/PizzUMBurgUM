@@ -145,6 +145,8 @@
         }
         .badge-H{ background:#ffe5e5; color:#a10f0f; }
         .badge-P{ background:#e5f5ff; color:#0f4fa1; }
+        .badge-B{ background:#e8f5e9; color:#1b5e20; }
+        .badge-AC{ background:#fff3e0; color:#ef6c00; }
         .badge-O{ background:#e2e3e5; color:#383d41; }
 
         /* SWITCH */
@@ -282,11 +284,14 @@
                                 <option value="" disabled selected>Seleccionar tipo</option>
                                 <option value="H">Hamburguesa</option>
                                 <option value="P">Pizza</option>
+                                <option value="S">Salsa</option>
                                 <option value="M">Masa</option>
                                 <option value="QP">Queso de pizza</option>
                                 <option value="C">Carne</option>
                                 <option value="PH">Pan de hamburguesa</option>
                                 <option value="A">Aderezo</option>
+                                <option value="B">Bebida</option>
+                                <option value="AC">Acompanamiento</option>
                             </select>
                         </div>
 
@@ -324,7 +329,9 @@
                                 <td>
                                     <span class="badge-tipo"
                                           th:classappend="${p.tipo == 'H' ? ' badge-H' :
-                                                           (p.tipo == 'P' ? ' badge-P' : ' badge-O')} "
+                                                           (p.tipo == 'P' ? ' badge-P' :
+                                                           (p.tipo == 'B' ? ' badge-B' :
+                                                           (p.tipo == 'AC' ? ' badge-AC' : ' badge-O')))} "
                                           th:text="${p.tipo}">
                                     </span>
                                 </td>
