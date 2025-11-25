@@ -46,65 +46,69 @@ public class PizzUmBurgUmApplication {
     }
 
     public void runInCommandLine() {
-        Producto p1 = Producto.builder()
-                .nombre("Tomate")
-                .precio(100)
-                .tipo("P")
-                .build();
+        try {
+            Producto p1 = Producto.builder()
+                    .nombre("Tomate")
+                    .precio(100)
+                    .tipo("P")
+                    .build();
 
-        Producto p2 = Producto.builder()
-                .nombre("Pepperoni")
-                .precio(200)
-                .tipo("P")
-                .build();
+            Producto p2 = Producto.builder()
+                    .nombre("Pepperoni")
+                    .precio(200)
+                    .tipo("P")
+                    .build();
 
-        productoRepositorio.save(p1);
-        productoRepositorio.save(p2);
+            productoRepositorio.save(p1);
+            productoRepositorio.save(p2);
 
-        Cliente cliente1 = Cliente.builder()
-                .email("f@a")
-                .telefono("99999999")
-                .contrasena("pepepepe")
-                .nombreUsuario("FrancoPapa")
-                .direccion("sdoadjas")
-                .fechaNacimiento(LocalDate.now())
-                .metodoPago("VISA")
-                .build();
+            Cliente cliente1 = Cliente.builder()
+                    .email("f@a")
+                    .telefono("99999999")
+                    .contrasena("pepepepe")
+                    .nombreUsuario("FrancoPapa")
+                    .direccion("sdoadjas")
+                    .fechaNacimiento(LocalDate.now())
+                    .metodoPago("VISA")
+                    .build();
 
-        clienteRepositorio.save(cliente1);
+            clienteRepositorio.save(cliente1);
 
-        List<Long> prods = List.of(p1.getId_producto(), p2.getId_producto());
+            List<Long> prods = List.of(p1.getId_producto(), p2.getId_producto());
 
-        Creacion c1 = creacionServicio.agregarCreacion(cliente1.getIdUsuario(),'P',prods);
+            Creacion c1 = creacionServicio.agregarCreacion(cliente1.getIdUsuario(),'P',prods);
 
-        Funcionario funcionario = Funcionario.builder()
-                .nombreUsuario("Juan")
-                .contrasena("pepepepe")
-                .email("juean@mail")
-                .rol("ADMIN")
-                .build();
+            Funcionario funcionario = Funcionario.builder()
+                    .nombreUsuario("Juan")
+                    .contrasena("pepepepe")
+                    .email("juean@mail")
+                    .rol("ADMIN")
+                    .build();
 
-        Funcionario funcionario1 = Funcionario.builder()
-                .nombreUsuario("Mateo")
-                .contrasena("pepepepe")
-                .email("m@op")
-                .rol("OPERADOR")
-                .build();
+            Funcionario funcionario1 = Funcionario.builder()
+                    .nombreUsuario("Mateo")
+                    .contrasena("pepepepe")
+                    .email("m@op")
+                    .rol("OPERADOR")
+                    .build();
 
-        funcionarioRepositorio.save(funcionario);
-        funcionarioRepositorio.save(funcionario1);
+            funcionarioRepositorio.save(funcionario);
+            funcionarioRepositorio.save(funcionario1);
 
-        Pedido pedido = Pedido.builder()
-                .fecha(LocalDate.now())
-                .acompanamiento("p")
-                .creaciones(Set.of(c1))
-                .bebida("bebida")
-                .costoEnvio(100)
-                .estado("EN_COLA")
-                .build();
+            if (c1 != null) {
+                Pedido pedido = Pedido.builder()
+                        .fecha(LocalDate.now())
+                        .creaciones(Set.of(c1))
+                        .costoEnvio(100.0)
+                        .estado("EN_COLA")
+                        .build();
 
-        pedidoRepositorio.save(pedido);
-
+                pedidoRepositorio.save(pedido);
+            }
+        } catch (Exception e) {
+            System.err.println("Error inicializando datos: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 }

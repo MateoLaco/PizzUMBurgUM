@@ -5,7 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -23,25 +25,21 @@ public class Pedido {
 
     @Column(length = 100)
     @NotNull
-    private String estado;
+    @Builder.Default
+    private String estado = "Pendiente";
 
     @Column
-    @NotNull
-    private String acompanamiento;
-
-    @Column
-    @NotNull
-    private String bebida;
-
-    @Column
-    private Integer costoEnvio;
+    @Builder.Default
+    private Double costoEnvio = 0.0;
 
     @Column
     @NotNull
     private LocalDate fecha;
 
     @Column
-    private Integer precioTotal;
+    @NotNull
+    @Builder.Default
+    private Double precioTotal = 0.0;
 
     @ManyToMany
     @JoinTable(
@@ -49,7 +47,18 @@ public class Pedido {
             joinColumns = @JoinColumn(name = "id_pedido"),
             inverseJoinColumns = @JoinColumn(name = "id_creacion")
     )
+    @Builder.Default
     private Set<Creacion> creaciones = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(name = "pedido_bebidas", joinColumns = @JoinColumn(name = "id_pedido"))
+    @Builder.Default
+    private List<PedidoExtraItem> bebidas = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name = "pedido_acompanamientos", joinColumns = @JoinColumn(name = "id_pedido"))
+    @Builder.Default
+    private List<PedidoExtraItem> acompanamientos = new ArrayList<>();
 
     @PrePersist
     public void onCreate() {

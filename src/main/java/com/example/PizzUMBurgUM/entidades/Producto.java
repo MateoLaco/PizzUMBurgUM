@@ -39,5 +39,6 @@ public class Producto {
     private boolean activo;
 
     @ManyToMany(mappedBy = "productos")
+    @Builder.Default
     private Set<Creacion> creaciones = new HashSet<>();
 }

@@ -17,6 +17,13 @@ public class ProductoServicio {
         return productoRepositorio.findAll();
     }
 
+    public List<Producto> listarActivosPorTipo(String tipo) {
+        if (tipo == null || tipo.isBlank()) {
+            throw new IllegalArgumentException("El tipo de producto es obligatorio");
+        }
+        return productoRepositorio.findByTipoAndActivoTrue(tipo.trim().toUpperCase());
+    }
+
     public Producto crearProducto(Producto producto) {
 
         if (producto == null) {
@@ -35,8 +42,8 @@ public class ProductoServicio {
             throw new RuntimeException("El tipo de producto es obligatorio");
         }
 
-        // normalizamos tipo a una sola letra mayúscula
-        producto.setTipo(producto.getTipo().trim().substring(0, 1).toUpperCase());
+        // normalizamos tipo a mayúscula y lo trimea
+        producto.setTipo(producto.getTipo().trim().toUpperCase());
 
         // siempre activo al crearlo
         producto.setActivo(true);
@@ -44,7 +51,7 @@ public class ProductoServicio {
         return productoRepositorio.save(producto);
     }
 
-    // ⬇⬇⬇ NUEVO: actualizar precios + activos en lote
+    // Actualizar precios + activos en lote
     public void actualizarPreciosYActivosEnLote(List<Long> idsActivos,
                                                 Map<String, String> requestParams) {
 
@@ -60,7 +67,7 @@ public class ProductoServicio {
             p.setActivo(activosSet.contains(p.getId_producto()));
 
             // ----- precio -----
-            String key = "precio_" + p.getId_producto(); // 👈 misma convención que en el HTML
+            String key = "precio_" + p.getId_producto();
             String valor = requestParams.get(key);
 
             if (valor != null && !valor.isBlank()) {

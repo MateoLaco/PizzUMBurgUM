@@ -856,8 +856,21 @@
         });
     });
 
-    // Sistema de Carrito
-    let carrito = JSON.parse(localStorage.getItem('pizzumburgum_cart')) || [];
+    // Sistema de Carrito - Cargar del servidor
+    let carrito = [];
+
+    // Cargar carrito del servidor
+    function cargarCarritoDelServidor() {
+        fetch('/cliente/carrito-items')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    carrito = data.items || [];
+                    actualizarCarritoVisual();
+                }
+            })
+            .catch(error => console.error('Error al cargar carrito:', error));
+    }
 
     // Actualizar carrito visualmente
     function actualizarCarritoVisual() {
@@ -868,11 +881,12 @@
         const btnPedirYa = document.getElementById('btnPedirYa');
 
         // Actualizar contadores
-        cartBoxBadge.textContent = carrito.length;
-        cartPanelCount.textContent = `${carrito.length} ${carrito.length === 1 ? 'producto' : 'productos'}`;
+        const cantidadTotal = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+        cartBoxBadge.textContent = cantidadTotal;
+        cartPanelCount.textContent = `${cantidadTotal} ${cantidadTotal === 1 ? 'producto' : 'productos'}`;
 
         // Calcular total
-        const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+        const total = carrito.reduce((sum, item) => sum + (item.precioUnitario * item.cantidad), 0);
         cartPanelTotal.textContent = `$${total.toFixed(2)}`;
 
         // Habilitar/deshabilitar botón "Pedir Ya"
@@ -888,17 +902,18 @@
             </div>
         `;
         } else {
-            cartPanelItems.innerHTML = carrito.map((item, index) => `
+            cartPanelItems.innerHTML = carrito.map((item) => `
             <div class="cart-panel-item">
                 <div class="item-info-panel">
-                    <div class="item-name-panel">${item.nombre}</div>
+                    <div class="item-name-panel">${item.creacion.nombre}</div>
                     <div class="item-details-panel">
-                        ${item.tipo === 'pizza' ? '🍕 Pizza' : '🍔 Hamburguesa'}
-                        ${item.descripcion ? `• ${item.descripcion}` : ''}
+                        ${item.creacion.tipo === 'P' ? '🍕 Pizza' : '🍔 Hamburguesa'}
+                        ${item.creacion.descripcion ? `• ${item.creacion.descripcion}` : ''}
+                        x${item.cantidad}
                     </div>
                 </div>
-                <div class="item-price-panel">$${item.precio.toFixed(2)}</div>
-                <button class="item-remove-panel" onclick="eliminarDelCarrito(${index})">
+                <div class="item-price-panel">$${(item.precioUnitario * item.cantidad).toFixed(2)}</div>
+                <button class="item-remove-panel" onclick="eliminarDelCarritoServidor(${item.id})">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -906,10 +921,17 @@
         }
     }
 
-    function eliminarDelCarrito(index) {
-        carrito.splice(index, 1);
-        localStorage.setItem('pizzumburgum_cart', JSON.stringify(carrito));
-        actualizarCarritoVisual();
+    function eliminarDelCarritoServidor(itemId) {
+        fetch(`/cliente/carrito-item/${itemId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                cargarCarritoDelServidor();
+            }
+        })
+        .catch(error => console.error('Error:', error));
     }
 
     function irAlCarritoCompleto() {
@@ -938,7 +960,7 @@
 
     // Inicializar carrito al cargar la página
     document.addEventListener('DOMContentLoaded', function() {
-        actualizarCarritoVisual();
+        cargarCarritoDelServidor();
     });
 </script>
 </body>

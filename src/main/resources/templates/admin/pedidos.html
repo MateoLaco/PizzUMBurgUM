@@ -181,8 +181,8 @@
                         <tr>
                             <th># Pedido</th>
                             <th>Fecha</th>
-                            <th>Acompañamiento</th>
-                            <th>Bebida</th>
+                            <th>Acompanamientos</th>
+                            <th>Bebidas</th>
                             <th>Costo envío</th>
                             <th>Cant. creaciones</th>
                             <th>Estado</th>
@@ -193,8 +193,8 @@
                         <tr th:each="p : ${pedidos}">
                             <td th:text="${p.idPedido}">1</td>
                             <td th:text="${p.fecha}">2025-11-01</td>
-                            <td th:text="${p.acompanamiento}">Papas fritas</td>
-                            <td th:text="${p.bebida}">Refresco</td>
+                            <td th:text="${#lists.isEmpty(p.acompanamientos) ? '-' : #strings.listJoin(p.acompanamientos.?[nombre + ' x' + cantidad], ', ')}">-</td>
+                            <td th:text="${#lists.isEmpty(p.bebidas) ? '-' : #strings.listJoin(p.bebidas.?[nombre + ' x' + cantidad], ', ')}">-</td>
                             <td th:text="${p.costoEnvio != null ? p.costoEnvio : 0}">120</td>
                             <td th:text="${#lists.size(p.creaciones)}">2</td>
 
@@ -305,3 +305,6 @@
 
 </body>
 </html>
+
+
+

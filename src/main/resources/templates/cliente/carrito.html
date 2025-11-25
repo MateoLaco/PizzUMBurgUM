@@ -22,7 +22,7 @@
             padding: 0;
         }
 
-        /* Barra de Navegación */
+        /* Barra de NavegaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n */
         .navbar-horizontal {
             background: var(--dark-color);
             padding: 1rem 0;
@@ -141,6 +141,72 @@
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .extras-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        .extra-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .extra-item:last-child {
+            border-bottom: none;
+        }
+
+        .extra-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .extra-name {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .extra-price {
+            color: #84b6f4;
+            font-size: 0.9rem;
+        }
+
+        .extra-qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .extra-qty-btn {
+            background: none;
+            border: 1px solid #ccc;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--dark-color);
+            transition: all 0.2s ease;
+        }
+
+        .extra-qty-btn:hover {
+            background: var(--secondary-color);
+            color: var(--dark-color);
+            border-color: var(--secondary-color);
+        }
+
+        .extra-qty-value {
+            min-width: 24px;
+            text-align: center;
+            font-weight: 600;
         }
 
         .cart-section-title {
@@ -379,7 +445,7 @@
             transform: translateY(-2px);
         }
 
-        /* Carrito Vacío */
+        /* Carrito VacÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­o */
         .empty-cart {
             text-align: center;
             padding: 60px 20px;
@@ -490,7 +556,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <!-- Barra de Navegación Horizontal (igual que panel) -->
+    <!-- Barra de NavegaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n Horizontal (igual que panel) -->
     <nav class="navbar-horizontal">
         <div class="nav-container">
             <!-- Logo -->
@@ -498,7 +564,7 @@
                 PizzUM & BurgUM
             </a>
 
-            <!-- Links de Navegación -->
+            <!-- Links de NavegaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n -->
             <div class="nav-links">
                 <a class="nav-link" href="/cliente/panel">
                     Inicio
@@ -506,8 +572,11 @@
                 <a class="nav-link" href="/cliente/perfil">
                     Perfil
                 </a>
-                <a class="nav-link active" href="/cliente/favoritos">
+                <a class="nav-link" href="/cliente/favoritos">
                     Favoritos
+                </a>
+                <a class="nav-link active" href="/cliente/carrito">
+                    Carrito
                 </a>
                 <a th:href="@{/auth/logout}" class="nav-link logout-btn">
                     Salir
@@ -529,8 +598,18 @@
             <div class="cart-items">
                 <h2 class="cart-section-title">Tu Pedido</h2>
                 <div id="cartItemsList">
-                    <!-- Los productos se cargan dinámicamente aquí -->
+                    <!-- Los productos se cargan dinamicamente aqui -->
                 </div>
+            </div>
+
+            <div class="extras-card">
+                <h2 class="cart-section-title">Bebidas</h2>
+                <div id="bebidasList"></div>
+            </div>
+
+            <div class="extras-card">
+                <h2 class="cart-section-title">Acompanamientos</h2>
+                <div id="acompanamientosList"></div>
             </div>
 
             <!-- Resumen del Pedido -->
@@ -543,7 +622,17 @@
                 </div>
 
                 <div class="summary-item">
-                    <span class="summary-label">Envío</span>
+                    <span class="summary-label">Bebidas</span>
+                    <span class="summary-value" id="bebidasTotal">$0.00</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">Acompanamientos</span>
+                    <span class="summary-value" id="acompanamientosTotal">$0.00</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">Envio</span>
                     <span class="summary-value" id="delivery">$2.99</span>
                 </div>
 
@@ -567,17 +656,17 @@
                 </button>
 
                 <button class="btn-seguir" onclick="seguirComprando()">
-                    ← Seguir Comprando
+                    Seguir Comprando
                 </button>
             </div>
         </div>
 
-        <!-- Estado de Carrito Vacío -->
+        <!-- Estado de Carrito VacÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­o -->
         <div id="emptyCart" class="empty-cart" style="display: none;">
             <div class="empty-cart-icon">
                 <i class="fas fa-shopping-cart"></i>
             </div>
-            <h3>Tu carrito está vacío</h3>
+            <h3>Tu carrito estÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ vacÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­o</h3>
             <p>Agrega algunas pizzas o hamburguesas deliciosas a tu pedido</p>
             <div>
                 <a href="/cliente/crear-pizza" class="btn-crear">
@@ -597,70 +686,71 @@
     <footer class="footer">
         <div class="container">
             <p>&copy; 2025 PizzUM & BurgUM. Todos los derechos reservados.</p>
-            <p class="mb-0">Diseñado por MCN Solutions para amantes de la buena comida</p>
+            <p class="mb-0">DiseÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â±ado por MCN Solutions para amantes de la buena comida</p>
         </div>
     </footer>
 </div>
 
 <script>
-        // SOLUCIÓN: Siempre empezar con carrito vacío
-        let carrito = [];
+    let carrito = [];
+    const deliveryCost = 2.99;
 
-        // Solo cargar del localStorage si existe Y no tiene datos de prueba
-        const cartData = localStorage.getItem('pizzumburgum_cart');
-        if (cartData) {
-        const parsedCart = JSON.parse(cartData);
-        // Solo usar datos del localStorage si son datos reales del usuario
-        const tieneDatosReales = parsedCart.length > 0 &&
-        parsedCart.some(item => item.id && item.precio > 0);
+    let bebidasDisponibles = [];
+    let acompanamientosDisponibles = [];
+    const bebidasSeleccionadas = new Map();
+    const acompanamientosSeleccionados = new Map();
 
-        if (tieneDatosReales) {
-        carrito = parsedCart;
-    } else {
-        // Limpiar datos de prueba
-        localStorage.removeItem('pizzumburgum_cart');
+    function cargarCarritoDesdeServidor() {
+        fetch('/cliente/carrito-items')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    carrito = data.items || [];
+                    cargarCarrito();
+                } else {
+                    console.error('Error al obtener carrito:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar carrito:', error);
+            });
     }
-    }
 
-        function cargarCarrito() {
+    function cargarCarrito() {
         const cartItemsList = document.getElementById('cartItemsList');
         const emptyCart = document.getElementById('emptyCart');
         const btnRealizarPedido = document.getElementById('btnRealizarPedido');
 
-        // LIMPIAR TODO
         cartItemsList.innerHTML = '';
 
-        if (carrito.length === 0) {
-        emptyCart.style.display = 'block';
-        btnRealizarPedido.disabled = true;
-        document.getElementById('subtotal').textContent = '$0.00';
-        document.getElementById('taxes').textContent = '$0.00';
-        document.getElementById('total').textContent = '$0.00';
-        return;
-    }
+        if (!carrito || carrito.length === 0) {
+            emptyCart.style.display = 'block';
+            btnRealizarPedido.disabled = true;
+            actualizarResumen();
+            return;
+        }
 
         emptyCart.style.display = 'none';
         btnRealizarPedido.disabled = false;
 
-        // SOLO MOSTRAR ITEMS DEL CARRITO REAL
-        cartItemsList.innerHTML = carrito.map((item, index) => `
+        cartItemsList.innerHTML = carrito.map((item) => `
             <div class="cart-item">
                 <div class="item-image">
-                    <i class="fas ${item.tipo === 'pizza' ? 'fa-pizza-slice pizza-icon' : 'fa-hamburger burger-icon'}"></i>
+                    <i class="fas ${item.creacion.tipo === 'P' ? 'fa-pizza-slice pizza-icon' : 'fa-hamburger burger-icon'}"></i>
                 </div>
                 <div class="item-details">
-                    <div class="item-name">${item.nombre}</div>
-                    <div class="item-description">${item.descripcion}</div>
-                    <span class="item-type">${item.tipo === 'pizza' ? '🍕 Pizza' : '🍔 Hamburguesa'}</span>
+                    <div class="item-name">${item.creacion.nombre}</div>
+                    <div class="item-description">${item.creacion.descripcion || ''}</div>
+                    <span class="item-type">${item.creacion.tipo === 'P' ? 'Pizza' : 'Hamburguesa'}</span>
                 </div>
                 <div class="item-controls">
                     <div class="quantity-controls">
-                        <button class="quantity-btn" onclick="cambiarCantidad(${index}, -1)">-</button>
+                        <button class="quantity-btn" onclick="cambiarCantidad(${item.id}, -1)">-</button>
                         <span class="quantity">${item.cantidad}</span>
-                        <button class="quantity-btn" onclick="cambiarCantidad(${index}, 1)">+</button>
+                        <button class="quantity-btn" onclick="cambiarCantidad(${item.id}, 1)">+</button>
                     </div>
-                    <div class="item-price">$${(item.precio * item.cantidad).toFixed(2)}</div>
-                    <button class="remove-btn" onclick="eliminarItem(${index})">
+                    <div class="item-price">$${(item.precioUnitario * item.cantidad).toFixed(2)}</div>
+                    <button class="remove-btn" onclick="eliminarItem(${item.id})">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -670,59 +760,195 @@
         actualizarResumen();
     }
 
-        // El resto del código igual...
-        function cambiarCantidad(index, cambio) {
-        if (cambio === -1 && carrito[index].cantidad === 1) return;
-        carrito[index].cantidad += cambio;
-        localStorage.setItem('pizzumburgum_cart', JSON.stringify(carrito));
-        cargarCarrito();
+    function cargarExtras() {
+        Promise.all([
+            fetch('/cliente/productos/bebidas').then(resp => resp.json()),
+            fetch('/cliente/productos/acompanamientos').then(resp => resp.json())
+        ]).then(([bebidasResp, acompResp]) => {
+            if (bebidasResp.success) {
+                bebidasDisponibles = bebidasResp.items || [];
+                renderExtras(bebidasDisponibles, 'bebidasList', 'B');
+            }
+            if (acompResp.success) {
+                acompanamientosDisponibles = acompResp.items || [];
+                renderExtras(acompanamientosDisponibles, 'acompanamientosList', 'AC');
+            }
+            actualizarResumen();
+        }).catch(error => console.error('Error al cargar extras:', error));
     }
 
-        function eliminarItem(index) {
-        const item = carrito[index];
-        if (confirm(`¿Eliminar "${item.nombre}" de tu carrito?`)) {
-        carrito.splice(index, 1);
-        localStorage.setItem('pizzumburgum_cart', JSON.stringify(carrito));
-        cargarCarrito();
-    }
+    function renderExtras(lista, contenedorId, tipo) {
+        const contenedor = document.getElementById(contenedorId);
+        if (!contenedor) return;
+
+        if (!lista || lista.length === 0) {
+            contenedor.innerHTML = '<p style="color:#84b6f4;">No hay opciones disponibles.</p>';
+            return;
+        }
+
+        const mapa = obtenerMapaPorTipo(tipo);
+
+        contenedor.innerHTML = lista.map(item => {
+            const cantidad = mapa.get(item.id_producto)?.cantidad || 0;
+            const precio = Number(item.precio || 0).toFixed(2);
+            return `
+                <div class="extra-item">
+                    <div class="extra-info">
+                        <span class="extra-name">${item.nombre}</span>
+                        <span class="extra-price">$${precio}</span>
+                    </div>
+                    <div class="extra-qty-controls">
+                        <button class="extra-qty-btn" onclick="cambiarCantidadExtra('${tipo}', ${item.id_producto}, -1)">-</button>
+                        <span class="extra-qty-value">${cantidad}</span>
+                        <button class="extra-qty-btn" onclick="cambiarCantidadExtra('${tipo}', ${item.id_producto}, 1)">+</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
 
-        function actualizarResumen() {
-        const subtotal = carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
-        const delivery = 2.99;
-        const taxes = subtotal * 0.10;
-        const total = subtotal + delivery + taxes;
+    function cambiarCantidadExtra(tipo, productoId, delta) {
+        const mapa = obtenerMapaPorTipo(tipo);
+        const lista = obtenerListaPorTipo(tipo);
+        const producto = lista.find(p => p.id_producto === productoId);
+        if (!producto) return;
+
+        const actual = mapa.get(productoId) || { id: productoId, nombre: producto.nombre, precio: Number(producto.precio || 0), cantidad: 0 };
+        const nuevaCantidad = actual.cantidad + delta;
+
+        if (nuevaCantidad <= 0) {
+            mapa.delete(productoId);
+        } else {
+            mapa.set(productoId, { ...actual, cantidad: nuevaCantidad });
+        }
+
+        renderExtras(lista, tipo === 'B' ? 'bebidasList' : 'acompanamientosList', tipo);
+        actualizarResumen();
+    }
+
+    function obtenerMapaPorTipo(tipo) {
+        return tipo === 'B' ? bebidasSeleccionadas : acompanamientosSeleccionados;
+    }
+
+    function obtenerListaPorTipo(tipo) {
+        return tipo === 'B' ? bebidasDisponibles : acompanamientosDisponibles;
+    }
+
+    function totalExtras(mapa) {
+        let total = 0;
+        mapa.forEach(item => {
+            total += (item.precio || 0) * item.cantidad;
+        });
+        return total;
+    }
+
+    function cambiarCantidad(itemId, cambio) {
+        const item = carrito.find(i => i.id === itemId);
+        if (!item) return;
+
+        let nuevaCantidad = item.cantidad + cambio;
+        if (nuevaCantidad < 1) nuevaCantidad = 1;
+
+        fetch(`/cliente/carrito-item/${itemId}/cantidad?cantidad=${nuevaCantidad}`, {
+            method: 'PUT'
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    cargarCarritoDesdeServidor();
+                } else {
+                    console.error('Error al actualizar cantidad:', data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function eliminarItem(itemId) {
+        if (!confirm('Eliminar este item del carrito?')) return;
+
+        fetch(`/cliente/carrito-item/${itemId}`, {
+            method: 'DELETE'
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    cargarCarritoDesdeServidor();
+                } else {
+                    console.error('Error al eliminar item:', data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function actualizarResumen() {
+        const subtotal = carrito.reduce((total, item) => total + (item.precioUnitario * item.cantidad), 0);
+        const bebidasTotal = totalExtras(bebidasSeleccionadas);
+        const acompanamientosTotal = totalExtras(acompanamientosSeleccionados);
+        const base = subtotal + bebidasTotal + acompanamientosTotal;
+        const taxes = base * 0.10;
+        const total = base + deliveryCost + taxes;
 
         document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('bebidasTotal').textContent = `$${bebidasTotal.toFixed(2)}`;
+        document.getElementById('acompanamientosTotal').textContent = `$${acompanamientosTotal.toFixed(2)}`;
         document.getElementById('taxes').textContent = `$${taxes.toFixed(2)}`;
+        document.getElementById('delivery').textContent = `$${deliveryCost.toFixed(2)}`;
         document.getElementById('total').textContent = `$${total.toFixed(2)}`;
     }
 
-        function realizarPedido() {
-        if (carrito.length === 0) return;
-        const total = document.getElementById('total').textContent;
-
-        if (confirm(`¿Confirmar pedido por ${total}?`)) {
-        alert('¡Pedido realizado con éxito! 🎉');
-        carrito = [];
-        localStorage.setItem('pizzumburgum_cart', JSON.stringify(carrito));
-        cargarCarrito();
-    }
+    function construirPayloadExtras(mapa) {
+        return Array.from(mapa.values()).map(item => ({
+            productoId: item.id,
+            cantidad: item.cantidad
+        }));
     }
 
-        function seguirComprando() {
+    function realizarPedido() {
+        if (!carrito || carrito.length === 0) return;
+        const totalTexto = document.getElementById('total').textContent;
+
+        if (confirm(`Confirmar pedido por ${totalTexto}?`)) {
+            const payload = {
+                costoEnvio: deliveryCost,
+                bebidas: construirPayloadExtras(bebidasSeleccionadas),
+                acompanamientos: construirPayloadExtras(acompanamientosSeleccionados)
+            };
+
+            fetch('/cliente/realizar-pedido', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Pedido realizado con exito!');
+                        window.location.href = '/cliente/ordenes';
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al realizar pedido');
+                });
+        }
+    }
+
+    function seguirComprando() {
         window.location.href = '/cliente/panel';
     }
 
-        document.addEventListener('DOMContentLoaded', function() {
-        cargarCarrito();
+    document.addEventListener('DOMContentLoaded', function() {
+        cargarCarritoDesdeServidor();
+        cargarExtras();
 
         const currentPage = window.location.pathname;
         document.querySelectorAll('.nav-link').forEach(link => {
-        if (link.getAttribute('href') === currentPage) {
-        link.classList.add('active');
-    }
-    });
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
     });
 </script>
 </body>
