@@ -17,7 +17,11 @@ public class FavoritoDto {
     private String descripcion;
     private Double precio;
     private String tipo; // "PIZZA" o "HAMBURGUESA"
-    private String detalle;
+    /**
+     * Objeto libre con el detalle de la creación (pizza u hamburguesa).
+     * Se serializa a JSON para guardarlo en la BD.
+     */
+    private Object detalles;
     private LocalDate fechaCreacion;
 
     // Campos específicos para Hamburguesa
@@ -52,7 +56,14 @@ public class FavoritoDto {
         this.nombre = nombre;
     }
 
-    public FavoritoDto(Long id, String nombre, String descripcion, Double precio, String tipo, String detalles, LocalDateTime fechaCreacion) {
+    public FavoritoDto(Long id, String nombre, String descripcion, Double precio, String tipo, Object detalles, LocalDateTime fechaCreacion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.tipo = tipo;
+        this.detalles = detalles;
+        this.fechaCreacion = fechaCreacion != null ? fechaCreacion.toLocalDate() : null;
     }
 
     public static FavoritoDto fromEntity(com.example.PizzUMBurgUM.entidades.Favorito favorito) {
@@ -65,7 +76,7 @@ public class FavoritoDto {
                 favorito.getDetalles(),
                 favorito.getFechaCreacion()
         );
-}
+    }
 
     public String getNombre() {
         return nombre;

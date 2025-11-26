@@ -50,6 +50,25 @@ public class ClienteServicio {
     public Cliente guardarCliente(Cliente cliente) {
         return clienteRepositorio.save(cliente);
     }
+
+    public Cliente actualizarNombre(Cliente cliente, String nuevoNombre) {
+        cliente.setNombreUsuario(nuevoNombre);
+        return clienteRepositorio.save(cliente);
+    }
+
+    public Cliente actualizarPassword(Cliente cliente, String nuevaPassword) {
+        cliente.setContrasena(nuevaPassword);
+        return clienteRepositorio.save(cliente);
+    }
+
+    public Cliente actualizarMetodoPago(Cliente cliente, String metodoPago, String numero, String nombreTarjeta, String vencimiento, String cvv) {
+        cliente.setMetodoPago(metodoPago);
+        cliente.setNumeroTarjeta(numero);
+        cliente.setNombreTarjeta(nombreTarjeta);
+        cliente.setVencimientoTarjeta(vencimiento);
+        cliente.setCvvTarjeta(cvv);
+        return clienteRepositorio.save(cliente);
+    }
     public List<Creacion> obtenerHamburguesasRecientes(Cliente cliente) {
         return creacionRepositorio.findByCreadorAndTipo(cliente, 'H');
     }

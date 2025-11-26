@@ -27,12 +27,13 @@ public class FavoritoServicio {
     }
 
     public boolean eliminarFavorito(Cliente cliente, Long favoritoId) {
-        try {
-            favoritoRepositorio.deleteByClienteAndId(cliente, favoritoId);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        return favoritoRepositorio.findById(favoritoId)
+                .filter(f -> f.getCliente() != null && f.getCliente().getIdUsuario().equals(cliente.getIdUsuario()))
+                .map(fav -> {
+                    favoritoRepositorio.delete(fav);
+                    return true;
+                })
+                .orElse(false);
     }
     public boolean existeFavorito(Cliente cliente, String nombre) {
         return favoritoRepositorio.findByCliente(cliente).stream()

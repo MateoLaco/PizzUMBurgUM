@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
@@ -22,7 +22,7 @@
             padding: 0;
         }
 
-        /* Barra de NavegaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n */
+        /* Barra de NavegaciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n */
         .navbar-horizontal {
             background: var(--dark-color);
             padding: 1rem 0;
@@ -459,7 +459,7 @@
             transform: translateY(-2px);
         }
 
-        /* Carrito VacÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­o */
+        /* Carrito VacÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­o */
         .empty-cart {
             text-align: center;
             padding: 60px 20px;
@@ -570,7 +570,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <!-- Barra de NavegaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n Horizontal (igual que panel) -->
+    <!-- Barra de NavegaciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n Horizontal (igual que panel) -->
     <nav class="navbar-horizontal">
         <div class="nav-container">
             <!-- Logo -->
@@ -578,7 +578,7 @@
                 PizzUM & BurgUM
             </a>
 
-            <!-- Links de NavegaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n -->
+            <!-- Links de NavegaciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n -->
             <div class="nav-links">
                 <a class="nav-link" href="/cliente/panel">Inicio</a>
                 <a class="nav-link" href="/cliente/perfil">Perfil</a>
@@ -599,7 +599,7 @@
 
     <div class="cart-container">
         <div id="pedidoActivoBanner" class="active-order-banner">
-            <strong>Pedido en curso:</strong> ya tienes una orden activa. Finalízala o espera a que se entregue.
+            <strong>Pedido en curso:</strong> ya tienes una orden activa. FinalÃ­zala o espera a que se entregue.
         </div>
         <div class="cart-content">
             <!-- Lista de Productos -->
@@ -669,12 +669,12 @@
             </div>
         </div>
 
-        <!-- Estado de Carrito VacÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­o -->
+        <!-- Estado de Carrito Vacío -->
         <div id="emptyCart" class="empty-cart" style="display: none;">
             <div class="empty-cart-icon">
                 <i class="fas fa-shopping-cart"></i>
             </div>
-            <h3>Tu carrito estÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ vacÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­o</h3>
+            <h3>Tu carrito está vacío</h3>
             <p>Agrega algunas pizzas o hamburguesas deliciosas a tu pedido</p>
             <div>
                 <a href="/cliente/crear-pizza" class="btn-crear">
@@ -694,7 +694,7 @@
     <footer class="footer">
         <div class="container">
             <p>&copy; 2025 PizzUM & BurgUM. Todos los derechos reservados.</p>
-            <p class="mb-0">DiseÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â±ado por MCN Solutions para amantes de la buena comida</p>
+            <p class="mb-0">DiseÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â±ado por MCN Solutions para amantes de la buena comida</p>
         </div>
     </footer>
 </div>
@@ -937,7 +937,7 @@
         const totalTexto = document.getElementById('total').textContent;
 
         if (pedidoActivo && pedidoActivo.estado && pedidoActivo.estado !== 'CANCELADO' && pedidoActivo.estado !== 'ENTREGADO') {
-            alert('Ya tienes un pedido activo. Espera a que finalice o cancélalo si está en cola.');
+            alert('Ya tienes un pedido activo. Espera a que finalice o cancÃ©lalo si estÃ¡ en cola.');
             return;
         }
 
@@ -987,3 +987,5 @@
 </script>
 </body>
 </html>
+
+

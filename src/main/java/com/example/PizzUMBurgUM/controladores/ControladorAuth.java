@@ -6,6 +6,7 @@ import com.example.PizzUMBurgUM.entidades.Cliente;
 import com.example.PizzUMBurgUM.entidades.Funcionario;
 import com.example.PizzUMBurgUM.servicios.ClienteServicio;
 import com.example.PizzUMBurgUM.servicios.FuncionarioServicio;
+import com.example.PizzUMBurgUM.servicios.MetodoPagoServicio;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class ControladorAuth {
 
     @Autowired
     private FuncionarioServicio funcionarioServicio;
+    @Autowired
+    private MetodoPagoServicio metodoPagoServicio;
 
     // MOSTRAR LOGIN
     @GetMapping("/login")
@@ -153,11 +156,21 @@ public class ControladorAuth {
                 .fechaNacimiento(fechaNacimiento)
                 .telefono(telefonoCompleto)
                 .numeroTarjeta(form.getNumeroTarjeta())    // sin espacios
-                // .nombreTarjeta(...) solo si tu entidad lo tiene
-                // .vencimientoTarjeta(vencimiento) si tu entidad tiene ese campo
+                .nombreTarjeta(form.getNombreTarjeta())
+                .vencimientoTarjeta(form.getVencimientoTarjeta())
+                .cvvTarjeta(form.getCvvTarjeta())
                 .build();
 
         Cliente clienteRegistrado = clienteServicio.guardarCliente(clienteNuevo);
+        metodoPagoServicio.crearMetodoPago(
+                clienteRegistrado,
+                form.getMetodoPago(),
+                form.getNumeroTarjeta(),
+                form.getNombreTarjeta(),
+                form.getVencimientoTarjeta(),
+                form.getCvvTarjeta(),
+                true
+        );
         session.setAttribute("clienteLogueado", clienteRegistrado);
         return "redirect:/cliente/panel";
     }
