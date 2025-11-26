@@ -1,5 +1,6 @@
 package com.example.PizzUMBurgUM.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -26,7 +27,7 @@ public class Pedido {
     @Column(length = 100)
     @NotNull
     @Builder.Default
-    private String estado = "Pendiente";
+    private String estado = "EN_COLA";
 
     @Column
     @Builder.Default
@@ -59,6 +60,11 @@ public class Pedido {
     @CollectionTable(name = "pedido_acompanamientos", joinColumns = @JoinColumn(name = "id_pedido"))
     @Builder.Default
     private List<PedidoExtraItem> acompanamientos = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_cliente", nullable = false)
+    @JsonIgnoreProperties({"creaciones", "favoritos", "pedidos"})
+    private Cliente cliente;
 
     @PrePersist
     public void onCreate() {

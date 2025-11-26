@@ -2,6 +2,7 @@ package com.example.PizzUMBurgUM.controladores;
 
 import com.example.PizzUMBurgUM.dto.FavoritoDto;
 import com.example.PizzUMBurgUM.dto.CreacionDto;
+import com.example.PizzUMBurgUM.dto.CarritoItemDto;
 import com.example.PizzUMBurgUM.entidades.Creacion;
 import com.example.PizzUMBurgUM.entidades.CarritoItem;
 import com.example.PizzUMBurgUM.entidades.Favorito;
@@ -289,8 +290,11 @@ public class ControladorCliente {
     }
 
     @GetMapping("/ordenes")
-    public String ordenes(HttpSession session) {
+    public String ordenes(Model model, HttpSession session) {
         if (!verificarSesion(session)) return "redirect:/auth/login";
+        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
+        var pedidoActivo = pedidoServicio.obtenerPedidoActivo(cliente);
+        model.addAttribute("pedidoActivo", pedidoActivo);
         return "cliente/ordenes";
     }
 
@@ -400,14 +404,33 @@ public class ControladorCliente {
             List<CarritoItem> items = carritoServicio.obtenerCarritoDelCliente(cliente);
             Double total = carritoServicio.calcularTotalCarrito(cliente);
             Integer cantidadItems = carritoServicio.obtenerTotalItems(cliente);
+            var pedidoActivo = pedidoServicio.obtenerPedidoActivo(cliente);
 
-            return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "message", "Carrito obtenido correctamente",
-                    "items", items,
-                    "total", total,
-                    "cantidadItems", cantidadItems
-            ));
+            // Map a DTO simple para evitar problemas de serializaci��n/lazy
+            List<CarritoItemDto> itemsDto = items.stream().map(item -> new CarritoItemDto(
+                    item.getId(),
+                    item.getCreacion() != null ? item.getCreacion().getId_creacion() : null,
+                    item.getCreacion() != null ? item.getCreacion().getNombre() : "",
+                    item.getCreacion() != null ? item.getCreacion().getDescripcion() : "",
+                    item.getCreacion() != null ? item.getCreacion().getTipo() : ' ',
+                    item.getPrecioUnitario(),
+                    item.getCantidad()
+            )).toList();
+
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", true);
+            resp.put("message", "Carrito obtenido correctamente");
+            resp.put("items", itemsDto);
+            resp.put("total", total);
+            resp.put("cantidadItems", cantidadItems);
+            if (pedidoActivo != null) {
+                resp.put("pedidoActivo", Map.of(
+                        "id", pedidoActivo.getIdPedido(),
+                        "estado", pedidoActivo.getEstado()
+                ));
+            }
+
+            return ResponseEntity.ok(resp);
 
         } catch (Exception e) {
             return ResponseEntity.status(500)
@@ -498,6 +521,51 @@ public class ControladorCliente {
         }
     }
 
+    @GetMapping("/pedido-activo")
+    @ResponseBody
+    public ResponseEntity<?> obtenerPedidoActivo(HttpSession session) {
+        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
+        if (cliente == null) {
+            return ResponseEntity.status(401)
+                    .body(Map.of("success", false, "message", "Usuario no autenticado"));
+        }
+        var pedidoActivo = pedidoServicio.obtenerPedidoActivo(cliente);
+        if (pedidoActivo == null) {
+            return ResponseEntity.ok(Map.of("success", true, "activo", false));
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("success", true);
+        data.put("activo", true);
+        data.put("pedido", Map.of(
+                "id", pedidoActivo.getIdPedido(),
+                "estado", pedidoActivo.getEstado(),
+                "fecha", pedidoActivo.getFecha()
+        ));
+        data.put("puedeCancelar", "EN_COLA".equalsIgnoreCase(pedidoActivo.getEstado()));
+        return ResponseEntity.ok(data);
+    }
+
+    @PostMapping("/pedido/{id}/cancelar")
+    @ResponseBody
+    public ResponseEntity<?> cancelarPedido(@PathVariable Long id, HttpSession session) {
+        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
+        if (cliente == null) {
+            return ResponseEntity.status(401)
+                    .body(Map.of("success", false, "message", "Usuario no autenticado"));
+        }
+        try {
+            var pedido = pedidoServicio.cancelarPedido(cliente, id);
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Pedido cancelado",
+                    "pedidoId", pedido.getIdPedido()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
+
     /**
      * Realiza un pedido a partir del carrito
      */
@@ -511,6 +579,12 @@ public class ControladorCliente {
             if (cliente == null) {
                 return ResponseEntity.status(401)
                         .body(Map.of("success", false, "message", "Usuario no autenticado"));
+            }
+
+            // Bloquea si ya tiene un pedido activo (no entregado ni cancelado)
+            if (pedidoServicio.obtenerPedidoActivo(cliente) != null) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("success", false, "message", "Ya tienes un pedido activo"));
             }
 
             Double costoEnvio = (pedidoRequest != null && pedidoRequest.costoEnvio() != null)

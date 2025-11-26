@@ -800,18 +800,11 @@
                 PizzUM & BurgUM
             </a>
             <div class="nav-links">
-                <a class="nav-link active" href="/cliente/panel">
-                    Inicio
-                </a>
-                <a class="nav-link" href="/cliente/perfil">
-                    Perfil
-                </a>
-                <a class="nav-link" href="/cliente/favoritos">
-                    Favoritos
-                </a>
-                <a th:href="@{/auth/logout}" class="nav-link logout-btn">
-                    Salir
-                </a>
+                <a class="nav-link active" href="/cliente/panel">Inicio</a>
+                <a class="nav-link" href="/cliente/perfil">Perfil</a>
+                <a class="nav-link" href="/cliente/favoritos">Favoritos</a>
+                <a class="nav-link" href="/cliente/ordenes">Ordenes</a>
+                <a th:href="@{/auth/logout}" class="nav-link logout-btn">Salir</a>
             </div>
         </div>
     </nav>
@@ -892,7 +885,12 @@
     <!-- Favoritos Section - CON TUS DATOS REALES -->
     <section class="favorites-section">
         <div class="main-container">
-            <h2 class="section-title">Tus Favoritos Recientes</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+                <h2 class="section-title" style="margin:0;">Tus Favoritos Recientes</h2>
+                <a href="/cliente/carrito" class="btn-view-all" style="padding:10px 20px; border-radius:20px; background:var(--primary-color); color:white; text-decoration:none;">
+                    Ver carrito
+                </a>
+            </div>
             <div class="row">
                 <!-- Favoritos dinámicos desde tu controlador -->
                 <div class="col-md-6" th:each="favorito : ${favoritos}" th:if="${favoritoStat.index < 2}">

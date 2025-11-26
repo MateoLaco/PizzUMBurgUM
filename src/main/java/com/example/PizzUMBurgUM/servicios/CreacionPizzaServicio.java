@@ -22,7 +22,8 @@ public class CreacionPizzaServicio {
     }
 
     public List<Producto> obtenerQuesosPizza() {
-        return productoRepositorio.findByTipoAndActivoTrue("Q");
+        // En admin se crea como tipo "QP" (Queso de Pizza)
+        return productoRepositorio.findByTipoAndActivoTrue("QP");
     }
 
     public List<Producto> obtenerToppingsGenerales() {

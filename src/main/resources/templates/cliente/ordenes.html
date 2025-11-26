@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Tu Orden - PizzUM & BurgUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary-color:#dc3545; --secondary-color:#ffc107; --dark-color:#2c3e50; --light-color:#f8f9fa; }
+        body { font-family:'Poppins',sans-serif; background:var(--dark-color); margin:0; }
+        .hero { background:linear-gradient(135deg,var(--primary-color),#c82333); color:#fff; padding:60px 0; text-align:center; }
+        .hero h1 { font-family:'Montserrat',sans-serif; font-weight:700; font-size:2.6rem; margin:0; }
+        .page { max-width:900px; margin: -40px auto 40px; padding:0 20px; }
+        .card { background:#fff; border-radius:16px; padding:24px; box-shadow:0 10px 24px rgba(0,0,0,.15); }
+        .progress-container { position:relative; padding:30px 20px 10px; }
+        .progress-line { position:absolute; top:34px; left:20px; right:20px; height:6px; background:#e9ecef; border-radius:3px; }
+        .progress-fill { height:6px; background:var(--primary-color); border-radius:3px; width:0%; transition:width .4s ease; }
+        .steps { display:flex; justify-content:space-between; position:relative; z-index:1; }
+        .step { text-align:center; flex:1; color:#6c757d; font-weight:600; font-size:.9rem; }
+        .step .icon { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; background:#e9ecef; color:#6c757d; }
+        .step.done .icon, .step.active .icon { background:var(--primary-color); color:#fff; }
+        .step.done, .step.active { color:#2c3e50; }
+        .status-text { margin-top:16px; font-weight:600; color:#2c3e50; }
+        .actions { margin-top:20px; display:flex; gap:12px; flex-wrap:wrap; }
+        .btn { padding:12px 18px; border-radius:12px; border:none; cursor:pointer; font-weight:700; font-family:'Poppins',sans-serif; }
+        .btn-primary { background:var(--primary-color); color:#fff; }
+        .btn-secondary { background:#e9ecef; color:#2c3e50; }
+        .empty { text-align:center; color:#2c3e50; padding:40px 20px; }
+        .empty p { color:#6c757d; }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="hero">
+        <div class="container">
+            <h1>Tu Orden</h1>
+            <p th:if="${pedidoActivo != null}" style="margin-top:8px;">Seguimiento de tu pedido en tiempo real</p>
+            <p th:if="${pedidoActivo == null}" style="margin-top:8px;">No tienes pedidos activos</p>
+        </div>
+    </section>
+
+    <div class="page">
+        <div class="card" th:if="${pedidoActivo != null}">
+            <div class="progress-container">
+                <div class="progress-line">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="steps" id="steps" th:attr="data-estado=${pedidoActivo.estado}">
+                    <div class="step" data-estado="EN_COLA">
+                        <div class="icon"><i class="fas fa-clock"></i></div>
+                        En cola
+                    </div>
+                    <div class="step" data-estado="EN_PREPARACION">
+                        <div class="icon"><i class="fas fa-utensils"></i></div>
+                        Preparación
+                    </div>
+                    <div class="step" data-estado="EN_CAMINO">
+                        <div class="icon"><i class="fas fa-motorcycle"></i></div>
+                        En camino
+                    </div>
+                    <div class="step" data-estado="ENTREGADO">
+                        <div class="icon"><i class="fas fa-check"></i></div>
+                        Entregado
+                    </div>
+                </div>
+            </div>
+            <div class="status-text" id="estadoTexto"
+                 th:text="'Estado actual: ' + ${pedidoActivo.estado}"></div>
+            <div class="actions">
+                <button class="btn btn-primary" th:if="${pedidoActivo.estado == 'EN_COLA'}"
+                        th:attr="data-id=${pedidoActivo.idPedido}"
+                        onclick="cancelarPedido(this.getAttribute('data-id'))">
+                    Cancelar pedido
+                </button>
+                <a class="btn btn-secondary" href="/cliente/panel">Ir al inicio</a>
+                <a class="btn btn-secondary" href="/cliente/carrito">Ir al carrito</a>
+                <a class="btn btn-secondary" href="/cliente/favoritos">Ir a favoritos</a>
+            </div>
+        </div>
+
+        <div class="card empty" th:if="${pedidoActivo == null}">
+            <h3>No tienes pedidos activos</h3>
+            <p>Vuelve al carrito para crear uno nuevo.</p>
+            <div class="actions" style="justify-content:center; gap:10px; flex-wrap:wrap;">
+                <a class="btn btn-primary" href="/cliente/panel">Ir al inicio</a>
+                <a class="btn btn-secondary" href="/cliente/carrito">Ir al carrito</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const stepsEl = document.getElementById('steps');
+        if (!stepsEl) return;
+        const estado = stepsEl.dataset.estado || 'EN_COLA';
+        const order = ['EN_COLA', 'EN_PREPARACION', 'EN_CAMINO', 'ENTREGADO'];
+        const idx = order.indexOf(estado);
+        const percent = idx >= 0 ? (idx / (order.length - 1)) * 100 : 0;
+        const fill = document.getElementById('progressFill');
+        if (fill) fill.style.width = percent + '%';
+        document.querySelectorAll('.step').forEach((step, i) => {
+            if (i < idx) step.classList.add('done');
+            if (i === idx) step.classList.add('active');
+        });
+        const estadoTexto = document.getElementById('estadoTexto');
+        if (estadoTexto) {
+            estadoTexto.textContent = 'Estado actual: ' + estado.replace('_', ' ');
+        }
+    })();
+
+    function cancelarPedido(id) {
+        if (!confirm('Cancelar el pedido?')) return;
+        fetch(`/cliente/pedido/${id}/cancelar`, { method: 'POST' })
+            .then(resp => resp.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Pedido cancelado');
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'No se pudo cancelar');
+                }
+            })
+            .catch(() => alert('Error al cancelar'));
+    }
+</script>
+</body>
+</html>

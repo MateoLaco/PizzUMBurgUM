@@ -95,16 +95,7 @@ public class PizzUmBurgUmApplication {
             funcionarioRepositorio.save(funcionario);
             funcionarioRepositorio.save(funcionario1);
 
-            if (c1 != null) {
-                Pedido pedido = Pedido.builder()
-                        .fecha(LocalDate.now())
-                        .creaciones(Set.of(c1))
-                        .costoEnvio(100.0)
-                        .estado("EN_COLA")
-                        .build();
-
-                pedidoRepositorio.save(pedido);
-            }
+            // Se omitió la creación de un pedido inicial para no bloquear nuevos pedidos del cliente al iniciar la app
         } catch (Exception e) {
             System.err.println("Error inicializando datos: " + e.getMessage());
             e.printStackTrace();

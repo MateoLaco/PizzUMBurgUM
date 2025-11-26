@@ -690,6 +690,7 @@
                 <a class="nav-link active" href="/cliente/favoritos">
                     Favoritos
                 </a>
+                <a class="nav-link" href="/cliente/ordenes">Ordenes</a>
                 <a th:href="@{/auth/logout}" class="nav-link logout-btn">
                     Salir
                 </a>
@@ -736,8 +737,6 @@
     <!-- Lista de Favoritos -->
     <section class="favorites-section">
         <div class="container">
-            <h2 class="section-title">Todas Tus Creaciones Favoritas</h2>
-
             <!-- Estado vacío -->
             <div th:if="${favoritos == null or favoritos.empty}">
                 <div class="empty-state">
