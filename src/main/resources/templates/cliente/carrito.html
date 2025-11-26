@@ -209,6 +209,20 @@
             font-weight: 600;
         }
 
+        .active-order-banner {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 16px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .active-order-banner strong {
+            color: #614700;
+        }
+
         .cart-section-title {
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
@@ -566,21 +580,12 @@
 
             <!-- Links de NavegaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n -->
             <div class="nav-links">
-                <a class="nav-link" href="/cliente/panel">
-                    Inicio
-                </a>
-                <a class="nav-link" href="/cliente/perfil">
-                    Perfil
-                </a>
-                <a class="nav-link" href="/cliente/favoritos">
-                    Favoritos
-                </a>
-                <a class="nav-link active" href="/cliente/carrito">
-                    Carrito
-                </a>
-                <a th:href="@{/auth/logout}" class="nav-link logout-btn">
-                    Salir
-                </a>
+                <a class="nav-link" href="/cliente/panel">Inicio</a>
+                <a class="nav-link" href="/cliente/perfil">Perfil</a>
+                <a class="nav-link" href="/cliente/favoritos">Favoritos</a>
+                <a class="nav-link" href="/cliente/ordenes">Ordenes</a>
+                <a class="nav-link" href="/cliente/carrito">Carrito</a>
+                <a th:href="@{/auth/logout}" class="nav-link logout-btn">Salir</a>
             </div>
         </div>
     </nav>
@@ -593,6 +598,9 @@
     </section>
 
     <div class="cart-container">
+        <div id="pedidoActivoBanner" class="active-order-banner">
+            <strong>Pedido en curso:</strong> ya tienes una orden activa. Finalízala o espera a que se entregue.
+        </div>
         <div class="cart-content">
             <!-- Lista de Productos -->
             <div class="cart-items">
@@ -699,6 +707,7 @@
     let acompanamientosDisponibles = [];
     const bebidasSeleccionadas = new Map();
     const acompanamientosSeleccionados = new Map();
+    let pedidoActivo = null;
 
     function cargarCarritoDesdeServidor() {
         fetch('/cliente/carrito-items')
@@ -706,6 +715,7 @@
             .then(data => {
                 if (data.success) {
                     carrito = data.items || [];
+                    pedidoActivo = data.pedidoActivo || null;
                     cargarCarrito();
                 } else {
                     console.error('Error al obtener carrito:', data.message);
@@ -726,22 +736,23 @@
         if (!carrito || carrito.length === 0) {
             emptyCart.style.display = 'block';
             btnRealizarPedido.disabled = true;
+            actualizarBanner();
             actualizarResumen();
             return;
         }
 
         emptyCart.style.display = 'none';
-        btnRealizarPedido.disabled = false;
+        btnRealizarPedido.disabled = !!pedidoActivo;
 
         cartItemsList.innerHTML = carrito.map((item) => `
             <div class="cart-item">
                 <div class="item-image">
-                    <i class="fas ${item.creacion.tipo === 'P' ? 'fa-pizza-slice pizza-icon' : 'fa-hamburger burger-icon'}"></i>
+                    <i class="fas ${item.tipo === 'P' ? 'fa-pizza-slice pizza-icon' : 'fa-hamburger burger-icon'}"></i>
                 </div>
                 <div class="item-details">
-                    <div class="item-name">${item.creacion.nombre}</div>
-                    <div class="item-description">${item.creacion.descripcion || ''}</div>
-                    <span class="item-type">${item.creacion.tipo === 'P' ? 'Pizza' : 'Hamburguesa'}</span>
+                    <div class="item-name">${item.nombre}</div>
+                    <div class="item-description">${item.descripcion || ''}</div>
+                    <span class="item-type">${item.tipo === 'P' ? 'Pizza' : 'Hamburguesa'}</span>
                 </div>
                 <div class="item-controls">
                     <div class="quantity-controls">
@@ -757,7 +768,25 @@
             </div>
         `).join('');
 
+        actualizarBanner();
         actualizarResumen();
+    }
+
+    function actualizarBanner() {
+        const banner = document.getElementById('pedidoActivoBanner');
+        const btnRealizarPedido = document.getElementById('btnRealizarPedido');
+        if (!banner) return;
+
+        if (pedidoActivo && pedidoActivo.estado && pedidoActivo.estado !== 'CANCELADO' && pedidoActivo.estado !== 'ENTREGADO') {
+            banner.style.display = 'block';
+            banner.innerHTML = `<strong>Pedido en curso:</strong> Estado "${pedidoActivo.estado}". Finaliza o espera antes de crear otro.`;
+            btnRealizarPedido.disabled = true;
+        } else {
+            banner.style.display = 'none';
+            if (carrito && carrito.length > 0) {
+                btnRealizarPedido.disabled = false;
+            }
+        }
     }
 
     function cargarExtras() {
@@ -906,6 +935,11 @@
     function realizarPedido() {
         if (!carrito || carrito.length === 0) return;
         const totalTexto = document.getElementById('total').textContent;
+
+        if (pedidoActivo && pedidoActivo.estado && pedidoActivo.estado !== 'CANCELADO' && pedidoActivo.estado !== 'ENTREGADO') {
+            alert('Ya tienes un pedido activo. Espera a que finalice o cancélalo si está en cola.');
+            return;
+        }
 
         if (confirm(`Confirmar pedido por ${totalTexto}?`)) {
             const payload = {

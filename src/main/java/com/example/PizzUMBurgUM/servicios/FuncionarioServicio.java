@@ -44,10 +44,16 @@ public class FuncionarioServicio {
     public void actualizarEstadoPedido(Long id, String nuevoEstado) {
 
         Pedido pedido = pedidoRepositorio.findById(id)
-                .orElseThrow(() -> new RuntimeException("No se encontró el pedido con id " + id));
+                .orElseThrow(() -> new RuntimeException("No se encontro el pedido con id " + id));
+
+        if (pedido.getEstado() != null &&
+                (pedido.getEstado().equalsIgnoreCase("ENTREGADO") ||
+                 pedido.getEstado().equalsIgnoreCase("CANCELADO"))) {
+            throw new IllegalArgumentException("No se puede modificar un pedido entregado o cancelado");
+        }
 
         if (nuevoEstado == null || nuevoEstado.isBlank()) {
-            throw new IllegalArgumentException("El nuevo estado no puede ser vacío");
+            throw new IllegalArgumentException("El nuevo estado no puede ser vacio");
         }
 
         nuevoEstado = nuevoEstado.toUpperCase();
@@ -56,14 +62,12 @@ public class FuncionarioServicio {
                 !nuevoEstado.equals("EN_PREPARACION") &&
                 !nuevoEstado.equals("EN_CAMINO") &&
                 !nuevoEstado.equals("ENTREGADO")) {
-            throw new IllegalArgumentException("Estado inválido: " + nuevoEstado);
+            throw new IllegalArgumentException("Estado invalido: " + nuevoEstado);
         }
 
         pedido.setEstado(nuevoEstado);
         pedidoRepositorio.save(pedido);
-    }
-
-    // ------------------ FUNCIONARIOS (ABM) ------------------
+    }    // ------------------ FUNCIONARIOS (ABM) ------------------
 
     public List<Funcionario> listarFuncionarios() {
         return funcionarioRepositorio.findAll();
@@ -88,7 +92,7 @@ public class FuncionarioServicio {
         }
 
         if (funcionario.getContrasena() == null || funcionario.getContrasena().isBlank()) {
-            throw new IllegalArgumentException("La contraseña es obligatoria");
+            throw new IllegalArgumentException("La contraseÃ±a es obligatoria");
         }
 
         if (funcionario.getRol() == null || funcionario.getRol().isBlank()) {
@@ -140,7 +144,7 @@ public class FuncionarioServicio {
             throw new IllegalArgumentException("Ya existe un funcionario con ese email");
         }
         if (nuevosDatos.getContrasena() == null || nuevosDatos.getContrasena().isBlank()) {
-            throw new IllegalArgumentException("La contraseña es obligatoria");
+            throw new IllegalArgumentException("La contraseÃ±a es obligatoria");
         }
         if (nuevosDatos.getRol() == null || nuevosDatos.getRol().isBlank()) {
             throw new IllegalArgumentException("El rol es obligatorio");
@@ -189,11 +193,11 @@ public class FuncionarioServicio {
             throw new IllegalStateException("No hay funcionario autenticado.");
         }
         if (nuevoNombre == null || nuevoNombre.isBlank()) {
-            throw new IllegalArgumentException("El nombre de usuario no puede estar vacío.");
+            throw new IllegalArgumentException("El nombre de usuario no puede estar vacÃ­o.");
         }
 
         Funcionario existente = funcionarioRepositorio.findById(funcionarioActual.getIdUsuario())
-                .orElseThrow(() -> new RuntimeException("No se encontró el funcionario."));
+                .orElseThrow(() -> new RuntimeException("No se encontrÃ³ el funcionario."));
 
         existente.setNombreUsuario(nuevoNombre.trim());
 
@@ -201,7 +205,7 @@ public class FuncionarioServicio {
     }
 
     /**
-     * Cambia la contraseña del funcionario logueado verificando la contraseña actual.
+     * Cambia la contraseÃ±a del funcionario logueado verificando la contraseÃ±a actual.
      */
     public Funcionario cambiarContrasenaPerfil(Funcionario funcionarioActual,
                                                String contrasenaActual,
@@ -210,20 +214,20 @@ public class FuncionarioServicio {
             throw new IllegalStateException("No hay funcionario autenticado.");
         }
         if (contrasenaActual == null || contrasenaActual.isBlank()) {
-            throw new IllegalArgumentException("Debes ingresar la contraseña actual.");
+            throw new IllegalArgumentException("Debes ingresar la contraseÃ±a actual.");
         }
         if (nuevaContrasena == null || nuevaContrasena.isBlank()) {
-            throw new IllegalArgumentException("La nueva contraseña no puede estar vacía.");
+            throw new IllegalArgumentException("La nueva contraseÃ±a no puede estar vacÃ­a.");
         }
         if (nuevaContrasena.length() < 8) {
-            throw new IllegalArgumentException("La nueva contraseña debe tener al menos 8 caracteres.");
+            throw new IllegalArgumentException("La nueva contraseÃ±a debe tener al menos 8 caracteres.");
         }
 
         Funcionario existente = funcionarioRepositorio.findById(funcionarioActual.getIdUsuario())
-                .orElseThrow(() -> new RuntimeException("No se encontró el funcionario."));
+                .orElseThrow(() -> new RuntimeException("No se encontrÃ³ el funcionario."));
 
         if (!existente.getContrasena().equals(contrasenaActual)) {
-            throw new IllegalArgumentException("La contraseña actual no es correcta.");
+            throw new IllegalArgumentException("La contraseÃ±a actual no es correcta.");
         }
 
         existente.setContrasena(nuevaContrasena);
@@ -231,3 +235,5 @@ public class FuncionarioServicio {
         return funcionarioRepositorio.save(existente);
     }
 }
+
+

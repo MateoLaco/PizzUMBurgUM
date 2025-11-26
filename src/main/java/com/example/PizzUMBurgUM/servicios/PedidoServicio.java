@@ -76,15 +76,38 @@ public class PedidoServicio {
 
         // Crear el pedido
         Pedido pedido = Pedido.builder()
-                .estado("Pendiente")
+                .estado("EN_COLA")
                 .acompanamientos(acompanamientosItems)
                 .bebidas(bebidasItems)
                 .costoEnvio(costoEnvio)
                 .precioTotal(totalPrecio)
                 .creaciones(creaciones)
+                .cliente(cliente)
                 .build();
 
         return pedidoRepositorio.save(pedido);
+    }
+
+    public Pedido cancelarPedido(Cliente cliente, Long pedidoId) {
+        Pedido pedido = obtenerPedido(pedidoId);
+        if (pedido == null) {
+            throw new IllegalArgumentException("Pedido no encontrado");
+        }
+        if (pedido.getCliente() == null || !pedido.getCliente().getIdUsuario().equals(cliente.getIdUsuario())) {
+            throw new IllegalArgumentException("No autorizado para cancelar este pedido");
+        }
+        if (!"EN_COLA".equalsIgnoreCase(pedido.getEstado())) {
+            throw new IllegalArgumentException("El pedido solo puede cancelarse cuando está en cola");
+        }
+        pedido.setEstado("CANCELADO");
+        return pedidoRepositorio.save(pedido);
+    }
+
+    public Pedido obtenerPedidoActivo(Cliente cliente) {
+        List<String> enCurso = List.of("EN_COLA", "EN_PREPARACION", "EN_CAMINO");
+        return pedidoRepositorio
+                .findTopByClienteAndEstadoInOrderByFechaDesc(cliente, enCurso)
+                .orElse(null);
     }
 
     private List<PedidoExtraItem> mapearExtras(List<PedidoExtraDto> extras, String tipoEsperado) {
