@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import com.example.PizzUMBurgUM.entidades.Cliente;
 import com.example.PizzUMBurgUM.servicios.ClienteServicio;
-import com.example.PizzUMBurgUM.servicios.CreacionPizzaServicio;   // 👈 nuevo import
+import com.example.PizzUMBurgUM.servicios.CreacionPizzaServicio;
 import com.example.PizzUMBurgUM.servicios.CarritoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -192,7 +192,7 @@ public class ControladorCliente {
             }
 
             ObjectMapper objectMapper = new ObjectMapper();
-            String detallesJson = objectMapper.writeValueAsString(favoritoDto.getDetalle());
+            String detallesJson = objectMapper.writeValueAsString(favoritoDto.getDetalles());
 
             Favorito favorito = Favorito.builder()
                     .nombre(favoritoDto.getNombre())
@@ -259,10 +259,27 @@ public class ControladorCliente {
 
             Favorito favorito = favoritoOpt.get();
 
+            // reconstruir creacion basica desde los datos guardados
+            char tipoCreacion = favorito.getTipo() != null && !favorito.getTipo().isBlank()
+                    ? Character.toUpperCase(favorito.getTipo().charAt(0))
+                    : 'H';
+
+            CreacionDto creacionDto = new CreacionDto(
+                    favorito.getNombre(),
+                    favorito.getDescripcion(),
+                    favorito.getPrecio(),
+                    tipoCreacion,
+                    List.of(),
+                    true
+            );
+
+            Creacion creacion = creacionServicio.crearCreacionDesdeDto(creacionDto, cliente);
+            carritoServicio.agregarAlCarrito(cliente, creacion, 1);
+
             return ResponseEntity.ok(Map.of(
                     "success", true,
                     "message", favorito.getNombre() + " agregado al carrito",
-                    "precio", favorito.getPrecio()
+                    "precio", creacion.getPrecio()
             ));
 
         } catch (Exception e) {
@@ -616,6 +633,68 @@ public class ControladorCliente {
             return ResponseEntity.status(500)
                     .body(Map.of("success", false, "message", "Error al realizar pedido: " + e.getMessage()));
         }
+    }
+
+    // -------- Perfil: actualizar nombre --------
+    @PostMapping("/perfil/nombre")
+    @ResponseBody
+    public ResponseEntity<?> actualizarNombre(@RequestParam String nuevoNombre, HttpSession session) {
+        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
+        if (cliente == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "No autenticado"));
+        }
+        if (nuevoNombre == null || nuevoNombre.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Nombre inválido"));
+        }
+        Cliente actualizado = clienteServicio.actualizarNombre(cliente, nuevoNombre.trim());
+        session.setAttribute("clienteLogueado", actualizado);
+        return ResponseEntity.ok(Map.of("success", true, "message", "Nombre actualizado"));
+    }
+
+    // -------- Perfil: actualizar contraseña --------
+    @PostMapping("/perfil/password")
+    @ResponseBody
+    public ResponseEntity<?> actualizarPassword(@RequestParam String actual,
+                                                @RequestParam String nueva,
+                                                HttpSession session) {
+        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
+        if (cliente == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "No autenticado"));
+        }
+        if (actual == null || nueva == null || actual.isBlank() || nueva.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Campos inválidos"));
+        }
+        if (!cliente.getContrasena().equals(actual)) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Contraseña actual incorrecta"));
+        }
+        Cliente actualizado = clienteServicio.actualizarPassword(cliente, nueva);
+        session.setAttribute("clienteLogueado", actualizado);
+        return ResponseEntity.ok(Map.of("success", true, "message", "Contraseña actualizada"));
+    }
+
+    // -------- Perfil: actualizar método de pago --------
+    @PostMapping("/perfil/metodo-pago")
+    @ResponseBody
+    public ResponseEntity<?> actualizarMetodoPago(@RequestParam String metodoPago,
+                                                  @RequestParam String numeroTarjeta,
+                                                  @RequestParam String nombreTarjeta,
+                                                  @RequestParam String vencimientoTarjeta,
+                                                  @RequestParam String cvvTarjeta,
+                                                  HttpSession session) {
+        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
+        if (cliente == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "No autenticado"));
+        }
+        Cliente actualizado = clienteServicio.actualizarMetodoPago(
+                cliente,
+                metodoPago,
+                numeroTarjeta,
+                nombreTarjeta,
+                vencimientoTarjeta,
+                cvvTarjeta
+        );
+        session.setAttribute("clienteLogueado", actualizado);
+        return ResponseEntity.ok(Map.of("success", true, "message", "Método de pago actualizado"));
     }
 
 }

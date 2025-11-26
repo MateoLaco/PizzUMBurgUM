@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
@@ -22,7 +22,7 @@
             padding: 0;
         }
 
-        /* Barra de Navegación Horizontal  */
+        /* Barra de NavegaciÃ³n Horizontal  */
         .navbar-horizontal {
             background: var(--dark-color);
             padding: 1rem 0;
@@ -134,7 +134,7 @@
             }
         }
 
-        /* ESTILOS ESPECÍFICOS DE FAVORITOS (ORIGINALES) */
+        /* ESTILOS ESPECÃFICOS DE FAVORITOS (ORIGINALES) */
         .favorites-section {
             background: white;
             padding: 40px 0;
@@ -581,7 +581,7 @@
             background: #2471a3;
         }
 
-        /* Mensaje de carrito vacío */
+        /* Mensaje de carrito vacÃ­o */
         .empty-cart-panel {
             text-align: center;
             color: #6c757d;
@@ -630,12 +630,37 @@
                 border-radius: 15px;
             }
         }
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            min-width: 260px;
+            max-width: 340px;
+            display: none;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            color: #fff;
+            font-family: "Poppins", sans-serif;
+            z-index: 1200;
+            opacity: 0;
+            transition: opacity .25s ease, transform .25s ease;
+            transform: translateY(10px);
+        }
+        .toast.show { display: flex; opacity: 1; transform: translateY(0); }
+        .toast.success { background: #2ecc71; }
+        .toast.error { background: #e74c3c; }
+        .toast .toast-icon { font-size: 1.3rem; line-height: 1; }
+        .toast .toast-title { font-weight: 700; }
+        .toast .toast-text { line-height: 1.3; }
     </style>
 </head>
 <body>
 <div layout:fragment="content">
 
-    <!-- Barra de Navegación Horizontal (igual que panel) -->
+    <!-- Barra de NavegaciÃ³n Horizontal (igual que panel) -->
     <!-- Carrito en la esquina inferior derecha -->
     <div class="cart-bottom-right" id="cartBottomRight">
         <div class="cart-box-main" onclick="irAlCarritoCompleto()">
@@ -679,7 +704,7 @@
                 PizzUM & BurgUM
             </a>
 
-            <!-- Links de Navegación -->
+            <!-- Links de NavegaciÃ³n -->
             <div class="nav-links">
                 <a class="nav-link" href="/cliente/panel">
                     Inicio
@@ -690,7 +715,7 @@
                 <a class="nav-link active" href="/cliente/favoritos">
                     Favoritos
                 </a>
-                <a class="nav-link" href="/cliente/ordenes">Ordenes</a>
+                <a class="nav-link" href="/cliente/ordenes">Orden</a>
                 <a th:href="@{/auth/logout}" class="nav-link logout-btn">
                     Salir
                 </a>
@@ -708,7 +733,7 @@
         </div>
     </section>
 
-    <!-- Estadísticas -->
+    <!-- EstadÃ­sticas -->
     <section class="favorites-stats">
         <div class="container">
             <div class="row">
@@ -737,12 +762,12 @@
     <!-- Lista de Favoritos -->
     <section class="favorites-section">
         <div class="container">
-            <!-- Estado vacío -->
+            <!-- Estado vacÃ­o -->
             <div th:if="${favoritos == null or favoritos.empty}">
                 <div class="empty-state">
                     <i class="fas fa-heart"></i>
-                    <h3>No tienes favoritos aún</h3>
-                    <p>Cuando marques creaciones como favoritas, aparecerán aquí.</p>
+                    <h3>No tienes favoritos aun</h3>
+                    <p>Cuando marques creaciones como favoritas, apareceran aqui.</p>
                     <div style="margin-top: 20px; text-align: center">
                         <a href="/cliente/crear-pizza" class="btn-crear me-2">Crear Mi Primera Pizza</a>
                         <a href="/cliente/crear-hamburguesa" class="btn-crear">Crear Mi Primera Hamburguesa</a>
@@ -759,10 +784,10 @@
                               th:classappend="${favorito.tipo == 'PIZZA'} ? 'type-pizza' : 'type-hamburguesa'"
                               th:text="${favorito.tipo}">TIPO</span>
 
-                        <!-- Nombre y descripción -->
-                        <div class="item-name" th:text="${favorito.nombre}">Nombre de la Creación</div>
-                        <div class="item-details" th:text="${favorito.descripcion} ?: 'Sin descripción'">
-                            Descripción de la creación...
+                        <!-- Nombre y descripciÃ³n -->
+                        <div class="item-name" th:text="${favorito.nombre}">Nombre de la CreaciÃ³n</div>
+                        <div class="item-details" th:text="${favorito.descripcion} ?: 'Sin descripciÃ³n'">
+                            DescripciÃ³n de la creaciÃ³n...
                         </div>
 
                         <!-- Precio -->
@@ -778,11 +803,11 @@
                             </span>
                         </div>
 
-                        <!-- Botones de acción -->
+                        <!-- Botones de acciÃ³n -->
                         <div class="action-buttons">
                             <button class="btn btn-action btn-use"
                                     th:onclick="|usarFavorito(${favorito.id})|">
-                                <i class="fas fa-shopping-cart me-2"></i>Pedir Esta Creación
+                                <i class="fas fa-shopping-cart me-2"></i>Pedir esta creacion
                             </button>
                             <button class="btn btn-action btn-delete"
                                     th:onclick="|eliminarFavorito(${favorito.id})|">
@@ -798,44 +823,58 @@
     <footer class="footer">
         <div class="container">
             <p>&copy; 2025 PizzUM & BurgUM. Todos los derechos reservados.</p>
-            <p class="mb-0">Diseñado por MCN Solutions para amantes de la buena comida</p>
+            <p class="mb-0">DiseÃ±ado por MCN Solutions para amantes de la buena comida</p>
         </div>
     </footer>
 
+<div id="toast" class="toast success">
+    <span class="toast-icon" id="toastIcon">✓</span>
+    <div class="toast-text">
+        <div class="toast-title" id="toastTitle">Listo</div>
+        <div id="toastMsg">Mensaje</div>
+    </div>
 </div>
 
 <script>
     function usarFavorito(favoritoId) {
-        alert('Cargando favorito ID: ' + favoritoId + ' en tu carrito...');
+        fetch('/cliente/favorito/' + favoritoId + '/pedir', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(resp => resp.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Agregado al carrito','success');
+                    cargarCarritoDelServidor(); // refresca contador/badge en tiempo real
+                } else {
+                    showToast(data.message || 'No se pudo agregar el favorito','error');
+                }
+            })
+            .catch(() => alert('Error de conexiÃ³n al intentar agregar el favorito'));
     }
 
     function eliminarFavorito(favoritoId) {
-        if (confirm('¿Estás seguro de que quieres eliminar este favorito?\nEsta acción no se puede deshacer.')) {
-            fetch('/favoritos/eliminar/' + favoritoId, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
+        if (!confirm('Â¿EstÃ¡s seguro de que quieres eliminar este favorito?\nEsta acciÃ³n no se puede deshacer.')) return;
+
+        fetch('/cliente/favorito/' + favoritoId, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Â¡Favorito eliminado correctamente!');
+                    location.reload();
+                } else {
+                    showToast(data.message || 'Error al eliminar','error');
                 }
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error en la respuesta del servidor');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('¡Favorito eliminado correctamente!');
-                        location.reload();
-                    } else {
-                        alert('Error: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error al eliminar el favorito. Por favor, intenta nuevamente.');
-                });
-        }
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error al eliminar el favorito. Intenta nuevamente.','error');
+            });
     }
 
     // Script para marcar enlace activo
@@ -850,7 +889,7 @@
         });
     });
 
-    // Si la página vuelve desde el back/forward cache, recargar
+    // Si la pÃ¡gina vuelve desde el back/forward cache, recargar
     window.addEventListener('pageshow', function (event) {
         if (event.persisted) {
             window.location.reload();
@@ -891,7 +930,7 @@
         const total = carrito.reduce((sum, item) => sum + (item.precioUnitario * item.cantidad), 0);
         if (cartPanelTotal) cartPanelTotal.textContent = `$${total.toFixed(2)}`;
 
-        // Habilitar/deshabilitar botón "Pedir Ya"
+        // Habilitar/deshabilitar botÃ³n "Pedir Ya"
         if (btnPedirYa) btnPedirYa.disabled = carrito.length === 0;
 
         // Actualizar contenido del panel
@@ -910,8 +949,8 @@
                     <div class="item-info-panel">
                         <div class="item-name-panel">${item.creacion.nombre}</div>
                         <div class="item-details-panel">
-                            ${item.creacion.tipo === 'P' ? '🍕 Pizza' : '🍔 Hamburguesa'}
-                            ${item.creacion.descripcion ? `• ${item.creacion.descripcion}` : ''}
+                            ${item.creacion.tipo === 'P' ? 'Pizza' : 'Hamburguesa'}
+                            ${item.creacion.descripcion ? `â€¢ ${item.creacion.descripcion}` : ''}
                             x${item.cantidad}
                         </div>
                     </div>
@@ -946,17 +985,44 @@
         if (carrito.length === 0) return;
 
         const total = carrito.reduce((sum, item) => sum + (item.precioUnitario * item.cantidad), 0);
-        const confirmacion = confirm(`¿Confirmar pedido por $${total.toFixed(2)}?`);
+        const confirmacion = confirm(`Â¿Confirmar pedido por $${total.toFixed(2)}?`);
 
         if (confirmacion) {
-            alert('¡Pedido realizado con éxito! 🎉');
+            alert('Â¡Pedido realizado con Ã©xito! ðŸŽ‰');
         }
     }
 
-    // Inicializar carrito al cargar la página
+    // Inicializar carrito al cargar la pÃ¡gina
     document.addEventListener('DOMContentLoaded', function() {
         cargarCarritoDelServidor();
     });
 </script>
+<script>
+    let toastTimeout = null;
+    function showToast(message, type = "success") {
+        const toast = document.getElementById("toast");
+        if (!toast) return;
+        const title = document.getElementById("toastTitle");
+        const msg = document.getElementById("toastMsg");
+        const icon = document.getElementById("toastIcon");
+
+        toast.classList.remove("success","error");
+        toast.classList.add(type);
+        title.textContent = type === "success" ? "Listo" : "Error";
+        msg.textContent = message || "";
+        icon.textContent = type === "success" ? "✓" : "⚠";
+
+        toast.classList.add("show");
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+</script>
 </body>
 </html>
+
+
+
+
+
+
+

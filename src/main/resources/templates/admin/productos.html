@@ -80,7 +80,7 @@
             font-size:1.3rem;
         }
 
-        /* FORM NUEVO PRODUCTO */
+        /* FORM PRODUCTO */
         .form-grid{
             display:grid;
             grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
@@ -252,7 +252,7 @@
             <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
             <div th:if="${mensajeError}" class="alert alert-danger" th:text="${mensajeError}"></div>
 
-            <!-- FORM NUEVO PRODUCTO -->
+            <!-- FORM PRODUCTO -->
             <div class="card">
                 <h3>Crear nuevo producto</h3>
 
@@ -336,7 +336,7 @@
                                     </span>
                                 </td>
 
-                                <!-- 💰 PRECIO EDITABLE -->
+                                <!-- PRECIO EDITABLE -->
                                 <td>
                                     <input type="number"
                                            min="0"
@@ -346,7 +346,7 @@
                                            style="width:120px; padding:6px 8px; border-radius:8px; border:1px solid #ccc; text-align:right;">
                                 </td>
 
-                                <!-- 🔛 ACTIVO -->
+                                <!-- ACTIVO -->
                                 <td>
                                     <label class="switch">
                                         <input type="checkbox"

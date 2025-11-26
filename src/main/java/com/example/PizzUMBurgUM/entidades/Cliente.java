@@ -39,6 +39,15 @@ public class Cliente extends Usuario{
     @Column(name = "numero_tarjeta")
     private String numeroTarjeta;
 
+    @Column(name = "nombre_tarjeta")
+    private String nombreTarjeta;
+
+    @Column(name = "vencimiento_tarjeta")
+    private String vencimientoTarjeta;
+
+    @Column(name = "cvv_tarjeta")
+    private String cvvTarjeta;
+
     @NotNull
     @Column(length = 9)
     @Size(min = 8, max = 13)

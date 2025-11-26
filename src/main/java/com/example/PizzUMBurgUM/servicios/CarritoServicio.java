@@ -49,7 +49,7 @@ public class CarritoServicio {
             item.setCantidad(item.getCantidad() + cantidad);
             return carritoItemRepositorio.save(item);
         } else {
-            // Si no existe, crear nuevo item
+            // Crear item si no existe
             CarritoItem nuevoItem = CarritoItem.builder()
                     .cliente(cliente)
                     .creacion(creacion)

@@ -49,7 +49,7 @@ public class ControladorProductoAdmin {
         return "redirect:/admin/productos";
     }
 
-    // ⬇⬇⬇ NUEVO: guardar cambios de ACTIVO + PRECIO en lote
+    // Guardar cambios de activo y precio en lote
     @PostMapping("/guardar-cambios")
     public String guardarCambios(@RequestParam(value = "activos", required = false) List<Long> idsActivos,
                                  @RequestParam Map<String, String> requestParams,
